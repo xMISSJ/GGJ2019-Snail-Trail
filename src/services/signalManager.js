@@ -56,7 +56,7 @@ export default class SignalManager extends Singleton {
    *
    * @param signalName Name of the signal
    */
-  dispatch(signalName) {
+  dispatch(signalName, ...parameters) {
     const signal = this[getSignal](signalName);
 
     if (!signal) {
@@ -66,7 +66,7 @@ export default class SignalManager extends Singleton {
       return;
     }
 
-    signal.dispatch();
+    signal.dispatch(...parameters);
   }
 
   /**
