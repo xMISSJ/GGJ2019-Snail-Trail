@@ -37,6 +37,7 @@ export default class AssetList extends Singleton {
       // { key: 'rq', dir: 'op', png: 'rq', etc1: 'op', s3tc: 'op', pvrtc: 'op', preload: 'op' },
       { key: 'loaderBg', dir: '', png: 'loader-bg.png', preload: false },
       { key: 'loaderBar', dir: '', png: 'loader-bar.png' },
+      { key: 'cloud', dir: '', png: 'cloud.png' },
     ];
 
     this._soundList = [

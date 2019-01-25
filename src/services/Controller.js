@@ -106,7 +106,6 @@ export default class Controller {
       this.wasHolding.shoot = false;
       this.onShootRelease.dispatch();
     }
-    console.log('this.input.aimUp: ', this.input.aimUp, 'this.input.up: ', this.input.up, 'this.input.left: ', this.input.left);
   }
 
   checkOnRelease() {
