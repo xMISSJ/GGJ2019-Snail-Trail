@@ -23,5 +23,15 @@ export default {
         up: 'I', down: 'K', left: 'J', right: 'L', attack: 'P',
       },
     },
+    player3: {
+      keys: {
+        up: '1', down: '2', left: '3', right: '4', attack: '5',
+      },
+    },
+    player4: {
+      keys: {
+        up: '6', down: '7', left: '8', right: '9', attack: '0',
+      },
+    },
   },
 };
