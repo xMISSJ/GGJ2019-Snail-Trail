@@ -1,5 +1,6 @@
 import { State, Phaser } from 'phaser';
 import lang from '../lang';
+import Background from '../sprites/background'
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
@@ -21,6 +22,8 @@ export default class extends State {
   }
 
   create() {
+    this.background = new Background(0,0);
+    game.add.existing(this.background);
     this.colliderGroup = new ColliderGroup();
   }
 
