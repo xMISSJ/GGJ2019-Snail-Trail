@@ -29,12 +29,20 @@ export default class Controller {
     };
 
     this.inputPad.deadZone = 0.005;
-    this.minimalAim = 0.6;
+    this.minimalMove = 0.6;
   }
 
   update() {
-    this.character.targetDirection.x = this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
-    this.character.targetDirection.y = this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
+    var stickPoint = new Phaser.Point(this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X),
+      this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y));
+    if (stickPoint.getMagnitude() > this.minimalMove) {
+      this.character.targetDirection.x = stickPoint.x;
+      this.character.targetDirection.y = stickPoint.y;
+      console.log(this.inputPad);
+    } else {
+      this.character.targetDirection.x = 0;
+      this.character.targetDirection.y = 0;
+    }
     this.input = {
       left: (this.keys.left.isDown && !this.keys.right.isDown)
                 || (this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) && !this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT))
