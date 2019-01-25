@@ -11,7 +11,7 @@ export default class ColliderGroup extends Phaser.Group {
 
   buildSlugs() {
     for (let i = 0; i < 4; i += 1) {
-      const slug = new Slug([i * 200, i * 200]);
+      const slug = new Slug(i + 1, [i * 200, i * 200]);
 
       this.slugs.push(slug);
 
@@ -20,6 +20,10 @@ export default class ColliderGroup extends Phaser.Group {
   }
 
   update() {
+    for (let i = 0; i < 4; i += 1) {
+      this.slugs[i].update();
+    }
+
     for (let i = 0; i < this.slugs.length; i += 1) {
       for (let j = 0; j < this.slugs.length; j += 1) {
         if (i === j) continue;
@@ -30,7 +34,7 @@ export default class ColliderGroup extends Phaser.Group {
 
   render() {
     for (let i = 0; i < this.slugs.length; i += 1) {
-      game.debug.body(this.slugs[i])
+      game.debug.body(this.slugs[i]);
     }
   }
 }
