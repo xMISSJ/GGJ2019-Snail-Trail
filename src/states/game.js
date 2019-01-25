@@ -11,6 +11,7 @@ export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
     game.input.gamepad.start();
+    console.log( game.input.gamepad);
     game.physics.startSystem(Phaser.Physics.ARCADE);
   }
 
