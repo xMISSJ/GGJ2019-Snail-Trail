@@ -74,7 +74,6 @@ export default class extends State {
     const data = { truecolor: this._imagePath + image.dir + image.png };
 
     for (let i = 0; i < this._compression.length; i += 1) {
-
       if (image[this._compression[i]]) {
         data[this._compression[i]] = this._imagePath + image.dir + image[this._compression[i]];
       }
