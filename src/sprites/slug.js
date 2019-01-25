@@ -2,6 +2,7 @@ import { Point } from 'phaser';
 import Sprite from '../services/sprite';
 import Controller from '../services/Controller';
 import Config from '../config';
+import SignalManager from "../services/signalManager";
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
@@ -27,10 +28,11 @@ export default class Slug extends Sprite {
     this.targetDirection = new Point();
 
     this.rotationSpeed = 1;
+    SignalManager.instance.dispatch('addSlug', this, "test 1", "test 2");
   }
 
   onCollide(entity1, entity2) {
-    var point = new Point()
+    const point = new Point()
     const difference = Point.subtract(entity1.position, entity2.position, point).normalize();
 
     this.body.velocity.setTo(difference.x * 100, difference.y * 100);
