@@ -26,18 +26,7 @@ export default class extends State {
   create() {
     this.background = new Background(0,0);
     game.add.existing(this.background);
-    this.colliderGroup = new ColliderGroup();
-    game.debug.text('Click to disable body1', 32, 32);
-    this.colliderGroup.render()
-    const bannerText = lang.text('welcome');
-    const banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
-      font: '40px Bangers',
-      fill: '#77BFA3',
-      smoothed: false,
-    });
 
-    banner.padding.set(10, 16);
-    banner.anchor.setTo(0.5);
     if (__DEV__) {
       const zKey = game.input.keyboard.addKey(Phaser.KeyCode.Z);
       const xKey = game.input.keyboard.addKey(Phaser.KeyCode.X);
@@ -47,7 +36,6 @@ export default class extends State {
       const qKey = game.input.keyboard.addKey(Phaser.KeyCode.Q);
 
       zKey.onDown.add(() => {
-        console.log("teste")
         GameManager.instance.pickUpShell(1);
       });
       xKey.onDown.add(() => {
