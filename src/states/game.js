@@ -4,6 +4,7 @@ import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
+import CountDownText from '../sprites/countDownText';
 
 export default class extends State {
   init() {
