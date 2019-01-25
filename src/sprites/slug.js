@@ -25,7 +25,7 @@ export default class Slug extends Sprite {
 
     game.physics.arcade.enable(this);
     this.body.enable = true;
-    this.body.setCircle(15, 0, 0);
+    this.body.setCircle(15, 0, 20);
     this.body.bounce.set(1);
     this.body.collideWorldBounds = true;
     this.body.drag.setTo(100, 100);
