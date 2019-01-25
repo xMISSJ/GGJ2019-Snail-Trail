@@ -33,6 +33,8 @@ export default class Controller {
   }
 
   update() {
+    this.character.targetDirection.x = this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X);
+    this.character.targetDirection.y = this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y);
     this.input = {
       left: (this.keys.left.isDown && !this.keys.right.isDown)
                 || (this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) && !this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT))
