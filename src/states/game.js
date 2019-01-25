@@ -3,10 +3,12 @@ import lang from '../lang';
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
+import Character from '../TestSlug'
 
 export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
+    this.testCharacter = new Character(1);
   }
 
   preload() {
