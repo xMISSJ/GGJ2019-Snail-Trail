@@ -1,4 +1,4 @@
-import { Phaser,  Point } from 'phaser';
+import { Phaser, Point } from 'phaser';
 import Sprite from '../services/sprite';
 import Controller from '../services/Controller';
 import Config from '../config';
@@ -18,12 +18,23 @@ export default class Slug extends Sprite {
 
 
     this.currentDirection = new Point(1, 0);
-    this.targetDirection = new Point(0,0);
+    this.targetDirection = new Point(0, 0);
 
     this.rotationSpeed = 2;
-    this.currentMovementSpeed = 0;;
+    this.currentMovementSpeed = 0;
     this.movementSpeedStep = 0.02;
     this.maxMovementSpeed = 2;
+
+    this.isMoving = false;
+    this.createSlug();
+  }
+
+  createSlug() {
+    this.player = game.add.sprite(32, 24, 'slug', 1);
+    this.player.smoothed = false;
+
+    this.moving = this.player.animations.add('moving', [0, 3], 10, true);
+    // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
   onCollide() {
@@ -36,6 +47,7 @@ export default class Slug extends Sprite {
 
     if (this.targetDirection.getMagnitude() > 0.2) {
       if (this.currentDirection.getMagnitude() < 0.2) {
+        this.isMoving = true;
         this.currentDirection.x = this.targetDirection.x;
         this.currentDirection.y = this.targetDirection.y;
         this.currentDirection.normalize();
@@ -43,7 +55,7 @@ export default class Slug extends Sprite {
 
       this.currentMovementSpeed += this.movementSpeedStep;
     } else {
-
+      this.isMoving = false;
       this.currentMovementSpeed -= this.movementSpeedStep * 3;
     }
 
@@ -52,6 +64,8 @@ export default class Slug extends Sprite {
 
     this.x += this.currentDirection.x;
     this.y += this.currentDirection.y;
+
+    this.doAnimation();
   }
 
   rotate() {
@@ -59,6 +73,12 @@ export default class Slug extends Sprite {
       this.currentDirection.rotate(0, 0, -this.rotationSpeed, true);
     } else {
       this.currentDirection.rotate(0, 0, this.rotationSpeed, true);
+    }
+  }
+
+  doAnimation() {
+    if (this.isMoving) {
+      this.player.play('moving');
     }
   }
 
