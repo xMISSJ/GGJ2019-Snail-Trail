@@ -8,15 +8,25 @@ export default class GameManager extends Singleton {
     this.shellHolder = 0;
     this.winAmount = 5;
     this.timer = game.time.create(false);
+    this.states = {
+      countDown: 0,
+      game: 1,
+      end: 2,
+      pause: 3,
+    };
+    this.currentState = this.states.pause;
   }
 
   startGame() {
     this.reset();
+    this.currentState = this.states.game;
   }
 
   addTimeToPlayerScore(playerID) {
+    if (playerID <= 0) {
+      return;
+    }
     this.playerScores[playerID - 1] = this.shellHolderStartScore + this.timer.seconds;
-    console.log(this.playerScores);
     this.checkPlayerWin(playerID);
   }
 
@@ -38,8 +48,13 @@ export default class GameManager extends Singleton {
   checkPlayerWin(playerID) {
     if (this.playerScores[playerID - 1] >= this.winAmount) {
       console.log('Player ' + playerID + ' wins');
-      this.reset();
+      this.endGame();
     }
+  }
+
+  endGame() {
+    this.currentState = this.states.end;
+    this.reset();
   }
 
   reset() {
@@ -51,9 +66,9 @@ export default class GameManager extends Singleton {
   }
 
   update() {
-    if (this.shellHolder === 0) {
-      return;
+    if (this.currentState === this.states.game) {
+      console.log(this.playerScores);
+      this.addTimeToPlayerScore(this.shellHolder);
     }
-    this.addTimeToPlayerScore(this.shellHolder);
   }
 }

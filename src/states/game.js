@@ -25,14 +25,13 @@ export default class extends State {
     banner.padding.set(10, 16);
     banner.anchor.setTo(0.5);
 
-    GameManager.instance.startGame();
-
     if (__DEV__) {
       const zKey = game.input.keyboard.addKey(Phaser.KeyCode.Z);
       const xKey = game.input.keyboard.addKey(Phaser.KeyCode.X);
       const cKey = game.input.keyboard.addKey(Phaser.KeyCode.C);
       const vKey = game.input.keyboard.addKey(Phaser.KeyCode.V);
       const bKey = game.input.keyboard.addKey(Phaser.KeyCode.B);
+      const qKey = game.input.keyboard.addKey(Phaser.KeyCode.Q);
 
       zKey.onDown.add(() => {
         GameManager.instance.pickUpShell(1);
@@ -48,6 +47,9 @@ export default class extends State {
       });
       bKey.onDown.add(() => {
         GameManager.instance.dropShell();
+      });
+      qKey.onDown.add(() => {
+        GameManager.instance.startGame();
       });
     }
   }
