@@ -7,7 +7,6 @@ export default class GameManager extends Singleton {
     this.playerScores = [];
     this.shellHolder = 0;
     this.winAmount = 5;
-    this.timer = game.time.create(false);
     this.states = {
       countDown: 0,
       game: 1,
