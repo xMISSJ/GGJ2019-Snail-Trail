@@ -42,7 +42,7 @@ export default class CollisionManager extends Group {
 
     for (let i = 0; i < this.slugs.length; i += 1) {
       for (let j = 0; j < this.slugs.length; j += 1) {
-        if (this.shell.visible) {
+        if (this.shell.isPickable) {
           game.physics.arcade.overlap(
             this.slugs[i],
             this.shell,
@@ -69,7 +69,7 @@ export default class CollisionManager extends Group {
     }
 
     if (this.shell && this.shell.visible) {
-      game.debug.body(this.shell)
+      game.debug.body(this.shell);
     }
   }
 }
