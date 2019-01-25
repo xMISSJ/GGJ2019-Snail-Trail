@@ -1,4 +1,4 @@
-import { State } from 'phaser';
+import {State} from 'phaser';
 import lang from '../lang';
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
@@ -6,6 +6,7 @@ import SignalManager from '../services/signalManager';
 import Image from '../services/image';
 import CollisionManager from '../sprites/collisionManager';
 import Slug from '../sprites/slug';
+import Shell from '../sprites/shell';
 
 export default class extends State {
   init() {
@@ -21,6 +22,7 @@ export default class extends State {
   create() {
     this.collisionManager = new CollisionManager();
     this.buildSlugs();
+    this.buildShell();
   }
 
   buildSlugs() {
@@ -28,6 +30,11 @@ export default class extends State {
       const slug = new Slug(i + 1, [i * 200, i * 200]);
       game.add.existing(slug);
     }
+  }
+
+  buildShell() {
+    const shell = new Shell([800, 400]);
+    game.add.existing(shell);
   }
 
   render() {
