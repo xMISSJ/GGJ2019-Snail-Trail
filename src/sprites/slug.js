@@ -5,13 +5,14 @@ import Config from '../config';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
-    super({ asset: 'cloud' });
+    super({ asset: 'slug' });
     this.playerNumber = playerNumber;
     this.x = position[0];
     this.y = position[1];
     game.physics.arcade.enable(this);
     this.body.enable = true;
 
+    this.scale.set(3,3);
     this.settings = Config.playerInput[`player${playerNumber}`];
     this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
     this.controller = new Controller(game, this, this.gamePad, this.settings);
@@ -20,20 +21,19 @@ export default class Slug extends Sprite {
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
 
-    this.rotationSpeed = 2;
+    this.rotationSpeed = 3.5;
     this.currentMovementSpeed = 0;
-    this.movementSpeedStep = 0.02;
-    this.maxMovementSpeed = 2;
+    this.movementSpeedStep = 0.08;
+    this.maxMovementSpeed = 5;
 
     this.isMoving = false;
     this.createSlug();
   }
 
   createSlug() {
-    this.player = game.add.sprite(32, 24, 'slug', 1);
-    this.player.smoothed = false;
+    this.smoothed = false;
 
-    this.moving = this.player.animations.add('moving', [0, 3], 10, true);
+    this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
@@ -42,7 +42,6 @@ export default class Slug extends Sprite {
 
   update() {
     this.controller.update();
-    this.rotate();
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
@@ -53,6 +52,7 @@ export default class Slug extends Sprite {
         this.currentDirection.normalize();
       }
 
+      this.rotate();
       this.currentMovementSpeed += this.movementSpeedStep;
     } else {
       this.isMoving = false;
@@ -74,11 +74,16 @@ export default class Slug extends Sprite {
     } else {
       this.currentDirection.rotate(0, 0, this.rotationSpeed, true);
     }
+
+    var newAngle = this.currentDirection.angle(new Point(0,0), true) + 180;
+    this.angle = newAngle;
   }
 
   doAnimation() {
     if (this.isMoving) {
-      this.player.play('moving');
+      this.play('moving');
+    } else {
+      // TODO Play idle
     }
   }
 

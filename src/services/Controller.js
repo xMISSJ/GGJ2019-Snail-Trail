@@ -38,7 +38,6 @@ export default class Controller {
     if (stickPoint.getMagnitude() > this.minimalMove) {
       this.character.targetDirection.x = stickPoint.x;
       this.character.targetDirection.y = stickPoint.y;
-      console.log(this.inputPad);
     } else {
       this.character.targetDirection.x = 0;
       this.character.targetDirection.y = 0;
