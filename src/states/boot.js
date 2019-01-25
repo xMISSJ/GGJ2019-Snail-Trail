@@ -44,7 +44,7 @@ export default class extends State {
     // Parameters(key, path, width, height, amount of frames
     // game.load.spritesheet('ms', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
 
-    game.load.spritesheet('slug', 'assets/sprites/placeholder_snail.png', 32, 24, 4);
+    game.load.spritesheet('slug', 'assets/sprites/slug-move-spritesheet.png', 33, 74, 4);
   }
 
   [loadComplete]() {
