@@ -3,10 +3,15 @@ import lang from '../lang';
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
+import Image from '../services/image';
+import Slug from '../sprites/slug';
+import ColliderGroup from "../sprites/colliderGroup";
 
 export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
+    game.input.gamepad.start();
+    game.physics.startSystem(Phaser.Physics.ARCADE);
   }
 
   preload() {
@@ -14,17 +19,11 @@ export default class extends State {
   }
 
   create() {
-    const bannerText = lang.text('welcome');
-    const banner = this.add.text(this.world.centerX, this.game.height - 80, bannerText, {
-      font: '40px Bangers',
-      fill: '#77BFA3',
-      smoothed: false,
-    });
-
-    banner.padding.set(10, 16);
-    banner.anchor.setTo(0.5);
+    this.colliderGroup = new ColliderGroup();
   }
 
   render() {
+    game.debug.text('Click to disable body1', 32, 32);
+    this.colliderGroup.render()
   }
 }
