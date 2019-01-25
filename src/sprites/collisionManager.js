@@ -1,4 +1,4 @@
-import { Group } from 'phaser';
+import {Group} from 'phaser';
 import SignalManager from '../services/signalManager';
 
 export default class CollisionManager extends Group {
@@ -59,6 +59,10 @@ export default class CollisionManager extends Group {
           null,
           this.slugs[i],
         );
+
+        if (!game.physics.arcade.intersects(this.slugs[i].body, this.slugs[j].body)) {
+          this.slugs[i].checkIfNotColliding(this.slugs[j]);
+        }
       }
     }
   }

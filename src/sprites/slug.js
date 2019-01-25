@@ -19,6 +19,8 @@ export default class Slug extends Sprite {
 
     this.shell = null;
 
+    this.collidingWith = [];
+
     this.playerNumber = playerNumber;
 
     game.physics.arcade.enable(this);
@@ -54,15 +56,32 @@ export default class Slug extends Sprite {
   }
 
   onCollideSlug(entity1, entity2) {
-    this.setVelocity(entity1, entity2, 100);
+    const index = this.collidingWith.indexOf(entity2);
+
+    if (index === -1) {
+      this.collidingWith.push(entity2);
+    } else {
+      console.log('already collided');
+      return;
+    }
+    this.setVelocity(entity1, entity2, 200);
 
     this.removeHealth(entity1, entity2, 1);
   }
 
+  checkIfNotColliding(entity) {
+    const index = this.collidingWith.indexOf(entity);
+
+    if (index >= 0) {
+      this.collidingWith.splice(index, 1);
+    }
+  }
+
   setVelocity(entity1, entity2, magnitude) {
+    console.log("set velocity")
     const point = new Point();
     const difference = Point.subtract(entity1.position, entity2.position, point).normalize();
-    this.body.velocity.setTo(difference.x * magnitude, difference.y * magnitude);
+    this.body.velocity.setTo(this.body.velocity.x + difference.x * magnitude, this.body.velocity.y + difference.y * magnitude);
   }
 
   onCollideShell(entity1, entity2) {
