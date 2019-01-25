@@ -9,6 +9,8 @@ export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
     this.testCharacter = new Character(1);
+
+    game.input.gamepad.start();
   }
 
   preload() {
@@ -25,6 +27,10 @@ export default class extends State {
 
     banner.padding.set(10, 16);
     banner.anchor.setTo(0.5);
+  }
+
+  update() {
+      this.testCharacter.update();
   }
 
   render() {

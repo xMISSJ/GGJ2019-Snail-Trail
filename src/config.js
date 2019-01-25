@@ -11,4 +11,17 @@ export default {
   antialias: false,
   multiTexture: true,
   enableDebug: __DEV__,
+
+  playerInput: {
+    player1: {
+      keys: {
+        up: 'W', down: 'S', left: 'A', right: 'D', attack: 'Q',
+      },
+    },
+    player2: {
+      keys: {
+        up: 'I', down: 'K', left: 'J', right: 'L', attack: 'P',
+      },
+    },
+  },
 };

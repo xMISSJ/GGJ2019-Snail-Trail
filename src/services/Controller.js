@@ -80,7 +80,7 @@ export default class Controller {
       }
     }
     if (this.input.up) {
-      this.character.jump();
+      this.character.moveUp();
     } else if (this.input.down) {
       this.character.moveDown();
     }
@@ -106,6 +106,7 @@ export default class Controller {
       this.wasHolding.shoot = false;
       this.onShootRelease.dispatch();
     }
+    console.log('this.input.aimUp: ', this.input.aimUp, 'this.input.up: ', this.input.up, 'this.input.left: ', this.input.left);
   }
 
   checkOnRelease() {
