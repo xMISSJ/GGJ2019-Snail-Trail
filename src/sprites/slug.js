@@ -37,11 +37,12 @@ export default class Slug extends Sprite {
 
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
+    this.lastDirection = new Point(1, 0);
 
-    this.rotationSpeed = 3.5;
+    this.rotationSpeed = 1.5;
     this.currentMovementSpeed = 0;
-    this.movementSpeedStep = 0.08;
-    this.maxMovementSpeed = 5;
+    this.movementSpeedStep = 0.05;
+    this.maxMovementSpeed = 3;
 
     this.isMoving = false;
     this.createSlug();
@@ -49,7 +50,6 @@ export default class Slug extends Sprite {
 
   createSlug() {
     this.smoothed = false;
-    this.rotationSpeed = 1;
     SignalManager.instance.dispatch('addSlug', this);
     this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
@@ -115,17 +115,22 @@ export default class Slug extends Sprite {
 
     if (this.targetDirection.getMagnitude() > 0.2) {
       if (this.currentDirection.getMagnitude() < 0.2) {
+        console.log('lastDirection', this.lastDirection);
         this.isMoving = true;
-        this.currentDirection.x = this.targetDirection.x;
-        this.currentDirection.y = this.targetDirection.y;
+        this.currentDirection.x = this.lastDirection.x;
+        this.currentDirection.y = this.lastDirection.y;
         this.currentDirection.normalize();
       }
 
       this.rotate();
       this.currentMovementSpeed += this.movementSpeedStep;
-    } else {
-      this.isMoving = false;
+    } else if (this.currentDirection.getMagnitude() > 0.2) {
       this.currentMovementSpeed -= this.movementSpeedStep * 3;
+      this.lastDirection.x = this.currentDirection.x;
+      this.lastDirection.y = this.currentDirection.y;
+    } else if (this.isMoving) {
+      this.isMoving = false;
+      this.currentMovementSpeed = 0;
     }
 
     this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
@@ -133,7 +138,6 @@ export default class Slug extends Sprite {
 
     this.x += this.currentDirection.x;
     this.y += this.currentDirection.y;
-
     this.doAnimation();
   }
 
@@ -145,7 +149,7 @@ export default class Slug extends Sprite {
     }
 
     const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 180;
-    this.angle = newAngle;
+    this.angle = newAngle+90;
   }
 
   doAnimation() {
