@@ -34,8 +34,15 @@ export default class extends State {
       this[loadSound](this._soundList[i]);
     }
 
+    this.loadSpritesheets();
+
     this.load.onFileComplete.add(this[fileComplete], this);
     this.load.onLoadComplete.add(this[loadComplete], this);
+  }
+
+  loadSpritesheets() {
+    // Parameters(key, path, width, height, amount of frames
+    // game.load.spritesheet('ms', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
   }
 
   [loadComplete]() {
@@ -70,7 +77,6 @@ export default class extends State {
         data[this._compression[i]] = this._imagePath + image.dir + image[this._compression[i]];
       }
     }
-console.log(image)
     this.load.image(image.key, data);
   }
 
