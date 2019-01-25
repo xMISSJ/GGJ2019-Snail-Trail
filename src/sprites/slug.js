@@ -3,6 +3,7 @@ import Sprite from '../services/sprite';
 import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
+import GameManager from '../services/gameManager';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
@@ -67,6 +68,7 @@ export default class Slug extends Sprite {
   onCollideShell(entity1, entity2) {
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
+    GameManager.instance.pickUpShell(this.playerNumber);
 
     this.shell = entity2;
   }
@@ -78,6 +80,7 @@ export default class Slug extends Sprite {
 
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
+      GameManager.instance.dropShell();
 
       this.setVelocity(entity1, entity2, 1000);
       if (this.shell) {
