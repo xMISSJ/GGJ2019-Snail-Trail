@@ -21,6 +21,9 @@ export default class Leaderboard extends Phaser.Group {
   createLeaderboard() {
     for (let i = 0; i < 4; i += 1) {
       this.cards[i] = new LeaderboardCard(i + 1, 350 + (i * 250), 20);
+      if (i >= game.totalPlayers) {
+        this.cards[i].visible = false;
+      }
     }
   }
 
