@@ -7,7 +7,7 @@ import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position, asset) {
+  constructor(playerNumber, position, asset, color) {
     super({ asset, x: position[0], y: position[1] });
 
     this.moveAsset = asset;
@@ -67,7 +67,7 @@ export default class Slug extends Sprite {
     this.body.onEndContact.add(this.onEndContact, this);
     this.trailParts = [];
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
-      const trailPart = new TrailPart(10, 50, this.playerNumber);
+      const trailPart = new TrailPart(10, 50, this.playerNumber, color);
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
@@ -168,6 +168,7 @@ export default class Slug extends Sprite {
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
     GameManager.instance.pickUpShell(this.playerNumber);
+    game.world.bringToTop(this);
 
     this.shell = entity2;
   }

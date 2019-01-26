@@ -2,11 +2,12 @@ import Sprite from '../services/sprite';
 import CollisionManager from './collisionManager';
 
 export default class extends Sprite {
-  constructor(x, y, number) {
+  constructor(x, y, number, color) {
     const numberOfSprite = 2;
     const randomSpriteNumber = Math.floor(Math.random() * numberOfSprite) + 1;
 
     super({ asset: `trailPart${randomSpriteNumber}`, x, y, anchorX: 0.5, anchorY: 0.5 });
+    this.tint = color;
     this.alive = false;
     this.tag = `trail${number}`;
     this.lifetime = 2;

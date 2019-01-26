@@ -13,7 +13,7 @@ import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
-import CharacterSelect from '../states/characterSelect';
+import CharacterSelect from './characterSelect';
 
 export default class extends State {
   init() {
@@ -85,14 +85,22 @@ export default class extends State {
 
   buildSlugs() {
     this.slugColors = [
-        'slugGreen',
-        'slugMagenta',
-        'slugOrange',
-        'slugBlue'
-      ];
+      { asset: 'slugGreen', tint: 0x69e037 },
+      { asset: 'slugMagenta', tint: 0xd71fa6 },
+      { asset: 'slugOrange', tint: 0xff8809 },
+      { asset: 'slugBlue', tint: 0x74b5ed },
+    ];
+
+    this.slugPositions = [
+      [200, 200],
+      [1000, 200],
+      [200, 500],
+      [1000, 500],
+    ];
+
     for (let i = 0; i < game.totalPlayers; i += 1) {
-      const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100], this.slugColors[i]);
-      game.controllers[i].setCharacter(slug);
+      const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i].asset, this.slugColors[i].tint);
+      game.playerSettings[i].controller.setCharacter(slug);
       game.add.existing(slug);
     }
   }
@@ -104,6 +112,6 @@ export default class extends State {
 
   render() {
     GameManager.instance.update();
-    //this.collisionManager.render();
+    // this.collisionManager.render();
   }
 }
