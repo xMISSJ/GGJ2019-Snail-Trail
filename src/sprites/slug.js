@@ -60,7 +60,7 @@ export default class Slug extends Sprite {
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
-    this.trailCooldown = 0.095;
+    this.trailCooldown = 0.15;
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
   }
@@ -262,6 +262,7 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime -= game.time.elapsed/1000;
 
+    if(!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.trailCooldown;
       this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
