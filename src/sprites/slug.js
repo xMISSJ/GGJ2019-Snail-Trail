@@ -14,6 +14,7 @@ export default class Slug extends Sprite {
     super({ asset: `${colors.color}Slug`, x: position[0], y: position[1] });
     this.color = colors.color;
 
+    this.name = colors.name;
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = game.cache.getJSON('characterSettings');
 
@@ -48,7 +49,6 @@ export default class Slug extends Sprite {
     this.body.fixedRotation = true;
     this.body.angle = 90;
     this.body.collideWorldBounds = true;
-
     this.scale.set(1, 1);
 
     this.currentDirection = new Point(1, 0);
@@ -179,7 +179,7 @@ export default class Slug extends Sprite {
     this.switchState(this.states.SNAIL);
     BackgroundMusic.instance.playRandomVoice();
     GameManager.instance.pickUpShell(this.playerNumber);
-    game.overlay.start()
+    game.overlay.start(this.name)
     const newExplosion = new Explosion('MEDIUM', this.position);
     newExplosion.start([entity1]);
     game.world.bringToTop(this);
@@ -211,7 +211,11 @@ export default class Slug extends Sprite {
   }
 
   update() {
-    // if (GameManager.instance.paused) return;
+    if (GameManager.instance.paused) {
+      this.body.moveRight(0);
+      this.body.moveDown(0);
+      return;
+    }
     if (this.currentTrailState === this.trailStates.COLLIDE) {
       // this.removeHealth(null, null, game.time.elapsed / 1000);
     }

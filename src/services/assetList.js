@@ -70,8 +70,10 @@ export default class AssetList extends Singleton {
       { key: 'FRANK', dir: 'overlay/', png: 'FRANK.png' },
       { key: 'CARL', dir: 'overlay/', png: 'CARL.png' },
       { key: 'BILL', dir: 'overlay/', png: 'BILL.png' },
-      { key: 'buffslug', dir: 'overlay/', png: 'buffslug.png' },
-      { key: 'buff-bill', dir: 'overlay/', png: 'buff-bill.png' },
+      { key: 'bill_buffed', dir: 'overlay/', png: 'bill_buffed.png' },
+      { key: 'carl_buffed', dir: 'overlay/', png: 'carl_buffed.png' },
+      { key: 'frank_buffed', dir: 'overlay/', png: 'frank_buffed.png' },
+      { key: 'phteven_buffed', dir: 'overlay/', png: 'phteven_buffed.png' },
     ];
 
     this._soundList = [

@@ -19,31 +19,30 @@ export default class Overlay extends Group {
   buildSprites() {
     this.hypeBar = new Image({
       key: 'hype_bar',
-      position: new Point(3597 / 2 + game.width, game.height / 2),
+      position: new Point(3597 / 2 + game.width, game.height / 2 + 50),
     });
 
     this.vs = new Image({
       key: 'vs',
-      position: new Point(game.width / 2, game.height / 2),
+      position: new Point(game.width / 2, game.height / 2 + 50),
     });
 
     this.name = new Image({
       key: 'PHTEVEN',
-      position: new Point(game.width - 300, game.height * 0.7),
+      position: new Point(game.width - 300, game.height * 0.7 + 50),
       scale: new Point(0.5, 0.5),
       anchor: new Point(1, 0.5),
     });
 
     this.everyoneHype = new Image({
       key: 'everyone_hype',
-      position: new Point(200, game.height * 0.3),
+      position: new Point(200, game.height * 0.3 + 50),
       anchor: new Point(0, 0.5),
     });
 
     this.buffslug = new Image({
       key: 'buff-bill',
-      position: new Point(game.width - 200, game.height / 2),
-      scale: new Point(3, 3),
+      position: new Point(game.width - 200, 450),
     });
 
     this.add(this.hypeBar);
@@ -54,35 +53,34 @@ export default class Overlay extends Group {
   }
 
   createTweens() {
-    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 800, null, false);
+    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 3000, null, false);
     this.hypeBarTween.onComplete.add(() => {
-      console.log(GameManager.instance);
       GameManager.instance.togglePause();
       this.visible = false;
     });
 
-    this.buffslugTweenIn = game.make.tween(this.buffslug).to({ x: game.width - 200 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 0, 0, false);
-    this.buffslugTweenOut = game.make.tween(this.buffslug).to({ x: game.width + 200 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 1000, 0, false);
+    this.buffslugTweenIn = game.make.tween(this.buffslug).to({ x: game.width - 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
+    this.buffslugTweenOut = game.make.tween(this.buffslug).to({ x: game.width + 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
     this.buffslugTweenIn.onComplete.add(() => {
       this.buffslugTweenOut.start();
     });
 
-    this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 0, 0, false);
-    this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 1000, 0, false);
+    this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
+    this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
     this.nameTweenIn.onComplete.add(() => {
       this.nameTweenOut.start();
     });
 
-    this.vsTweenIn = game.make.tween(this.vs.scale).to({ x: 1, y: 1 }, 200, null, false);
-    this.vsTweenOut = game.make.tween(this.vs.scale).to({ x: 0, y: 0 }, 200, Phaser.Easing.Cubic.Out, false, 500);
+    this.vsTweenIn = game.make.tween(this.vs.scale).to({ x: 1, y: 1 }, 500, null, false);
+    this.vsTweenOut = game.make.tween(this.vs.scale).to({ x: 0, y: 0 }, 500, Phaser.Easing.Cubic.Out, false, 1500);
     this.vsTweenIn.onComplete.add(() => {
       game.camera.shake(0.01, 100);
 
       this.vsTweenOut.start();
     });
 
-    this.everyoneHypeTweenIn = game.make.tween(this.everyoneHype).to({ x: 200 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 0, 0, false);
-    this.everyoneHypeTweenOut = game.make.tween(this.everyoneHype).to({ x: -500 }, 100, Phaser.Easing.Sinusoidal.InOut, false, 1000, 0, false);
+    this.everyoneHypeTweenIn = game.make.tween(this.everyoneHype).to({ x: 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
+    this.everyoneHypeTweenOut = game.make.tween(this.everyoneHype).to({ x: -500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
     this.everyoneHypeTweenIn.onComplete.add(() => {
       this.everyoneHypeTweenOut.start();
     });
@@ -92,9 +90,10 @@ export default class Overlay extends Group {
     game.world.bringToTop(this);
   }
 
-  start() {
+  start(name) {
     GameManager.instance.togglePause();
-
+    this.setTexture(name);
+    this.setName(name);
     setTimeout(() => {
       this.visible = true;
       this.hypeBar.x = 3597 / 2 + game.width;
@@ -117,5 +116,13 @@ export default class Overlay extends Group {
     this.vs.visible = true;
     this.vs.scale.setTo(5, 5);
     this.vsTweenIn.start();
+  }
+
+  setTexture(name) {
+    this.buffslug.loadTexture(`${name}_buffed`);
+  }
+
+  setName(name) {
+    this.name.loadTexture(name.toUpperCase());
   }
 }

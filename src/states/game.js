@@ -14,7 +14,7 @@ import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
-import Overlay from "../sprites/overlay";
+import Overlay from '../sprites/overlay';
 
 export default class extends State {
   init() {
@@ -77,10 +77,10 @@ export default class extends State {
 
   buildSlugs() {
     this.slugColors = [
-      { tint: 0x69e037, color: 'green' },
-      { tint: 0xd71fa6, color: 'magenta' },
-      { tint: 0xff8809, color: 'orange' },
-      { tint: 0x74b5ed, color: 'blue' },
+      { tint: 0x69e037, color: 'green', name: 'bill' },
+      { tint: 0xd71fa6, color: 'magenta', name: 'phteven' },
+      { tint: 0xff8809, color: 'orange', name: 'carl' },
+      { tint: 0x74b5ed, color: 'blue', name: 'frank' },
     ];
 
     this.slugPositions = [

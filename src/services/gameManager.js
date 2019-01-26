@@ -139,10 +139,10 @@ export default class GameManager extends Singleton {
 
     switch(this.paused) {
       case false:
-        game.time.slowMotion = 1.0;
+        this.timer.resume()
         break;
       case true:
-        game.time.slowMotion = 3;
+        this.timer.pause()
         break;
     }
   }
