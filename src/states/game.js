@@ -13,6 +13,7 @@ import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
+import CharacterSelect from './characterSelect';
 
 export default class extends State {
   init() {
@@ -65,6 +66,12 @@ export default class extends State {
     this.leaderboard = new Leaderboard();
   }
 
+  update() {
+    for (let i = 0; i < game.controllers.length; i++) {
+      game.controllers[i].update();
+    }
+  }
+
   buildWalls() {
     const wall1 = new Wall([0, 350], [720, 100]);
     game.add.existing(wall1);
@@ -77,20 +84,25 @@ export default class extends State {
   }
 
   buildSlugs() {
-    // for (let i = 0; i < 4; i += 1) {
-    //   const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
-    //   game.add.existing(slug);
-    // }
+    this.slugColors = [
+      'slugGreen',
+      'slugMagenta',
+      'slugOrange',
+      'slugBlue',
+    ];
 
-    const slug1 = new Slug(1, [200, 200], 'slugGreen', 0x69e037);
-    const slug2 = new Slug(2, [1000, 200], 'slugMagenta', 0xd71fa6);
-    const slug3 = new Slug(3, [200, 500], 'slugOrange', 0xff8809);
-    const slug4 = new Slug(4, [1000, 500], 'slugBlue', 0xff8809);
+    this.slugPositions = [
+      [200, 200],
+      [1000, 200],
+      [200, 500],
+      [1000, 500],
+    ];
 
-    game.add.existing(slug1);
-    game.add.existing(slug2);
-    game.add.existing(slug3);
-    game.add.existing(slug4);
+    for (let i = 0; i < game.totalPlayers; i += 1) {
+      const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i]);
+      game.controllers[i].setCharacter(slug);
+      game.add.existing(slug);
+    }
   }
 
   buildShell() {
@@ -100,6 +112,6 @@ export default class extends State {
 
   render() {
     GameManager.instance.update();
-    //this.collisionManager.render();
+    // this.collisionManager.render();
   }
 }
