@@ -20,6 +20,11 @@ export default class GameManager extends Singleton {
     };
     this.timer = game.time.create(false);
     this.currentState = this.states.pause;
+
+    this.key3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+    this.key3.onDown.add(this.togglePause, this);
+
+    this.paused = false;
   }
 
   startGame() {
@@ -122,6 +127,17 @@ export default class GameManager extends Singleton {
   update() {
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
+    }
+  }
+
+  togglePause() {
+    this.paused = !this.paused;
+
+    switch(this.paused) {
+      case false:
+        break;
+      case true:
+        break;
     }
   }
 }

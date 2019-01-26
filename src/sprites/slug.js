@@ -206,6 +206,7 @@ export default class Slug extends Sprite {
   }
 
   update() {
+    if (GameManager.instance.paused) return;
     if (this.currentTrailState === this.trailStates.COLLIDE) {
       // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
