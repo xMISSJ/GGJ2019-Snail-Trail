@@ -89,26 +89,28 @@ export default class Overlay extends Group {
   }
 
   update() {
-    game.world.bringToTop(this)
+    game.world.bringToTop(this);
   }
 
   start() {
-    console.log(GameManager.instance);
-    this.visible = true;
     GameManager.instance.togglePause();
-    this.hypeBar.x = 3597 / 2 + game.width;
-    this.hypeBarTween.start();
 
-    this.buffslug.x = game.width + 200;
-    this.buffslugTweenIn.start();
+    setTimeout(() => {
+      this.visible = true;
+      this.hypeBar.x = 3597 / 2 + game.width;
+      this.hypeBarTween.start();
 
-    this.name.x = game.width + 500;
-    this.nameTweenIn.start();
-    this.vs.visible = false;
-    game.time.events.add(500, this.startVSAnimation, this);
+      this.buffslug.x = game.width + 200;
+      this.buffslugTweenIn.start();
 
-    this.everyoneHype.x = -500;
-    this.everyoneHypeTweenIn.start();
+      this.name.x = game.width + 500;
+      this.nameTweenIn.start();
+      this.vs.visible = false;
+      game.time.events.add(500, this.startVSAnimation, this);
+
+      this.everyoneHype.x = -500;
+      this.everyoneHypeTweenIn.start();
+    }, 50);
   }
 
   startVSAnimation() {
