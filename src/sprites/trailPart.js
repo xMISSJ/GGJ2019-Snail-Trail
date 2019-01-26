@@ -22,6 +22,7 @@ export default class extends Sprite {
     game.physics.p2.enable(this, true);
     this.body.data.sensor = true;
     this.body.enable = true;
+    this.body.debug = false;
     this.circleShape = this.body.setCircle(20, 0, 0);
     this.visible = false;
 
