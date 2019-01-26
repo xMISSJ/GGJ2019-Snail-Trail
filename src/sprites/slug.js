@@ -42,13 +42,8 @@ export default class Slug extends Sprite {
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
 
-    this.rotationSpeed = 1.5;
+    this.body.debug = true;
     this.currentMovementSpeed = 0;
-    this.movementSpeedStep = 0.05;
-    this.maxMovementSpeed = 3;
-    this.body.debug = true
-    this.boostSpeed = 5;
-    this.speedDecrease = 0.12;
 
     this.isMoving = false;
 
@@ -186,8 +181,8 @@ export default class Slug extends Sprite {
       this.currentDirection.rotate(0, 0, this.currentStats.rotationSpeed, true);
     }
 
-    const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 180;
-    this.angle = newAngle + 90;
+    const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 270;
+    this.angle = newAngle;
     this.body.angle = this.angle - 90;
   }
 
