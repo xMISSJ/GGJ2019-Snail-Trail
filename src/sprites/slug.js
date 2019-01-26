@@ -265,7 +265,6 @@ export default class Slug extends Sprite {
   }
 
   handleTrailSpawn() {
-    return;
     for (let i = 0; i < this.maxTrailParts; i += 1) {
       this.trailParts[i].update();
     }
