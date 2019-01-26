@@ -4,8 +4,8 @@ import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
-import CollisionManager from './collisionManager'
-import Explosion from './explosion'
+import CollisionManager from './collisionManager';
+import Explosion from './explosion';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position, asset, color) {
@@ -26,7 +26,7 @@ export default class Slug extends Sprite {
 
     this.trailSpeed = 1;
     this.canPickUp = true;
-    this.currentState = this.states.SLUG
+    this.currentState = this.states.SLUG;
     // this.switchState(this.states.SLUG);
     this.characterStats = game.cache.getJSON('characterSettings');
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -53,7 +53,7 @@ export default class Slug extends Sprite {
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
-    this.forceDirection = new Point(1,0);
+    this.forceDirection = new Point(1, 0);
     this.currentForce = 0;
 
     this.body.debug = false;
@@ -87,9 +87,9 @@ export default class Slug extends Sprite {
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     this.hittedSnail = this.animations.add('hittedSnail', [0, 1, 2], 10, false);
     this.hittedSnail.onComplete.add(() => {
-      console.log("test")
-      this.doAnimation()
-    })
+      console.log('test');
+      this.doAnimation();
+    });
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
     this.doAnimation();
   }
@@ -185,7 +185,7 @@ export default class Slug extends Sprite {
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
-
+      CollisionManager.instance.doExplosion(this.position, [entity2], 500);
       this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
@@ -198,7 +198,7 @@ export default class Slug extends Sprite {
 
   update() {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
-      //this.removeHealth(null, null, game.time.elapsed / 1000);
+      // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -280,7 +280,6 @@ export default class Slug extends Sprite {
   }
 
   doAnimation() {
-
     if (true) {
       if (this.isSlug) {
         this.loadTexture(`${this.moveAsset}`);
@@ -302,7 +301,6 @@ export default class Slug extends Sprite {
       this.loadTexture('snailHit');
       this.play('hittedSnail');
     }
-
   }
 
   moveUp() {
@@ -356,14 +354,14 @@ export default class Slug extends Sprite {
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
-    var newExplosion = new Explosion("BIG", this.x, this.y);
+    const newExplosion = new Explosion('BIG', this.x, this.y);
     newExplosion.start();
     this.doHitAnimation();
     this.canPickUp = false;
     setTimeout(() => {
       this.doAnimation();
       this.canPickUp = true;
-    }, 3000)
+    }, 3000);
   }
 
   switchToSnail() {
@@ -371,6 +369,7 @@ export default class Slug extends Sprite {
     this.loadTexture('snail');
     this.doAnimation();
     this.scale.set(1.7, 1.7);
+    CollisionManager.instance.doExplosion(this.position, [this]);
   }
 
   shoot() {
@@ -388,7 +387,7 @@ export default class Slug extends Sprite {
 
   pressA() {
     this.currentForce = 1500;
-    this.forceDirection = new Point(1,0);
+    this.forceDirection = new Point(1, 0);
   }
 
   handleTrailSpawn() {
@@ -406,5 +405,23 @@ export default class Slug extends Sprite {
 
       if (this.trailToSpawn >= this.currentStats.maxTrailParts - 1) this.trailToSpawn = 0;
     }
+  }
+
+  explode(position, delay = 0) {
+    setTimeout(() => {
+      const distance = Math.hypot(position.x - this.position.x, position.y - this.position.y);
+      if (distance < 400) {
+        const direction = new Point();
+        Point.subtract(this.position, position, direction).normalize();
+        if (direction.x === 0 && direction.y === 0) {
+          direction.x = Math.random() - 0.5;
+          direction.y = Math.random() - 0.5;
+          direction.normalize();
+        }
+        this.forceDirection.setTo(direction.x, direction.y);
+        this.currentForce = (400 - distance) * 3;
+        console.log(this.forceDirection, this.currentForce, distance);
+      }
+    }, delay);
   }
 }
