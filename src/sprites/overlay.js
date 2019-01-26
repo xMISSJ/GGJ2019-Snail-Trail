@@ -1,6 +1,7 @@
 import { Group, Point, Phaser } from 'phaser';
 import Image from '../services/image';
 import GameManager from '../services/gameManager';
+import SoundEffects from '../services/soundEffects';
 
 export default class Overlay extends Group {
   constructor() {
@@ -53,7 +54,7 @@ export default class Overlay extends Group {
   }
 
   createTweens() {
-    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 2500, null, false);
+    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 2200, null, false);
     this.hypeBarTween.frameBased = true;
     this.hypeBarTween.onComplete.add(() => {
       GameManager.instance.togglePause();
@@ -72,6 +73,7 @@ export default class Overlay extends Group {
     this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 250, 0, false);
     this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 1250, 0, false);
     this.nameTweenIn.onComplete.add(() => {
+      SoundEffects.instance.onYay();
       this.nameTweenOut.start();
     });
     this.nameTweenIn.frameBased = true;
@@ -116,6 +118,7 @@ export default class Overlay extends Group {
 
       this.name.x = game.width + 500;
       this.nameTweenIn.start();
+      SoundEffects.instance.onSwoosh();
       this.vs.visible = false;
       game.time.events.add(500, this.startVSAnimation, this);
 
@@ -126,7 +129,7 @@ export default class Overlay extends Group {
 
   startVSAnimation() {
     this.vs.visible = true;
-    this.vs.scale.setTo(5, 5);
+    this.vs.scale.setTo(9, 9);
     this.vsTweenIn.start();
   }
 
