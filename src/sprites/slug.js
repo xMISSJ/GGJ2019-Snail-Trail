@@ -25,12 +25,12 @@ export default class Slug extends Sprite {
 
     game.physics.arcade.enable(this);
     this.body.enable = true;
-    this.body.setCircle(15, 0, 20);
+    this.body.setCircle(26, -8, 15);
     this.body.bounce.set(1);
     this.body.collideWorldBounds = true;
-    this.body.drag.setTo(100, 100);
+    this.body.drag.setTo(500, 500);
 
-    this.scale.set(3, 3);
+    this.scale.set(1.5, 1.5);
     this.settings = Config.playerInput[`player${playerNumber}`];
     this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
     this.controller = new Controller(game, this, this.gamePad, this.settings);
@@ -42,9 +42,14 @@ export default class Slug extends Sprite {
     this.rotationSpeed = 1.5;
     this.currentMovementSpeed = 0;
     this.movementSpeedStep = 0.05;
-    this.maxMovementSpeed = 3;
+    this.maxMovementSpeed = 2;
+    this.boostSpeed = 5;
+    this.speedDecrease = 0.12;
 
     this.isMoving = false;
+
+    this.canBoost = true;
+    this.isBoosting = false;
     this.createSlug();
   }
 
@@ -78,7 +83,7 @@ export default class Slug extends Sprite {
   }
 
   setVelocity(entity1, entity2, magnitude) {
-    console.log("set velocity")
+    console.log('set velocity');
     const point = new Point();
     const difference = Point.subtract(entity1.position, entity2.position, point).normalize();
     this.body.velocity.setTo(this.body.velocity.x + difference.x * magnitude, this.body.velocity.y + difference.y * magnitude);
@@ -133,7 +138,17 @@ export default class Slug extends Sprite {
       this.currentMovementSpeed = 0;
     }
 
-    this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
+    if (this.isBoosting) {
+      this.currentMovementSpeed -= this.speedDecrease;
+      if (this.currentMovementSpeed < this.maxMovementSpeed) {
+        this.currentMovementSpeed = this.maxMovementSpeed;
+        this.isBoosting = false;
+        this.canBoost = true;
+        // TODO Start cooldown
+      }
+    } else {
+      this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
+    }
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
 
     this.x += this.currentDirection.x;
@@ -149,7 +164,7 @@ export default class Slug extends Sprite {
     }
 
     const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 180;
-    this.angle = newAngle+90;
+    this.angle = newAngle + 90;
   }
 
   doAnimation() {
@@ -206,14 +221,20 @@ export default class Slug extends Sprite {
     // TODO for testing purposes
     this.tint = 0xffffff;
     this.currentHP = 3;
+    this.maxMovementSpeed -= 1;
   }
 
   switchToSnail() {
     // TODO for testing purposes
     this.tint = Math.random() * 0xffffff;
+    this.maxMovementSpeed += 1;
   }
 
   shoot() {
-
+    if (this.canBoost) {
+      this.canBoost = false;
+      this.isBoosting = true;
+      this.currentMovementSpeed += this.boostSpeed;
+    }
   }
 }
