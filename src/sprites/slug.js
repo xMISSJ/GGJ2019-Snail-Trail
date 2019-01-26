@@ -175,6 +175,7 @@ export default class Slug extends Sprite {
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
     GameManager.instance.pickUpShell(this.playerNumber);
+    game.overlay.start()
     const newExplosion = new Explosion('MEDIUM', this.position);
     newExplosion.start([entity1]);
     game.world.bringToTop(this);
@@ -206,7 +207,7 @@ export default class Slug extends Sprite {
   }
 
   update() {
-    if (GameManager.instance.paused) return;
+    // if (GameManager.instance.paused) return;
     if (this.currentTrailState === this.trailStates.COLLIDE) {
       // this.removeHealth(null, null, game.time.elapsed / 1000);
     }

@@ -14,6 +14,7 @@ import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
+import Overlay from "../sprites/overlay";
 
 export default class extends State {
   init() {
@@ -48,12 +49,16 @@ export default class extends State {
     this.leaderboard = new Leaderboard();
 
     GameManager.instance.startGame();
+
+    this.overlay = new Overlay();
   }
 
   update() {
     if (GameManager.instance.currentState !== GameManager.instance.states.game) {
       return;
     }
+
+    GameManager.instance.update();
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
     }
@@ -98,7 +103,7 @@ export default class extends State {
   }
 
   render() {
-    //GameManager.instance.update();
+
     // this.collisionManager.render();
   }
 }
