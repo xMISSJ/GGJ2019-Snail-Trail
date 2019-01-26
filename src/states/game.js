@@ -85,10 +85,10 @@ export default class extends State {
 
   buildSlugs() {
     this.slugColors = [
-      'slugGreen',
-      'slugMagenta',
-      'slugOrange',
-      'slugBlue',
+      { asset: 'slugGreen', tint: 0x69e037 },
+      { asset: 'slugMagenta', tint: 0xd71fa6 },
+      { asset: 'slugOrange', tint: 0xff8809 },
+      { asset: 'slugBlue', tint: 0x74b5ed },
     ];
 
     this.slugPositions = [
@@ -99,7 +99,7 @@ export default class extends State {
     ];
 
     for (let i = 0; i < game.totalPlayers; i += 1) {
-      const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i]);
+      const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i].asset, this.slugColors[i].tint);
       game.controllers[i].setCharacter(slug);
       game.add.existing(slug);
     }
