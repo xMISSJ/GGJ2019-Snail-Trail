@@ -1,6 +1,5 @@
 import { Phaser, Point } from 'phaser';
 import Sprite from '../services/sprite';
-import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
@@ -8,8 +7,10 @@ import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position) {
-    super({ asset: 'slug', x: position[0], y: position[1] });
+  constructor(playerNumber, position, asset) {
+    super({ asset, x: position[0], y: position[1] });
+
+    this.moveAsset = asset;
 
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = this.game.cache.getJSON('characterSettings');
@@ -18,8 +19,9 @@ export default class Slug extends Sprite {
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
     Object.freeze(this.state);
-    this.tag = 'slug';
-    this.maxHP = 3;
+
+    this.tag = "slug";
+    this.maxHP = 30;
 
     this.trailSpeed = 1;
 
@@ -45,9 +47,6 @@ export default class Slug extends Sprite {
     this.body.collideWorldBounds = true;
 
     this.scale.set(1, 1);
-    this.settings = Config.playerInput[`player${playerNumber}`];
-    this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
-    this.controller = new Controller(game, this, this.gamePad, this.settings);
 
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
@@ -79,7 +78,7 @@ export default class Slug extends Sprite {
     this.smoothed = false;
     // SignalManager.instance.dispatch('addSlug', this);
     CollisionManager.instance.addSlug(this);
-    this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
+    this.moving = this.animations.add('movingSlug', [0, 1, 2, 3], 10, true);
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
@@ -123,7 +122,6 @@ export default class Slug extends Sprite {
 
   onEndTrail() {
     this.collideWithTrail -= 1;
-    console.log("player " + this.playerNumber, this.collideWithTrail)
     if (this.collideWithTrail === 0) {
       this.trailSpeed = 1;
       this.currentTrailState = this.trailStates.NO_COLLIDE;
@@ -131,7 +129,9 @@ export default class Slug extends Sprite {
   }
 
   onCollideSlug(entity1, entity2) {
-    this.removeHealth(entity1, entity2, 1);
+    if (entity2.isBoosting) {
+      this.removeHealth(entity1, entity2, 10);
+    }
   }
 
   checkIfNotColliding(entity) {
@@ -161,8 +161,9 @@ export default class Slug extends Sprite {
   removeHealth(entity1, entity2, value) {
     if (!this.isSnail) return;
 
+    this.game.camera.shake(0.03, 100);
     this.currentHP -= value;
-console.log(this.currentHP)
+    console.log(this.currentHP);
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
@@ -181,7 +182,6 @@ console.log(this.currentHP)
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
-    this.controller.update();
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
@@ -202,7 +202,6 @@ console.log(this.currentHP)
       this.isMoving = false;
       this.currentMovementSpeed = 0;
     }
-
     this.handleBoosting();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
     this.x += this.currentDirection.x * this.trailSpeed;
@@ -257,8 +256,11 @@ console.log(this.currentHP)
 
   doAnimation() {
     if (this.isMoving) {
-      if (this.states.SLUG) this.play('moving');
-      else if (this.states.SNAIL) this.play('movingSnail');
+      if (this.isSlug) {
+        this.play('movingSlug');
+      } else if (this.isSnail) {
+        this.play('movingSnail');
+      }
     } else {
       // TODO Play idle
     }
@@ -309,7 +311,7 @@ console.log(this.currentHP)
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = 3;
-    this.loadTexture('slug');
+    this.loadTexture(this.moveAsset);
     this.scale.set(1, 1);
   }
 
@@ -320,11 +322,14 @@ console.log(this.currentHP)
   }
 
   shoot() {
-    if (this.currentState === this.states.SNAIL) return;
-    if (this.canBoost) {
+    if (this.currentState === this.states.SLUG) {
+      if(!this.canBoost) return;
+      this.game.camera.shake(0.005, 50);
       this.canBoost = false;
       this.isBoosting = true;
       this.currentMovementSpeed += this.currentStats.boostSpeed;
+    } else if (this.currentState === this.states.SNAIL) {
+
     }
   }
 
