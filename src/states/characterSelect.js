@@ -41,6 +41,10 @@ export default class characterSelect extends State {
       this.topBackground.animations.play('movement');
       this.topBackground.scale.set(4);
     }
+
+    this.startText = new Text({ text: 'Press B to start the game!', position: new Phaser.Point(game.width / 2, game.height - 67), fontSize: 20, color: '#FFFFFF' });
+    this.add.existing(this.startText);
+    game.add.tween(this.startText).to({ y: this.startText.y - 4 }, 100, 'Linear', true).yoyo(true).loop(true);
   }
 
   update() {
@@ -54,8 +58,8 @@ export default class characterSelect extends State {
         if (game.controllers[i].buttonInput[buttonPress]) {
           this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
-          //console.log('adding controller: ', i + 1);
-          //console.log(game.totalPlayers - 1);
+          // console.log('adding controller: ', i + 1);
+          // console.log(game.totalPlayers - 1);
 
           this.createCard(game.totalPlayers - 1);
           this.screens.push(this.screen);
@@ -71,7 +75,8 @@ export default class characterSelect extends State {
   }
 
   createCard(index) {
-    this.screen = game.add.sprite(93 + index * this.offset, 220, this.spriteNames[index]);
+    this.screen = game.add.sprite(93 + index * this.offset, 235, this.spriteNames[index]);
     this.nameText = new Text({ text: this.slugNames[index], position: new Phaser.Point(190 + index * this.offset, this.screen.y - 70), fontSize: 20, color: '#FFFFFF' });
+    game.add.tween(this.nameText.scale).to({ x: 1.1, y: 1.1 }, 200, 'Linear', true);
   }
 }
