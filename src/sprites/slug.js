@@ -260,6 +260,7 @@ export default class Slug extends Sprite {
         this.currentDashCoolDown -= game.time.elapsed / 1000;
         if (this.currentDashCoolDown <= 0) {
           this.canBoost = true;
+          this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber)
           this.currentDashCoolDown = this.currentStats.dashCooldown;
         }
       }
