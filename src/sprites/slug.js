@@ -4,7 +4,8 @@ import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
-import CollisionManager from './collisionManager';
+import CollisionManager from './collisionManager'
+import Explosion from './explosion'
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position, asset, color) {
@@ -355,6 +356,8 @@ export default class Slug extends Sprite {
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
+    var newExplosion = new Explosion("BIG", this.x, this.y);
+    newExplosion.start();
     this.doHitAnimation();
     this.canPickUp = false;
     setTimeout(() => {

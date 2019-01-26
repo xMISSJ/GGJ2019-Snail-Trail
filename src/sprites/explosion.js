@@ -1,9 +1,10 @@
 import { Group } from 'phaser';
 
+import BigSmoke from './explosionSmoke';
 export default class extends Phaser.Group {
-  constructor() {
+  constructor(explosionType, x, y) {
     super(game);
-
+    this.point = new Phaser.Point(x,y);
     this.explostionTypes = {
       SMALL: {
         explosionRadius: 50,
@@ -14,6 +15,11 @@ export default class extends Phaser.Group {
         explosionFreezeTime: 0.5,
       },
     };
+  }
+
+  start() {
+    this.smoke = new BigSmoke(this.point.x, this.point.y);
+    this.smoke.start();
   }
 
   explode(explostionType, charactersToIgnore) {
