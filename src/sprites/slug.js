@@ -147,6 +147,8 @@ export default class Slug extends Sprite {
       this.removeHealth(entity1, entity2, 10);
       entity2.isBoosting = false;
       entity2.currentDirection.normalize();
+      var newExplosion = new Explosion("SMALL", this.x, this.y);
+      newExplosion.start();
     }
   }
 
