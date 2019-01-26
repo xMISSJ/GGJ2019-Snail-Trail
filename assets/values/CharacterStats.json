@@ -6,9 +6,9 @@
     "maxMovementSpeed": 2,
     "boostSpeed": 16,
     "speedDecrease": 0.5,
-    "maxTrailParts": 100,
+    "maxTrailParts": 150,
     "dashCooldown": 1,
-    "trailCooldown": 0.01
+    "trailCooldown": 0.005
   },
   "SNAIL": {
     "rotationSpeed": 4,
