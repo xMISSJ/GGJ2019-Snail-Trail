@@ -79,6 +79,8 @@ export default class extends State {
       { tint: 0x74b5ed, color: 'blue' },
     ];
 
+    game.slugColors = this.slugColors;
+
     this.slugPositions = [
       [200, 200],
       [1000, 200],
@@ -86,10 +88,12 @@ export default class extends State {
       [1000, 500],
     ];
 
+    game.slugs = [];
     for (let i = 0; i < game.totalPlayers; i += 1) {
       const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i]);
       game.playerSettings[i].controller.setCharacter(slug);
       game.add.existing(slug);
+      game.slugs.push(slug);
     }
   }
 

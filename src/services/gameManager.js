@@ -3,6 +3,7 @@ import Singleton from './singleton';
 import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
 import Text from "./text";
+import RankingOverlay from "../sprites/ui/RankingOverlay";
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -10,7 +11,7 @@ export default class GameManager extends Singleton {
     this.playerScores = [];
     this.leaderboard = [];
     this.shellHolder = 0;
-    this.winAmount = 30;
+    this.winAmount = 3;
     this.countDownValue = 3;
     this.states = {
       countDown: 0,
@@ -82,16 +83,13 @@ export default class GameManager extends Singleton {
     SignalManager.instance.dispatch('gameEnd');
     this.currentState = this.states.end;
 
-    this.winText = new Text({
-      text: 'Player ' + playerID + ' wins!!!!',
-      anchor: new Phaser.Point(0.5, 0.5),
-      position: new Phaser.Point(game.width / 2, game.height / 2),
-      color: '#FFFFFF',
-      fontSize: 50,
-      stroke: '#000000',
-      strokeThickness: 10,
-    });
-    game.add.existing(this.winText);
+    // Makes all slugs invisible.
+    for (let i = 0; i < game.slugs.length; i++){
+      game.slugs[i].alpha = 0;
+    }
+
+    this.rankingOverlay = new RankingOverlay();
+    this.add(this.rankingOverlay);
   }
 
   reset() {
