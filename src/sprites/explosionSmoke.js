@@ -9,10 +9,10 @@ export default class extends Sprite {
       this.done();
     })
 
-    this.scale.set(2,2);
   }
 
-  start() {
+  start(scale) {
+    this.scale.set(scale,scale);
     this.visible = true;
     this.play('smokeBig');
   }
