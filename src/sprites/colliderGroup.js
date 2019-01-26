@@ -30,10 +30,4 @@ export default class ColliderGroup extends Phaser.Group {
       }
     }
   }
-
-  render() {
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      //game.debug.body(this.slugs[i])
-    }
-  }
 }

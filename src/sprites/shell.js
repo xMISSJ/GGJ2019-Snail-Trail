@@ -21,6 +21,7 @@ export default class Shell extends Sprite {
     this.circleShape = this.body.setCircle(40, 0, 0);
     this.body.debug = false;
     this.circleShape.sensor = true
+    this.body.debug = false;
 
     CollisionManager.instance.addShell(this);
     // SignalManager.instance.dispatch('addShell', this);

@@ -28,6 +28,8 @@ export default class LeaderboardCard extends Phaser.Group {
     });
     this.add(this.scoreText);
     this.setScore(0.00);
+
+    this.bobTween = game.add.tween(this.scoreText).to({ y: (this.background.height / 2) - 3 }, 50, Phaser.Easing.Default, false).yoyo(true).loop(true);
   }
 
   setScore(score) {

@@ -101,9 +101,4 @@ export default class extends State {
     const shell = new Shell([game.width / 2, game.height / 2]);
     game.add.existing(shell);
   }
-
-  render() {
-
-    // this.collisionManager.render();
-  }
 }
