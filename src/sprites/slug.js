@@ -147,8 +147,7 @@ export default class Slug extends Sprite {
       this.removeHealth(entity1, entity2, 10);
       entity2.isBoosting = false;
       entity2.currentDirection.normalize();
-      var newExplosion = new Explosion("SMALL", this.x, this.y);
-      newExplosion.start();
+
     }
   }
 
@@ -173,6 +172,8 @@ export default class Slug extends Sprite {
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
     GameManager.instance.pickUpShell(this.playerNumber);
+    const newExplosion = new Explosion('MEDIUM', this.position);
+    newExplosion.start([entity1]);
     game.world.bringToTop(this);
 
     this.shell = entity2;
@@ -187,13 +188,16 @@ export default class Slug extends Sprite {
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
-      CollisionManager.instance.doExplosion(this.position, [entity2], 500);
+      const newExplosion = new Explosion('BIG', this.position);
+      newExplosion.start([entity2]);
       this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
         this.shell = null;
       }
     } else {
+      const newExplosion = new Explosion('SMALL', this.position);
+      newExplosion.start([entity2]);
       this.doHitAnimation();
     }
   }
@@ -356,8 +360,7 @@ export default class Slug extends Sprite {
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
-    const newExplosion = new Explosion('BIG', this.x, this.y);
-    newExplosion.start();
+
     this.doHitAnimation();
     this.canPickUp = false;
     setTimeout(() => {
@@ -371,7 +374,6 @@ export default class Slug extends Sprite {
     this.loadTexture('snail');
     this.doAnimation();
     this.scale.set(1.7, 1.7);
-    CollisionManager.instance.doExplosion(this.position, [this]);
   }
 
   shoot() {
@@ -409,10 +411,10 @@ export default class Slug extends Sprite {
     }
   }
 
-  explode(position, delay = 0) {
+  explode(position, data) {
     setTimeout(() => {
       const distance = Math.hypot(position.x - this.position.x, position.y - this.position.y);
-      if (distance < 400) {
+      if (distance < data.explosionRadius) {
         const direction = new Point();
         Point.subtract(this.position, position, direction).normalize();
         if (direction.x === 0 && direction.y === 0) {
@@ -421,9 +423,9 @@ export default class Slug extends Sprite {
           direction.normalize();
         }
         this.forceDirection.setTo(direction.x, direction.y);
-        this.currentForce = (400 - distance) * 3;
+        this.currentForce = (data.explosionRadius - distance) * data.explosionForce;
         console.log(this.forceDirection, this.currentForce, distance);
       }
-    }, delay);
+    }, data.explosionFreezeTime * 1000);
   }
 }

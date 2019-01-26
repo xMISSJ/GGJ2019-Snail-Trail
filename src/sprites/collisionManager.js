@@ -81,15 +81,4 @@ export default class CollisionManager extends Singleton {
       game.debug.body(this.shell);
     }
   }
-
-  doExplosion(position, negate, delay) {
-    console.log(position, negate);
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      const index = negate.findIndex(x => x === this.slugs[i]);
-      console.log(index);
-      if (index === -1) {
-        this.slugs[i].explode(position, delay);
-      }
-    }
-  }
 }
