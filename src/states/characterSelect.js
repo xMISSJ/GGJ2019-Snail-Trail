@@ -1,8 +1,8 @@
 import { State, Phaser } from 'phaser';
-import SignalManager from '../services/signalManager';
 import PlayerMapping from '../services/PlayerMapping';
 import Controller from '../services/Controller';
 import Config from '../config';
+import Text from '../services/text';
 
 export default class characterSelect extends State {
   init() {
@@ -15,6 +15,9 @@ export default class characterSelect extends State {
     game.controllers = [];
     this.controllersAdded = [false, false, false, false];
     this.screens = [1, 2, 3, 4];
+    this.spriteNames = ['slugG', 'slugM', 'slugO', 'slugB'];
+    this.slugNames = ['Bill', 'Phteven', 'Carl', 'Frank'];
+    this.offset = 295;
   }
 
   create() {
@@ -51,36 +54,13 @@ export default class characterSelect extends State {
         if (game.controllers[i].buttonInput[buttonPress]) {
           this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
-          console.log('adding controller: ', i + 1);
-          console.log(game.totalPlayers - 1);
+          //console.log('adding controller: ', i + 1);
+          //console.log(game.totalPlayers - 1);
 
-          switch (game.totalPlayers - 1) {
-            case 0:
-              this.screen = game.add.sprite(93, 220, 'slugG');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 1:
-              this.screen = game.add.sprite(390, 220, 'slugM');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 2:
-              this.screen = game.add.sprite(685, 220, 'slugO');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 3:
-              console.log('hoi ik ben blauw');
-              this.screen = game.add.sprite(982, 220, 'slugB');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-          }
+          this.createCard(game.totalPlayers - 1);
+          this.screens.push(this.screen);
+          this.screen.scale.set(4);
+          this.add.existing(this.nameText);
         }
       }
     }
@@ -88,5 +68,10 @@ export default class characterSelect extends State {
 
   addPlayer(controller) {
     game.playerMap.addPlayer(controller);
+  }
+
+  createCard(index) {
+    this.screen = game.add.sprite(93 + index * this.offset, 220, this.spriteNames[index]);
+    this.nameText = new Text({ text: this.slugNames[index], position: new Phaser.Point(190 + index * this.offset, this.screen.y - 70), fontSize: 20, color: '#FFFFFF' });
   }
 }
