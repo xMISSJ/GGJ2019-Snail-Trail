@@ -7,7 +7,8 @@ export default class CollisionManager extends Group {
 
     this.slugs = [];
     this.shell = null;
-
+    this.slugsP2Group = game.physics.p2.createCollisionGroup();
+    this.shellP2Group = game.physics.p2.createCollisionGroup();
     SignalManager.instance.add('addSlug', this.addSlug, this);
     SignalManager.instance.add('addShell', this.addShell, this);
   }
@@ -17,10 +18,14 @@ export default class CollisionManager extends Group {
    ----------------------------- */
   addSlug(entity) {
     this.slugs.push(entity);
+
+    this.setPhysicsSlugs(entity);
   }
 
   addShell(entity) {
     this.shell = entity;
+
+    this.setPhysicsShell(entity)
   }
 
   removeShell(entity) {
@@ -35,43 +40,19 @@ export default class CollisionManager extends Group {
    * Collision checker
    ----------------------------- */
 
-  update() {
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      this.slugs[i].update();
-    }
-
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      for (let j = 0; j < this.slugs.length; j += 1) {
-        if (this.shell.isPickable) {
-          game.physics.arcade.overlap(
-            this.slugs[i],
-            this.shell,
-            this.slugs[i].onCollideShell,
-            null,
-            this.slugs[i],
-          );
-        }
-        if (i === j) continue;
-        game.physics.arcade.overlap(
-          this.slugs[i],
-          this.slugs[j],
-          this.slugs[i].onCollideSlug,
-          null,
-          this.slugs[i],
-        );
-
-        if (!game.physics.arcade.intersects(this.slugs[i].body, this.slugs[j].body)) {
-          this.slugs[i].checkIfNotColliding(this.slugs[j]);
-        }
-      }
-    }
+  setPhysicsSlugs(entity) {
+    entity.body.setCollisionGroup(this.slugsP2Group);
+    entity.body.collides(this.shellP2Group, entity.onCollideShell, entity);
+    entity.body.collides(this.slugsP2Group, entity.onCollideSlug, entity);
   }
 
-  render() {
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      game.debug.body(this.slugs[i]);
-    }
+  setPhysicsShell(entity) {
+    entity.body.setCollisionGroup(this.shellP2Group)
+    entity.body.collides([this.slugsP2Group, this.shellP2Group]);
+  }
 
+
+  render() {
     if (this.shell && this.shell.visible) {
       game.debug.body(this.shell);
     }

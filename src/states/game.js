@@ -16,7 +16,7 @@ export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
     game.input.gamepad.start();
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.startSystem(Phaser.Physics.P2JS);
   }
 
   preload() {
@@ -55,8 +55,8 @@ export default class extends State {
       });
     }
     this.collisionManager = new CollisionManager();
-    this.buildSlugs();
     this.buildShell();
+    this.buildSlugs();
   }
 
   buildSlugs() {

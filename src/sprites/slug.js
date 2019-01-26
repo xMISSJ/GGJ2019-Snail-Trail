@@ -11,7 +11,7 @@ export default class Slug extends Sprite {
 
     this.states = { SLUG: 0, SNAIL: 1 };
     Object.freeze(this.state);
-
+    this.tag = "slug";
     this.maxHP = 3;
 
     this.switchState(this.states.SLUG);
@@ -23,12 +23,11 @@ export default class Slug extends Sprite {
 
     this.playerNumber = playerNumber;
 
-    game.physics.arcade.enable(this);
+    game.physics.p2.enable(this, true);
     this.body.enable = true;
-    this.body.setCircle(15, 0, 20);
-    this.body.bounce.set(1);
-    this.body.collideWorldBounds = true;
-    this.body.drag.setTo(100, 100);
+    this.body.addCapsule(90, 40, 20);
+    this.body.fixedRotation = true
+    this.body.angle = 90
 
     this.scale.set(3, 3);
     this.settings = Config.playerInput[`player${playerNumber}`];
@@ -43,9 +42,10 @@ export default class Slug extends Sprite {
     this.currentMovementSpeed = 0;
     this.movementSpeedStep = 0.05;
     this.maxMovementSpeed = 3;
-
+    this.body.debug = true
     this.isMoving = false;
     this.createSlug();
+    this.body.onBeginContact.add(this.onContact, this)
   }
 
   createSlug() {
@@ -55,17 +55,18 @@ export default class Slug extends Sprite {
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
-  onCollideSlug(entity1, entity2) {
-    const index = this.collidingWith.indexOf(entity2);
-
-    if (index === -1) {
-      this.collidingWith.push(entity2);
-    } else {
-      console.log('already collided');
-      return;
+  onContact(body) {
+    switch(body.sprite.tag) {
+      case 'slug':
+        this.onCollideSlug(this, body.sprite);
+        break;
+      case 'shell':
+        this.onCollideShell(this, body.sprite);
+        break;
     }
-    this.setVelocity(entity1, entity2, 200);
+  }
 
+  onCollideSlug(entity1, entity2) {
     this.removeHealth(entity1, entity2, 1);
   }
 
@@ -78,13 +79,14 @@ export default class Slug extends Sprite {
   }
 
   setVelocity(entity1, entity2, magnitude) {
-    console.log("set velocity")
+    return;
     const point = new Point();
     const difference = Point.subtract(entity1.position, entity2.position, point).normalize();
     this.body.velocity.setTo(this.body.velocity.x + difference.x * magnitude, this.body.velocity.y + difference.y * magnitude);
   }
 
   onCollideShell(entity1, entity2) {
+    if (!entity2.isPickable) return;
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
     GameManager.instance.pickUpShell(this.playerNumber);
@@ -101,7 +103,7 @@ export default class Slug extends Sprite {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
 
-      this.setVelocity(entity1, entity2, 1000);
+      this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
         this.shell = null;
@@ -138,6 +140,8 @@ export default class Slug extends Sprite {
 
     this.x += this.currentDirection.x;
     this.y += this.currentDirection.y;
+    this.body.moveRight(this.currentDirection.x * 60);
+    this.body.moveDown(this.currentDirection.y * 60);
     this.doAnimation();
   }
 
@@ -149,7 +153,8 @@ export default class Slug extends Sprite {
     }
 
     const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 180;
-    this.angle = newAngle+90;
+    this.angle = newAngle + 90;
+    this.body.angle = this.angle - 90;
   }
 
   doAnimation() {
