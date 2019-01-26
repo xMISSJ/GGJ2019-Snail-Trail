@@ -1,20 +1,20 @@
 import {Group} from 'phaser';
 import SignalManager from '../services/signalManager';
+import Singleton from "../services/singleton";
 
-export default class CollisionManager extends Group {
+export default class CollisionManager extends Singleton {
   constructor() {
     super(game);
 
     this.slugs = [];
     this.shell = null;
     this.walls = [];
+    this.trails = [];
+
     this.wallsP2Group = game.physics.p2.createCollisionGroup();
     this.slugsP2Group = game.physics.p2.createCollisionGroup();
     this.shellP2Group = game.physics.p2.createCollisionGroup();
-    this.worldP2Group = game.physics.p2.createCollisionGroup();
-    SignalManager.instance.add('addSlug', this.addSlug, this);
-    SignalManager.instance.add('addWall', this.addShell, this);
-    SignalManager.instance.add('addShell', this.addShell, this);
+    this.trailsP2Group = game.physics.p2.createCollisionGroup();
   }
 
   /* -----------------------------
@@ -22,20 +22,24 @@ export default class CollisionManager extends Group {
    ----------------------------- */
   addSlug(entity) {
     this.slugs.push(entity);
-
     this.setPhysicsSlugs(entity);
   }
 
   addShell(entity) {
     this.shell = entity;
-
     this.setPhysicsShell(entity)
   }
 
   addWall(entity) {
     this.walls.push(entity);
-console.log("add wall")
     this.setPhysicsWall(entity)
+  }
+
+  addTrail(entity) {
+    console.log(entity)
+    this.trails.push(entity);
+
+    this.setPhysicsTrail(entity);
   }
 
   removeShell(entity) {
@@ -65,6 +69,12 @@ console.log("add wall")
 
   setPhysicsWall(entity) {
     entity.body.setCollisionGroup(this.wallsP2Group);
+    entity.body.collides(this.slugsP2Group);
+  }
+
+  setPhysicsTrail(entity) {
+    entity.body.setCollisionGroup(this.trailsP2Group);
+    entity.body.collides(this.slugsP2Group);
   }
 
   render() {

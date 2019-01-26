@@ -58,7 +58,7 @@ export default class extends State {
         GameManager.instance.startGame();
       });
     }
-    this.collisionManager = new CollisionManager();
+    // this.collisionManager = new CollisionManager();
     this.buildWalls();
     this.buildShell();
     this.buildSlugs();

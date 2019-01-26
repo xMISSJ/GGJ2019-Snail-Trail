@@ -5,6 +5,7 @@ import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
+import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
@@ -12,7 +13,7 @@ export default class Slug extends Sprite {
 
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = this.game.cache.getJSON('characterSettings');
-    console.log(this.characterStats);
+
     Object.freeze(this.state);
     this.tag = 'slug';
     this.maxHP = 3;
@@ -27,7 +28,7 @@ export default class Slug extends Sprite {
     this.playerNumber = playerNumber;
 
     game.physics.p2.enable(this, true);
-    this.body.enable = true;
+    // this.body.enable = true;
     this.body.clearShapes();
     this.body.addCapsule(40, 20, 10, 0, 0);
     this.body.fixedRotation = true;
@@ -67,7 +68,8 @@ export default class Slug extends Sprite {
 
   createSlug() {
     this.smoothed = false;
-    SignalManager.instance.dispatch('addSlug', this);
+    // SignalManager.instance.dispatch('addSlug', this);
+    CollisionManager.instance.addSlug(this);
     this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);

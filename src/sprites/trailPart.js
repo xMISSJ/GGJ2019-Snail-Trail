@@ -1,4 +1,5 @@
 import Sprite from '../services/sprite';
+import CollisionManager from "./collisionManager";
 
 export default class extends Sprite {
   constructor(x, y) {
@@ -15,7 +16,15 @@ export default class extends Sprite {
     this.pivot.y = -this.width;
 
     this.randomAngleOffset = 65;
+console.log("create trail part")
+    game.physics.p2.enable(this, true);
+    this.body.data.sensor = true
+    this.body.enable = true;
+    this.circleShape = this.body.setCircle(40, 0, 0);
 
+    this.circleShape.sensor = true
+
+    CollisionManager.instance.addTrail(this);
 
   }
 
