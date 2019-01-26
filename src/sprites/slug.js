@@ -7,10 +7,9 @@ import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position, asset, color) {
-    super({ asset, x: position[0], y: position[1] });
-
-    this.moveAsset = asset;
+  constructor(playerNumber, position, colors) {
+    super({ asset: `${colors.color}Slug`, x: position[0], y: position[1] });
+    this.color = colors.color;
 
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = game.cache.getJSON('characterSettings');
@@ -25,7 +24,7 @@ export default class Slug extends Sprite {
 
     this.trailSpeed = 1;
     this.canPickUp = true;
-    this.currentState = this.states.SLUG
+    this.currentState = this.states.SLUG;
     // this.switchState(this.states.SLUG);
     this.characterStats = game.cache.getJSON('characterSettings');
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -67,7 +66,7 @@ export default class Slug extends Sprite {
     this.body.onEndContact.add(this.onEndContact, this);
     this.trailParts = [];
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
-      const trailPart = new TrailPart(10, 50, this.playerNumber, color);
+      const trailPart = new TrailPart(10, 50, this.playerNumber, colors.tint);
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
@@ -84,9 +83,9 @@ export default class Slug extends Sprite {
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     this.hittedSnail = this.animations.add('hittedSnail', [0, 1, 2], 10, false);
     this.hittedSnail.onComplete.add(() => {
-      console.log("test")
-      this.doAnimation()
-    })
+      this.doAnimation();
+    });
+    console.log(this.hitted);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
     this.doAnimation();
   }
@@ -195,7 +194,7 @@ export default class Slug extends Sprite {
 
   update() {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
-      //this.removeHealth(null, null, game.time.elapsed / 1000);
+      // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -272,13 +271,12 @@ export default class Slug extends Sprite {
   }
 
   doAnimation() {
-
     if (true) {
       if (this.isSlug) {
-        this.loadTexture(`${this.moveAsset}`);
+        this.loadTexture(`${this.color}Slug`);
         this.play('movingSlug');
       } else if (this.isSnail) {
-        this.loadTexture('snail');
+        this.loadTexture(`${this.color}Snail`);
         this.play('movingSnail');
       }
     } else {
@@ -288,13 +286,12 @@ export default class Slug extends Sprite {
 
   doHitAnimation() {
     if (this.isSlug) {
-      this.loadTexture(`${this.moveAsset}Hit`);
+      this.loadTexture(`${this.color}SlugHit`);
       this.play('hittedSlug');
     } else if (this.isSnail) {
-      this.loadTexture('snailHit');
+      this.loadTexture(`snailHit`);
       this.play('hittedSnail');
     }
-
   }
 
   moveUp() {
@@ -342,7 +339,6 @@ export default class Slug extends Sprite {
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = this.maxHP;
-    this.loadTexture(this.moveAsset);
     this.scale.set(1, 1);
     this.collideWithTrail = 0;
     this.trailSpeed = 1;
@@ -353,12 +349,12 @@ export default class Slug extends Sprite {
     setTimeout(() => {
       this.doAnimation();
       this.canPickUp = true;
-    }, 3000)
+    }, 3000);
   }
 
   switchToSnail() {
     // TODO for testing purposes
-    this.loadTexture('snail');
+    // this.loadTexture('snail');
     this.doAnimation();
     this.scale.set(1.7, 1.7);
   }
