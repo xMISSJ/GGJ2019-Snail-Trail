@@ -30,6 +30,14 @@ export default class characterSelect extends State {
 
     this.background = game.add.sprite(0, 0, 'selection');
     this.background.scale.setTo(4);
+
+    this.topBackground = game.add.sprite(0, 0, 'testSheet');
+    this.topBackground.animations.add('movement', [0, 1, 2, 3], 10, true);
+
+    if (this.topBackground) {
+      this.topBackground.animations.play('movement');
+      this.topBackground.scale.set(4);
+    }
   }
 
   update() {
