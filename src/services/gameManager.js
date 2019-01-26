@@ -121,7 +121,6 @@ export default class GameManager extends Singleton {
       stroke: '#000000',
       strokeThickness: 10,
     });
-    game.add.existing(this.countDown);
     this.objectiveText = new Text({
       text: 'Hold the shell for 30 seconds!',
       position: new Phaser.Point(game.width / 2, game.height / 2 + 100),
@@ -132,6 +131,8 @@ export default class GameManager extends Singleton {
       strokeThickness: 10,
     });
     game.add.existing(this.objectiveText);
+    game.add.existing(this.countDown);
+    game.add.tween(this.countDown.scale).to({ x: 2, y: 2 }, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
     this.countDown.start(() => {
       this.currentState = this.states.game;
       this.countDown.destroy();
