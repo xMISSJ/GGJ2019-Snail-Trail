@@ -54,12 +54,15 @@ export default class Slug extends Sprite {
     this.createSlug();
 
     this.trailParts = [];
-    this.maxTrailParts = 20;
+    this.maxTrailParts = 50;
     for (let i = 0; i < this.maxTrailParts; i += 1) {
-      this.trailParts.push(new TrailPart(0,0));
+      var trailPart = new TrailPart(10,50)
+      this.trailParts.push(trailPart);
+      game.add.existing(trailPart);
     }
-    this.trailCooldown = 0.5;
+    this.trailCooldown = 0.095;
     this.trailCurrentTime = 0;
+    this.trailToSpawn = 0;
   }
 
   createSlug() {
@@ -249,11 +252,16 @@ export default class Slug extends Sprite {
   }
 
   handleTrailSpawn() {
+    for (let i = 0; i < this.maxTrailParts; i += 1) {
+      this.trailParts[i].update();
+    }
     this.trailCurrentTime -= game.time.elapsed/1000;
 
-    if(this.trailCurrentTime < 0) {
+    if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.trailCooldown;
-      console.log('spawn trail');
+      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
+      this.trailToSpawn++;
+      if(this.trailToSpawn >= this.maxTrailParts - 1) this.trailToSpawn = 0;
     }
   }
 }
