@@ -257,7 +257,7 @@ export default class Slug extends Sprite {
 
   switchToSnail() {
     // TODO for testing purposes
-    this.loadTexture('snailTemp');
+    this.loadTexture('snail');
     this.scale.set(1.7, 1.7);
   }
 
