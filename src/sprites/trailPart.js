@@ -26,6 +26,7 @@ export default class extends Sprite {
     this.visible = false;
 
     this.circleShape.sensor = true;
+    this.body.debug = false;
 
     CollisionManager.instance.addTrail(this);
   }

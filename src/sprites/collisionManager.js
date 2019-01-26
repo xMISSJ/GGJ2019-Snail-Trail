@@ -75,10 +75,4 @@ export default class CollisionManager extends Singleton {
     entity.body.setCollisionGroup(this.trailsP2Group);
     entity.body.collides(this.slugsP2Group);
   }
-
-  render() {
-    if (this.shell && this.shell.visible) {
-      game.debug.body(this.shell);
-    }
-  }
 }

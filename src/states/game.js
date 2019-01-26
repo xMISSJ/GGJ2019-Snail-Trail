@@ -54,6 +54,7 @@ export default class extends State {
     if (GameManager.instance.currentState !== GameManager.instance.states.game) {
       return;
     }
+    GameManager.instance.update();
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
     }
@@ -95,10 +96,5 @@ export default class extends State {
   buildShell() {
     const shell = new Shell([game.width / 2, game.height / 2]);
     game.add.existing(shell);
-  }
-
-  render() {
-    //GameManager.instance.update();
-    // this.collisionManager.render();
   }
 }
