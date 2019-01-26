@@ -13,7 +13,7 @@ export default class Slug extends Sprite {
     this.states = { SLUG: 0, SNAIL: 1 };
     Object.freeze(this.state);
     this.tag = "slug";
-    this.maxHP = 3;
+    this.maxHP = 30;
 
     this.switchState(this.states.SLUG);
     this.currentHP = this.maxHP;
@@ -41,13 +41,13 @@ export default class Slug extends Sprite {
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
 
-    this.rotationSpeed = 1.5;
+    this.rotationSpeed = 2;
     this.currentMovementSpeed = 0;
     this.movementSpeedStep = 0.05;
     this.maxMovementSpeed = 3;
     this.body.debug = true
-    this.boostSpeed = 5;
-    this.speedDecrease = 0.12;
+    this.boostSpeed = 16;
+    this.speedDecrease = 0.5;
 
     this.isMoving = false;
 
@@ -88,7 +88,9 @@ export default class Slug extends Sprite {
   }
 
   onCollideSlug(entity1, entity2) {
-    this.removeHealth(entity1, entity2, 1);
+    if(this.isBoosting) {
+      this.removeHealth(entity1, entity2, 10);
+    }
   }
 
   checkIfNotColliding(entity) {
@@ -174,7 +176,9 @@ export default class Slug extends Sprite {
     this.body.moveRight(this.currentDirection.x * 60);
     this.body.moveDown(this.currentDirection.y * 60);
     this.doAnimation();
-    this.handleTrailSpawn();
+    if(this.isBoosting) {
+      this.handleTrailSpawn();
+    }
   }
 
   rotate() {
@@ -257,10 +261,14 @@ export default class Slug extends Sprite {
   }
 
   shoot() {
-    if (this.canBoost) {
-      this.canBoost = false;
-      this.isBoosting = true;
-      this.currentMovementSpeed += this.boostSpeed;
+    if(this.currentState === this.states.SLUG) {
+      if (this.canBoost) {
+        this.canBoost = false;
+        this.isBoosting = true;
+        this.currentMovementSpeed += this.boostSpeed;
+      }
+    } else if (this.currentState === this.states.SNAIL) {
+      // TODO add snail ability
     }
   }
 
