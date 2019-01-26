@@ -67,7 +67,7 @@ export default class characterSelect extends State {
               break;
             case 3:
               console.log('hoi ik ben blauw');
-              this.screen = game.add.sprite(900, 220, 'slugB');
+              this.screen = game.add.sprite(982, 220, 'slugB');
               this.screen.scale.set(4);
               this.screens.push(this.screen);
               game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
