@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import Text from '../services/text';
 
 export default class CountDownText extends Text {
-  constructor({ startValue, position, fontSize, anchor, color }) {
-    super({ text: startValue, position, fontSize, anchor, color });
+  constructor({ startValue, position, fontSize, anchor, color}) {
+    super({ text: startValue, position, fontSize, anchor, color});
     this.startValue = startValue;
     this.timer = game.time.create(false);
   }
