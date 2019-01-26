@@ -112,6 +112,7 @@ export default class extends State {
       return;
     }
 
+    console.log(this._soundPath + sound.dir + sound.file);
     this.load.audio(sound.key, this._soundPath + sound.dir + sound.file);
     SoundManager.instance.addSound(sound.key, sound.loop, sound.allowMultiple);
   }

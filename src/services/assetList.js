@@ -66,6 +66,7 @@ export default class AssetList extends Singleton {
 
     this._soundList = [
       // { key: 'rq', dir: 'op', file: 'rq', preload: 'op'},
+      { key: 'guitar', dir: '', file: 'guitar.wav' },
     ];
 
     this._soundPath = './assets/sounds/';
