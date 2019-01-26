@@ -27,6 +27,9 @@ export default class characterSelect extends State {
       const settings = Config.playerInput[`player${i}`];
       game.controllers.push(new Controller(game, null, game.input.gamepad[`pad${i}`], settings));
     }
+
+    this.background = game.add.sprite(0, 0, 'selection');
+    this.background.scale.setTo(4);
   }
 
   update() {
@@ -41,25 +44,31 @@ export default class characterSelect extends State {
           this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
           console.log('adding controller: ', i + 1);
+          console.log(game.totalPlayers - 1);
 
-          switch (game.totalPlayers-1) {
+          switch (game.totalPlayers - 1) {
             case 0:
-              this.screen = game.add.sprite(300, 120, 'menuCard');
+              this.screen = game.add.sprite(93, 220, 'slugG');
+              this.screen.scale.set(4);
               this.screens.push(this.screen);
               game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
               break;
             case 1:
-              this.screen = game.add.sprite(700, 120, 'menuCard');
+              this.screen = game.add.sprite(390, 220, 'slugM');
+              this.screen.scale.set(4);
               this.screens.push(this.screen);
               game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
               break;
             case 2:
-              this.screen = game.add.sprite(300, 400, 'menuCard');
+              this.screen = game.add.sprite(685, 220, 'slugO');
+              this.screen.scale.set(4);
               this.screens.push(this.screen);
               game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
               break;
             case 3:
-              this.screen = game.add.sprite(700, 400, 'menuCard');
+              console.log('hoi ik ben blauw');
+              this.screen = game.add.sprite(900, 220, 'slugB');
+              this.screen.scale.set(4);
               this.screens.push(this.screen);
               game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
               break;

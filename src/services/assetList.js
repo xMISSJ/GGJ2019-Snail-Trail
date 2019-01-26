@@ -38,6 +38,7 @@ export default class AssetList extends Singleton {
       // Background
       { key: 'background', dir: '', png: 'bg.png' },
       { key: 'loaderBg', dir: '', png: 'loader-bg.png' },
+      { key: 'selection', dir: '', png: 'selection-bg.png' },
 
       // User Interface
       { key: 'loaderBar', dir: '', png: 'loader-bar.png' },
@@ -50,6 +51,11 @@ export default class AssetList extends Singleton {
       { key: 'trailPart2', dir: 'trailParts/', png: 'patch02.png' },
       { key: 'trailPart3', dir: 'trailParts/', png: 'patch03.png' },
       { key: 'trailPart4', dir: 'trailParts/', png: 'patch04.png' },
+
+      { key: 'slugB', dir: '', png: 'icon-slug-blue.png' },
+      { key: 'slugM', dir: '', png: 'icon-slug-magenta.png' },
+      { key: 'slugO', dir: '', png: 'icon-slug-orange.png' },
+      { key: 'slugG', dir: '', png: 'icon-slug-green.png' },
     ];
 
     this._soundList = [
