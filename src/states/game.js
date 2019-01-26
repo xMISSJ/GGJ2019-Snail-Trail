@@ -82,10 +82,10 @@ export default class extends State {
     //   game.add.existing(slug);
     // }
 
-    const slug1 = new Slug(1, [200, 200], 'slugGreen');
-    const slug2 = new Slug(2, [1000, 200], 'slugMagenta');
-    const slug3 = new Slug(3, [200, 500], 'slugOrange');
-    const slug4 = new Slug(4, [1000, 500], 'slugBlue');
+    const slug1 = new Slug(1, [200, 200], 'slugGreen', 0x69e037);
+    const slug2 = new Slug(2, [1000, 200], 'slugMagenta', 0xd71fa6);
+    const slug3 = new Slug(3, [200, 500], 'slugOrange', 0xff8809);
+    const slug4 = new Slug(4, [1000, 500], 'slugBlue', 0xff8809);
 
     game.add.existing(slug1);
     game.add.existing(slug2);
