@@ -1,6 +1,7 @@
 import { Group, Point, Phaser } from 'phaser';
 import Image from '../services/image';
 import GameManager from '../services/gameManager';
+import SoundEffects from '../services/soundEffects';
 
 export default class Overlay extends Group {
   constructor() {
@@ -53,37 +54,48 @@ export default class Overlay extends Group {
   }
 
   createTweens() {
-    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 3000, null, false);
+    this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 2200, null, false);
+    this.hypeBarTween.frameBased = true;
     this.hypeBarTween.onComplete.add(() => {
       GameManager.instance.togglePause();
+      console.log('end hyper time: ', game.time.totalElapsedSeconds());
       this.visible = false;
     });
 
-    this.buffslugTweenIn = game.make.tween(this.buffslug).to({ x: game.width - 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
-    this.buffslugTweenOut = game.make.tween(this.buffslug).to({ x: game.width + 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
+    this.buffslugTweenIn = game.make.tween(this.buffslug).to({ x: game.width - 200 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 250, 0, false);
+    this.buffslugTweenOut = game.make.tween(this.buffslug).to({ x: game.width + 200 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 1250, 0, false);
     this.buffslugTweenIn.onComplete.add(() => {
       this.buffslugTweenOut.start();
     });
+    this.buffslugTweenIn.frameBased = true;
+    this.buffslugTweenOut.frameBased = true;
 
-    this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
-    this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
+    this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 250, 0, false);
+    this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 1250, 0, false);
     this.nameTweenIn.onComplete.add(() => {
+      SoundEffects.instance.onYay();
       this.nameTweenOut.start();
     });
+    this.nameTweenIn.frameBased = true;
+    this.nameTweenOut.frameBased = true;
 
-    this.vsTweenIn = game.make.tween(this.vs.scale).to({ x: 1, y: 1 }, 500, null, false);
-    this.vsTweenOut = game.make.tween(this.vs.scale).to({ x: 0, y: 0 }, 500, Phaser.Easing.Cubic.Out, false, 1500);
+    this.vsTweenIn = game.make.tween(this.vs.scale).to({ x: 1, y: 1 }, 400, null, false);
+    this.vsTweenOut = game.make.tween(this.vs.scale).to({ x: 0, y: 0 }, 250, Phaser.Easing.Cubic.Out, false, 1000);
     this.vsTweenIn.onComplete.add(() => {
       game.camera.shake(0.01, 100);
 
       this.vsTweenOut.start();
     });
+    this.vsTweenIn.frameBased = true;
+    this.vsTweenOut.frameBased = true;
 
-    this.everyoneHypeTweenIn = game.make.tween(this.everyoneHype).to({ x: 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
-    this.everyoneHypeTweenOut = game.make.tween(this.everyoneHype).to({ x: -500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
+    this.everyoneHypeTweenIn = game.make.tween(this.everyoneHype).to({ x: 200 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 250, 0, false);
+    this.everyoneHypeTweenOut = game.make.tween(this.everyoneHype).to({ x: -500 }, 275, Phaser.Easing.Sinusoidal.InOut, false, 1250, 0, false);
     this.everyoneHypeTweenIn.onComplete.add(() => {
       this.everyoneHypeTweenOut.start();
     });
+    this.everyoneHypeTweenIn.frameBased = true;
+    this.everyoneHypeTweenOut.frameBased = true;
   }
 
   update() {
@@ -98,12 +110,15 @@ export default class Overlay extends Group {
       this.visible = true;
       this.hypeBar.x = 3597 / 2 + game.width;
       this.hypeBarTween.start();
+      console.log(this.hypeBarTween);
+      console.log('before hyper time: ', game.time.totalElapsedSeconds());
 
       this.buffslug.x = game.width + 200;
       this.buffslugTweenIn.start();
 
       this.name.x = game.width + 500;
       this.nameTweenIn.start();
+      SoundEffects.instance.onSwoosh();
       this.vs.visible = false;
       game.time.events.add(500, this.startVSAnimation, this);
 
@@ -114,7 +129,7 @@ export default class Overlay extends Group {
 
   startVSAnimation() {
     this.vs.visible = true;
-    this.vs.scale.setTo(5, 5);
+    this.vs.scale.setTo(9, 9);
     this.vsTweenIn.start();
   }
 

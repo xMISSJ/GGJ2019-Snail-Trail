@@ -15,6 +15,7 @@ export default class Slug extends Sprite {
     this.color = colors.color;
 
     this.name = colors.name;
+    console.log('name: ', this.name);
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = game.cache.getJSON('characterSettings');
 
@@ -177,7 +178,6 @@ export default class Slug extends Sprite {
     if (!entity1.canPickUp) return;
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
-    BackgroundMusic.instance.playRandomVoice();
     GameManager.instance.pickUpShell(this.playerNumber);
     game.overlay.start(this.name)
     const newExplosion = new Explosion('MEDIUM', this.position);
@@ -391,6 +391,7 @@ export default class Slug extends Sprite {
     // this.loadTexture('snail');
     this.doAnimation();
     this.scale.set(1.7, 1.7);
+    SoundEffects.instance.setYayName(this.name);
   }
 
   shoot() {
@@ -419,6 +420,7 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime -= game.time.elapsed / 1000;
 
+    if(this.currentState === this.states.SNAIL) return;
     var lifeTImeRatio = this.isBoosting ? 1 : 2;
     var scaleChange = this.isBoosting ? 1 : 0.5;
     if (!this.isMoving) return;

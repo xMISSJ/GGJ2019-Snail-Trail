@@ -1,10 +1,10 @@
 {
   "SLUG": {
-    "rotationSpeed": 2,
+    "rotationSpeed": 4,
     "currentMovementSpeed": 0,
     "movementSpeedStep": 0.05,
-    "maxMovementSpeed": 2,
-    "boostSpeed": 16,
+    "maxMovementSpeed": 2.3,
+    "boostSpeed": 13,
     "speedDecrease": 0.5,
     "maxTrailParts": 150,
     "dashCooldown": 1,
@@ -12,7 +12,7 @@
     "forceDrag": 0.95
   },
   "SNAIL": {
-    "rotationSpeed": 4,
+    "rotationSpeed": 4.5,
     "currentMovementSpeed": 0,
     "movementSpeedStep": 0.08,
     "maxMovementSpeed": 4,
