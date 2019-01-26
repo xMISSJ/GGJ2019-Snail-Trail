@@ -42,6 +42,9 @@ export default class GameManager extends Singleton {
 
   sortLeaderboard(playerID) {
     this.currentPlacement = this.leaderboard.findIndex((element) => element === playerID);
+    if (this.currentPlacement === 0) {
+      return;
+    }
     while (this.playerScores[this.leaderboard[this.currentPlacement] - 1] >= this.playerScores[this.leaderboard[this.currentPlacement - 1] - 1]) {
       SignalManager.instance.dispatch('switchLeaderboard', this.leaderboard[this.currentPlacement - 1], this.leaderboard[this.currentPlacement])
       const tempID = this.leaderboard[this.currentPlacement - 1];
@@ -102,7 +105,6 @@ export default class GameManager extends Singleton {
   }
 
   update() {
-
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
     }

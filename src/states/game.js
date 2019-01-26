@@ -88,11 +88,8 @@ export default class extends State {
     game.add.existing(shell);
   }
 
-  update() {
-    GameManager.instance.update();
-  }
-
   render() {
+    GameManager.instance.update();
     //this.collisionManager.render();
   }
 }
