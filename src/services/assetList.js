@@ -74,6 +74,9 @@ export default class AssetList extends Singleton {
       { key: 'reageaDrums', dir: '', file: 'reageaDrums.wav' },
       { key: '85chiptune', dir: '', file: '85chiptune.wav' },
       { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
+      { key: 'techLoop', dir: '', file: 'techLoop.wav' },
+
+      { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav' }
     ];
 
     this._soundPath = './assets/sounds/';

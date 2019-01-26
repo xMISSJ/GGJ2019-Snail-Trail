@@ -7,6 +7,7 @@ import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 import Explosion from './explosion';
 import BackgroundMusic from '../services/backgroundMusic';
+import SoundEffects from '../services/soundEffects';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position, colors) {
@@ -150,6 +151,7 @@ export default class Slug extends Sprite {
     if (entity2.isBoosting) {
       if (!this.isSnail) return;
       this.removeHealth(entity1, entity2, 10);
+      SoundEffects.instance.onShellHit();
       entity2.isBoosting = false;
       entity2.currentDirection.normalize();
     }
@@ -173,11 +175,11 @@ export default class Slug extends Sprite {
   onCollideShell(entity1, entity2) {
     if (!entity2.isPickable) return;
     if (!entity1.canPickUp) return;
-    entity2.onCollide();
     this.switchState(this.states.SNAIL);
     BackgroundMusic.instance.playRandomVoice();
     GameManager.instance.pickUpShell(this.playerNumber);
     const newExplosion = new Explosion('MEDIUM', this.position);
+    SoundEffects.instance.onShellHit();
     newExplosion.start([entity1]);
     game.world.bringToTop(this);
     this.shell = entity2;

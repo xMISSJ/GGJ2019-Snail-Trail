@@ -36,7 +36,7 @@ export default class BackgroundMusic extends Singleton {
   }
 
   setIngameSound() {
-    this.chiptune = SoundManager.instance.getSound('85chiptune')
+    this.techLoop = SoundManager.instance.getSound('techLoop')
     this.voiceSound = SoundManager.instance.getSound('85voiceSound');
   }
 
@@ -57,7 +57,7 @@ export default class BackgroundMusic extends Singleton {
   }
 
   playInGameSound() {
-    this.chiptune.play('',0,1, true);
+    this.techLoop.play('',0,1, true);
     this.voiceSound.play('',0,0, true);
   }
 
