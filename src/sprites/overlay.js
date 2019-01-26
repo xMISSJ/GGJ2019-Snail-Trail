@@ -54,8 +54,10 @@ export default class Overlay extends Group {
 
   createTweens() {
     this.hypeBarTween = game.make.tween(this.hypeBar).to({ x: -3597 / 2 }, 3000, null, false);
+    this.hypeBarTween.frameBased = true;
     this.hypeBarTween.onComplete.add(() => {
       GameManager.instance.togglePause();
+      console.log('end hyper time: ', game.time.totalElapsedSeconds());
       this.visible = false;
     });
 
@@ -64,12 +66,16 @@ export default class Overlay extends Group {
     this.buffslugTweenIn.onComplete.add(() => {
       this.buffslugTweenOut.start();
     });
+    this.buffslugTweenIn.frameBased = true;
+    this.buffslugTweenOut.frameBased = true;
 
     this.nameTweenIn = game.make.tween(this.name).to({ x: game.width - 300 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
     this.nameTweenOut = game.make.tween(this.name).to({ x: game.width + 500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
     this.nameTweenIn.onComplete.add(() => {
       this.nameTweenOut.start();
     });
+    this.nameTweenIn.frameBased = true;
+    this.nameTweenOut.frameBased = true;
 
     this.vsTweenIn = game.make.tween(this.vs.scale).to({ x: 1, y: 1 }, 500, null, false);
     this.vsTweenOut = game.make.tween(this.vs.scale).to({ x: 0, y: 0 }, 500, Phaser.Easing.Cubic.Out, false, 1500);
@@ -78,12 +84,16 @@ export default class Overlay extends Group {
 
       this.vsTweenOut.start();
     });
+    this.vsTweenIn.frameBased = true;
+    this.vsTweenOut.frameBased = true;
 
     this.everyoneHypeTweenIn = game.make.tween(this.everyoneHype).to({ x: 200 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 500, 0, false);
     this.everyoneHypeTweenOut = game.make.tween(this.everyoneHype).to({ x: -500 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1500, 0, false);
     this.everyoneHypeTweenIn.onComplete.add(() => {
       this.everyoneHypeTweenOut.start();
     });
+    this.everyoneHypeTweenIn.frameBased = true;
+    this.everyoneHypeTweenOut.frameBased = true;
   }
 
   update() {
@@ -98,6 +108,8 @@ export default class Overlay extends Group {
       this.visible = true;
       this.hypeBar.x = 3597 / 2 + game.width;
       this.hypeBarTween.start();
+      console.log(this.hypeBarTween);
+      console.log('before hyper time: ', game.time.totalElapsedSeconds());
 
       this.buffslug.x = game.width + 200;
       this.buffslugTweenIn.start();
