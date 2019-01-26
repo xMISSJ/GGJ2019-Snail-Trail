@@ -66,6 +66,12 @@ export default class extends State {
     this.leaderboard = new Leaderboard();
   }
 
+  update() {
+    for (let i = 0; i < game.controllers.length; i++) {
+      game.controllers[i].update();
+    }
+  }
+
   buildWalls() {
     const wall1 = new Wall([0, 350], [720, 100]);
     game.add.existing(wall1);
@@ -78,8 +84,9 @@ export default class extends State {
   }
 
   buildSlugs() {
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < game.totalPlayers; i += 1) {
       const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
+      game.controllers[i].setCharacter(slug);
       game.add.existing(slug);
     }
   }

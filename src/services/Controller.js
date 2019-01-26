@@ -33,15 +33,13 @@ export default class Controller {
   }
 
   update() {
-    var stickPoint = new Phaser.Point(this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X),
-      this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y));
-    if (stickPoint.getMagnitude() > this.minimalMove) {
-      this.character.targetDirection.x = stickPoint.x;
-      this.character.targetDirection.y = stickPoint.y;
-    } else {
-      this.character.targetDirection.x = 0;
-      this.character.targetDirection.y = 0;
-    }
+    this.buttonInput = {
+      a: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_A)),
+      b: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_B)),
+      y: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_Y)),
+      x: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_X))
+    };
+
     this.input = {
       left: (this.keys.left.isDown && !this.keys.right.isDown)
                 || (this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) && !this.inputPad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT))
@@ -64,6 +62,19 @@ export default class Controller {
       aimUp: this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y) < -0.005,
       aimDown: this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_RIGHT_Y) > 0.005,
     };
+
+    if(!this.character) return;
+
+    var stickPoint = new Phaser.Point(this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X),
+      this.inputPad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y));
+    if (stickPoint.getMagnitude() > this.minimalMove) {
+      this.character.targetDirection.x = stickPoint.x;
+      this.character.targetDirection.y = stickPoint.y;
+    } else {
+      this.character.targetDirection.x = 0;
+      this.character.targetDirection.y = 0;
+    }
+
     if (this.input.left) {
       if (this.wasHolding.right) {
         this.wasHolding.right = false;
@@ -119,5 +130,10 @@ export default class Controller {
 
   checkOnRelease() {
 
+  }
+
+  setCharacter(character) {
+    this.character = character;
+    console.log(this.character);
   }
 }

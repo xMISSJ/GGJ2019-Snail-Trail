@@ -5,7 +5,8 @@ import Phaser from 'phaser';
 import Facebook from './services/facebook';
 
 import BootState from './states/boot';
-import GameState from './states/game';
+import GameState from './states/game'
+import CharacterSelectState from './states/characterSelect';
 
 import config from './config';
 
@@ -15,7 +16,7 @@ class Game extends Phaser.Game {
 
     this.state.add('Boot', BootState, false);
     this.state.add('Game', GameState, false);
-    this.state.add('characterSelect', GameState, false);
+    this.state.add('characterSelect', CharacterSelectState, false);
 
     this.state.start('Boot');
   }

@@ -1,6 +1,5 @@
 import { Phaser, Point } from 'phaser';
 import Sprite from '../services/sprite';
-import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
@@ -35,9 +34,6 @@ export default class Slug extends Sprite {
     this.body.collideWorldBounds = true;
 
     this.scale.set(1, 1);
-    this.settings = Config.playerInput[`player${playerNumber}`];
-    this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
-    this.controller = new Controller(game, this, this.gamePad, this.settings);
 
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
@@ -131,7 +127,6 @@ export default class Slug extends Sprite {
 
   update() {
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
-    this.controller.update();
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
