@@ -1,5 +1,6 @@
 import Sprite from '../services/sprite';
 import SignalManager from '../services/signalManager';
+import CollisionManager from "./collisionManager";
 
 export default class Wall extends Sprite {
   constructor(position, size) {
@@ -7,6 +8,7 @@ export default class Wall extends Sprite {
 
 
     game.physics.p2.enable(this, true);
+    this.tag = 'wall'
     this.body.enable = true;
     this.body.clearShapes();
     this.body.setRectangle(size[0], size[1], 10, 0, 0);
@@ -16,6 +18,7 @@ export default class Wall extends Sprite {
     this.body.static = true;
     this.body.debug = true;
 
-    SignalManager.instance.dispatch('addWall', this);
+    CollisionManager.instance.addWall(this);
+    // SignalManager.instance.dispatch('addWall', this);
   }
 }

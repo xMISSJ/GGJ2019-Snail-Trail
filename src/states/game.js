@@ -59,7 +59,7 @@ export default class extends State {
         GameManager.instance.startGame();
       });
     }
-    this.collisionManager = new CollisionManager();
+    // this.collisionManager = new CollisionManager();
     this.buildWalls();
     this.buildShell();
     this.buildSlugs();
@@ -84,8 +84,14 @@ export default class extends State {
   }
 
   buildSlugs() {
+    this.slugColors = [
+        'slugGreen',
+        'slugMagenta',
+        'slugOrange',
+        'slugBlue'
+      ];
     for (let i = 0; i < game.totalPlayers; i += 1) {
-      const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
+      const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100], this.slugColors[i]);
       game.controllers[i].setCharacter(slug);
       game.add.existing(slug);
     }

@@ -1,6 +1,7 @@
 import { Group } from 'phaser';
 import Sprite from '../services/sprite';
 import SignalManager from '../services/signalManager';
+import CollisionManager from "./collisionManager";
 
 
 export default class Shell extends Sprite {
@@ -10,7 +11,9 @@ export default class Shell extends Sprite {
     this.states = { PICKABLE: 0, PICKEDUP: 1, SPAWN: 2 };
     Object.freeze(this.state);
     this.tag = "shell";
-    this.switchState(this.states.PICKABLE);
+
+    this.currentState = this.states.PICKABLE;
+    //this.switchState(this.states.PICKABLE);
 
     game.physics.p2.enable(this, true);
     this.body.data.sensor = true
@@ -19,7 +22,8 @@ export default class Shell extends Sprite {
 
     this.circleShape.sensor = true
 
-    SignalManager.instance.dispatch('addShell', this);
+    CollisionManager.instance.addShell(this);
+    // SignalManager.instance.dispatch('addShell', this);
   }
 
   onCollide() {
@@ -70,11 +74,14 @@ export default class Shell extends Sprite {
     // TODO for testing purposes
     this.tint = 0xffffff;
     this.visible = true;
+
+    CollisionManager.instance.addShell(this);
   }
 
   switchToPickUp() {
     // TODO for testing purposes
     this.visible = false;
+    this.body.clearCollision()
   }
 
   switchToSpawn() {

@@ -4,20 +4,33 @@ import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
+import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position) {
-    super({ asset: 'slug', x: position[0], y: position[1] });
+  constructor(playerNumber, position, asset) {
+    super({ asset, x: position[0], y: position[1] });
+
+    this.moveAsset = asset;
 
     this.states = { SLUG: 0, SNAIL: 1 };
+    this.characterStats = this.game.cache.getJSON('characterSettings');
+
+    this.trailStates = { NO_COLLIDE: 0, COLLIDE: 1 };
+    this.currentTrailState = this.trailStates.NO_COLLIDE;
+
     Object.freeze(this.state);
-    this.tag = 'slug';
-    this.maxHP = 3;
+
+    this.tag = "slug";
+    this.maxHP = 30;
+
+    this.trailSpeed = 1;
 
     this.switchState(this.states.SLUG);
     this.characterStats = this.game.cache.getJSON('characterSettings');
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
     this.currentHP = this.maxHP;
+
+    this.collideWithTrail = 0;
 
     this.shell = null;
 
@@ -26,7 +39,7 @@ export default class Slug extends Sprite {
     this.playerNumber = playerNumber;
 
     game.physics.p2.enable(this, true);
-    this.body.enable = true;
+    // this.body.enable = true;
     this.body.clearShapes();
     this.body.addCapsule(40, 20, 10, 0, 0);
     this.body.fixedRotation = true;
@@ -49,11 +62,11 @@ export default class Slug extends Sprite {
     this.currentDashCoolDown = this.currentStats.dashCooldown;
 
     this.createSlug();
-    this.body.onBeginContact.add(this.onContact, this);
-
+    this.body.onBeginContact.add(this.onBeginContact, this);
+    this.body.onEndContact.add(this.onEndContact, this);
     this.trailParts = [];
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
-      const trailPart = new TrailPart(10, 50);
+      const trailPart = new TrailPart(10, 50, this.playerNumber);
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
@@ -63,13 +76,14 @@ export default class Slug extends Sprite {
 
   createSlug() {
     this.smoothed = false;
-    SignalManager.instance.dispatch('addSlug', this);
-    this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
+    // SignalManager.instance.dispatch('addSlug', this);
+    CollisionManager.instance.addSlug(this);
+    this.moving = this.animations.add('movingSlug', [0, 1, 2, 3], 10, true);
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
-  onContact(body) {
+  onBeginContact(body) {
     switch (body.sprite.tag) {
       case 'slug':
         this.onCollideSlug(this, body.sprite);
@@ -78,10 +92,46 @@ export default class Slug extends Sprite {
         this.onCollideShell(this, body.sprite);
         break;
     }
+
+    if (body.sprite.tag.includes('trail') && !body.sprite.tag.includes(this.playerNumber)) {
+      this.onBeginTrail(body.sprite);
+    }
+  }
+
+  onEndContact(body) {
+    switch (body.sprite.tag) {
+      case 'slug':
+        break;
+      case 'shell':
+        break;
+      case 'trail':
+        this.onEndTrail();
+        break;
+    }
+
+    if (body.sprite.tag.includes('trail') && !body.sprite.tag.includes(this.playerNumber)) {
+      this.onEndTrail(body.sprite);
+    }
+  }
+
+  onBeginTrail() {
+    this.collideWithTrail += 1;
+    this.currentTrailState = this.trailStates.COLLIDE;
+    this.trailSpeed = 0.5;
+  }
+
+  onEndTrail() {
+    this.collideWithTrail -= 1;
+    if (this.collideWithTrail === 0) {
+      this.trailSpeed = 1;
+      this.currentTrailState = this.trailStates.NO_COLLIDE;
+    }
   }
 
   onCollideSlug(entity1, entity2) {
-    this.removeHealth(entity1, entity2, 1);
+    if (entity2.isBoosting) {
+      this.removeHealth(entity1, entity2, 10);
+    }
   }
 
   checkIfNotColliding(entity) {
@@ -111,8 +161,9 @@ export default class Slug extends Sprite {
   removeHealth(entity1, entity2, value) {
     if (!this.isSnail) return;
 
+    this.game.camera.shake(0.03, 100);
     this.currentHP -= value;
-
+    console.log(this.currentHP);
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
@@ -126,12 +177,15 @@ export default class Slug extends Sprite {
   }
 
   update() {
+    if (this.currentTrailState === this.trailStates.COLLIDE) {
+      this.removeHealth(null, null, game.time.elapsed / 1000);
+    }
+
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
       if (this.currentDirection.getMagnitude() < 0.2) {
-        console.log('lastDirection', this.lastDirection);
         this.isMoving = true;
         this.currentDirection.x = this.lastDirection.x;
         this.currentDirection.y = this.lastDirection.y;
@@ -150,10 +204,10 @@ export default class Slug extends Sprite {
     }
     this.handleBoosting();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
-    this.x += this.currentDirection.x;
-    this.y += this.currentDirection.y;
-    this.body.moveRight(this.currentDirection.x * 60);
-    this.body.moveDown(this.currentDirection.y * 60);
+    this.x += this.currentDirection.x * this.trailSpeed;
+    this.y += this.currentDirection.y * this.trailSpeed;
+    this.body.moveRight(this.currentDirection.x * 60 * this.trailSpeed);
+    this.body.moveDown(this.currentDirection.y * 60 * this.trailSpeed);
     this.doAnimation();
     this.handleTrailSpawn();
   }
@@ -169,7 +223,7 @@ export default class Slug extends Sprite {
     } else {
       this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.currentStats.maxMovementSpeed);
       if (!this.canBoost) {
-        this.currentDashCoolDown -= game.time.elapsed/1000;
+        this.currentDashCoolDown -= game.time.elapsed / 1000;
         if (this.currentDashCoolDown <= 0) {
           this.canBoost = true;
           this.currentDashCoolDown = this.currentStats.dashCooldown;
@@ -177,6 +231,7 @@ export default class Slug extends Sprite {
       }
     }
   }
+
   rotate() {
     // This part makes sure that the last part of the rotation doesn't over shoot.
     const angle = Math.acos(this.currentDirection.dot(this.targetDirection));
@@ -201,8 +256,11 @@ export default class Slug extends Sprite {
 
   doAnimation() {
     if (this.isMoving) {
-      if (this.states.SLUG) this.play('moving');
-      else if (this.states.SNAIL) this.play('movingSnail');
+      if (this.isSlug) {
+        this.play('movingSlug');
+      } else if (this.isSnail) {
+        this.play('movingSnail');
+      }
     } else {
       // TODO Play idle
     }
@@ -253,7 +311,7 @@ export default class Slug extends Sprite {
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = 3;
-    this.loadTexture('slug');
+    this.loadTexture(this.moveAsset);
     this.scale.set(1, 1);
   }
 
@@ -264,16 +322,19 @@ export default class Slug extends Sprite {
   }
 
   shoot() {
-    if (this.currentState === this.states.SNAIL) return;
-    if (this.canBoost) {
+    if (this.currentState === this.states.SLUG) {
+      if(!this.canBoost) return;
+      this.game.camera.shake(0.005, 50);
       this.canBoost = false;
       this.isBoosting = true;
       this.currentMovementSpeed += this.currentStats.boostSpeed;
+    } else if (this.currentState === this.states.SNAIL) {
+
     }
   }
 
   handleTrailSpawn() {
-    if(!this.isBoosting) return;
+    if (!this.isBoosting) return;
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
       this.trailParts[i].update();
     }
@@ -282,8 +343,9 @@ export default class Slug extends Sprite {
     if (!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.currentStats.trailCooldown;
-      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
+      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber);
       this.trailToSpawn++;
+
       if (this.trailToSpawn >= this.currentStats.maxTrailParts - 1) this.trailToSpawn = 0;
     }
   }
