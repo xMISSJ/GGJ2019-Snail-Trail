@@ -8,6 +8,7 @@ export default class Wall extends Sprite {
 
 
     game.physics.p2.enable(this, true);
+    this.tag = 'wall'
     this.body.enable = true;
     this.body.clearShapes();
     this.body.setRectangle(size[0], size[1], 10, 0, 0);

@@ -36,7 +36,6 @@ export default class CollisionManager extends Singleton {
   }
 
   addTrail(entity) {
-    console.log(entity)
     this.trails.push(entity);
 
     this.setPhysicsTrail(entity);
@@ -56,9 +55,9 @@ export default class CollisionManager extends Singleton {
 
   setPhysicsSlugs(entity) {
     entity.body.setCollisionGroup(this.slugsP2Group);
-    entity.body.collides(this.shellP2Group, entity.onCollideShell, entity);
-    entity.body.collides(this.slugsP2Group, entity.onCollideSlug, entity);
-    entity.body.collides(this.wallsP2Group);
+    // entity.body.collides(this.shellP2Group, entity.onCollideShell, entity);
+    // entity.body.collides(this.slugsP2Group, entity.onCollideSlug, entity);
+    entity.body.collides([this.shellP2Group, this.wallsP2Group, this.slugsP2Group, this.trailsP2Group]);
     entity.body.collideWorldBounds = true;
   }
 
