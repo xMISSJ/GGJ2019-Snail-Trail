@@ -16,7 +16,7 @@ export default class Wall extends Sprite {
     this.body.angle = 90;
     this.body.collideWorldBounds = true;
     this.body.static = true;
-    this.body.debug = true;
+    this.body.debug = false;
 
     CollisionManager.instance.addWall(this);
     // SignalManager.instance.dispatch('addWall', this);

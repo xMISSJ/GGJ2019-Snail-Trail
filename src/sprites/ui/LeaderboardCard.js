@@ -3,31 +3,36 @@ import Sprite from '../../services/sprite';
 import Text from '../../services/text';
 
 export default class LeaderboardCard extends Phaser.Group {
-  constructor(playerID, x, y) {
+  constructor(playerID, asset, x, y) {
     super(game);
     this.playerID = playerID;
     this.x = x;
     this.y = y;
-    this.createCard(x, y);
+    this.createCard(asset);
   }
 
-  createCard(x, y) {
+  createCard(asset) {
     this.background = new Sprite({
-      asset: 'loaderBg',
-      scaleX: 0.7,
+      asset,
       anchorX: 0.5,
       anchorY: 0,
     });
     this.add(this.background);
 
     this.scoreText = new Text({
-      text: this.playerID + ':   0.00',
-      anchor: new Phaser.Point(0.5, 0),
+      text: '0:00',
+      anchor: new Phaser.Point(0.5, 0.5),
+      position: new Phaser.Point(0, this.background.height / 2),
+      color: '#FFFFFF',
+      fontSize: 18,
     });
     this.add(this.scoreText);
+    this.setScore(0.00);
+
+    this.bobTween = game.add.tween(this.scoreText).to({ y: (this.background.height / 2) - 3 }, 50, Phaser.Easing.Default, false).yoyo(true).loop(true);
   }
 
   setScore(score) {
-    this.scoreText.text = this.playerID + ':   ' + score;
+    this.scoreText.text = score.toString().replace('.', ':');
   }
 }

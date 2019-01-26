@@ -9,6 +9,12 @@ export default class Leaderboard extends Phaser.Group {
     this.cards = [];
     this.queue = [];
     this.tweenSpeed = 800;
+    this.cardAssets = [
+      'leaderboardCardGreen',
+      'leaderboardCardMagenta',
+      'leaderboardCardOrange',
+      'leaderboardCardBlue',
+    ];
     this.createLeaderboard();
     SignalManager.instance.add('switchLeaderboard', (id1, id2) => {
       this.addToQueue(id1, id2);
@@ -16,23 +22,32 @@ export default class Leaderboard extends Phaser.Group {
     SignalManager.instance.add('gameReset', () => {
       this.resetLeaderboard();
     });
+    SignalManager.instance.add('switchShell', (shellHolder) => {
+      this.tweenShellHolderCard(shellHolder);
+    });
   }
 
   createLeaderboard() {
     for (let i = 0; i < 4; i += 1) {
-      this.cards[i] = new LeaderboardCard(i + 1, 350 + (i * 250), 20);
+      this.cards[i] = new LeaderboardCard(i + 1, this.cardAssets[i], 350 + (i * 250), 0);
       if (i >= game.totalPlayers) {
         this.cards[i].visible = false;
       }
     }
   }
 
-  addToQueue(id1, id2) {
-    // console.log(id1, id2);
-    // const tempPos = this.cards[id1 - 1].x;
-    // this.cards[id1 - 1].x = this.cards[id2 - 1].x;
-    // this.cards[id2 - 1].x = tempPos;
+  tweenShellHolderCard(holder) {
+    if (this.oldHolder) {
+      this.cards[this.oldHolder - 1].bobTween.stop();
+    }
+    if (holder === 0) {
+      return;
+    }
+    this.cards[holder - 1].bobTween.start();
+    this.oldHolder = holder;
+  }
 
+  addToQueue(id1, id2) {
     this.queue.push([id1 - 1, id2 - 1]);
     if (this.queue.length === 1) {
       this.tweenCards(id1 - 1, id2 - 1);
@@ -51,16 +66,15 @@ export default class Leaderboard extends Phaser.Group {
         if (this.queue.length > 0) {
           this.tweenCards(this.queue[0][0], this.queue[0][1]);
         }
-    });
+      });
   }
 
   update() {
-    for (let i = 0; i < 4; i += 1) {
-      if (GameManager.instance.getPlayerScore(i + 1) === undefined) {
-        return;
-      }
-      this.cards[i].setScore(GameManager.instance.getPlayerScore(i + 1).toFixed(2));
+    const shellHolder = GameManager.instance.shellHolder;
+    if (shellHolder === 0) {
+      return;
     }
+    this.cards[shellHolder - 1].setScore(GameManager.instance.getPlayerScore(shellHolder).toFixed(2));
   }
 
   resetLeaderboard() {

@@ -51,15 +51,23 @@ export default class extends State {
     game.load.spritesheet('snailHit', 'assets/sprites/snail-hit-spritesheet.png', 61, 74, 3);
     game.load.spritesheet('topTriangles', 'assets/sprites/top-triangle-spritesheet.png', 320, 28, 4);
 
-    game.load.spritesheet('slugGreen', 'assets/sprites/green_move.png', 33, 74, 4);
-    game.load.spritesheet('slugMagenta', 'assets/sprites/magenta_move.png', 33, 74, 4);
-    game.load.spritesheet('slugOrange', 'assets/sprites/orange_move.png', 33, 74, 4);
-    game.load.spritesheet('slugBlue', 'assets/sprites/blue_move.png', 33, 74, 4);
+    game.load.spritesheet('greenSnail', 'assets/sprites/green_snail_move.png', 60, 81, 4);
+    game.load.spritesheet('magentaSnail', 'assets/sprites/magenta_snail_move.png', 60, 81, 4);
+    game.load.spritesheet('orangeSnail', 'assets/sprites/orange_snail_move.png', 60, 81, 4);
+    game.load.spritesheet('blueSnail', 'assets/sprites/blue_snail_move.png', 60, 81, 4);
 
-    game.load.spritesheet('slugGreenHit', 'assets/sprites/green_hit.png', 33, 74, 3);
-    game.load.spritesheet('slugMagentaHit', 'assets/sprites/magenta_hit.png', 33, 74, 3);
-    game.load.spritesheet('slugOrangeHit', 'assets/sprites/orange_hit.png', 33, 74, 3);
-    game.load.spritesheet('slugBlueHit', 'assets/sprites/blue_hit.png', 33, 74, 3);
+    game.load.spritesheet('greenSlug', 'assets/sprites/green_move.png', 33, 74, 4);
+    game.load.spritesheet('magentaSlug', 'assets/sprites/magenta_move.png', 33, 74, 4);
+    game.load.spritesheet('orangeSlug', 'assets/sprites/orange_move.png', 33, 74, 4);
+    game.load.spritesheet('blueSlug', 'assets/sprites/blue_move.png', 33, 74, 4);
+
+    game.load.spritesheet('greenSlugHit', 'assets/sprites/green_hit.png', 33, 74, 3);
+    game.load.spritesheet('magentaSlugHit', 'assets/sprites/magenta_hit.png', 33, 74, 3);
+    game.load.spritesheet('orangeSlugHit', 'assets/sprites/orange_hit.png', 33, 74, 3);
+    game.load.spritesheet('blueSlugHit', 'assets/sprites/blue_hit.png', 33, 74, 3);
+
+
+    game.load.spritesheet('smokeBig', 'assets/sprites/explosion/snail-loseshell.png', 71, 74, 4);
 
   }
 

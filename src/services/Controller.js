@@ -126,6 +126,10 @@ export default class Controller {
       this.wasHolding.shoot = false;
       this.onShootRelease.dispatch();
     }
+
+    if (this.buttonInput.a) {
+      this.character.pressA();
+    }
   }
 
   checkOnRelease() {

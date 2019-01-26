@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Singleton from './singleton';
 import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
+import Text from "./text";
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -62,21 +63,35 @@ export default class GameManager extends Singleton {
     this.shellHolderStartScore = this.playerScores[playerID - 1];
     this.timer = game.time.create(false);
     this.timer.start();
+    SignalManager.instance.dispatch('switchShell', this.shellHolder);
   }
 
   dropShell() {
     this.shellHolder = 0;
+    SignalManager.instance.dispatch('switchShell', this.shellHolder);
   }
 
   checkPlayerWin(playerID) {
     if (this.playerScores[playerID - 1] >= this.winAmount) {
       console.log('Player ' + playerID + ' wins');
-      this.endGame();
+      this.endGame(playerID);
     }
   }
 
-  endGame() {
+  endGame(playerID) {
+    SignalManager.instance.dispatch('gameEnd');
     this.currentState = this.states.end;
+
+    this.winText = new Text({
+      text: 'Player ' + playerID + ' wins!!!!',
+      anchor: new Phaser.Point(0.5, 0.5),
+      position: new Phaser.Point(game.width / 2, game.height / 2),
+      color: '#FFFFFF',
+      fontSize: 50,
+      stroke: '#000000',
+      strokeThickness: 10,
+    });
+    game.add.existing(this.winText);
   }
 
   reset() {
@@ -92,10 +107,12 @@ export default class GameManager extends Singleton {
   startCountDown() {
     this.countDown = new CountDownText({
       startValue: 3,
-      position: new Phaser.Point(game.world.centerX, game.world.centerY),
+      position: new Phaser.Point(game.width / 2, game.height / 2),
       anchor: new Phaser.Point(0.5, 0.5),
-      color: '#000000',
+      color: '#FFFFFF',
       fontSize: 80,
+      stroke: '#000000',
+      strokeThickness: 10,
     });
     game.add.existing(this.countDown);
     this.countDown.start(() => {
