@@ -409,6 +409,7 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime -= game.time.elapsed / 1000;
 
+    if(this.currentState === this.states.SNAIL) return;
     var lifeTImeRatio = this.isBoosting ? 1 : 2;
     var scaleChange = this.isBoosting ? 1 : 0.5;
     if (!this.isMoving) return;
