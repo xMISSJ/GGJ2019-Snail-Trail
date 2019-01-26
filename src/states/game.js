@@ -11,6 +11,7 @@ import Shell from '../sprites/shell';
 import ColliderGroup from "../sprites/colliderGroup";
 import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
+import Leaderboard from '../sprites/ui/Leaderboard';
 
 export default class extends State {
   init() {
@@ -57,6 +58,7 @@ export default class extends State {
     this.collisionManager = new CollisionManager();
     this.buildSlugs();
     this.buildShell();
+    this.leaderboard = new Leaderboard();
   }
 
   buildSlugs() {
