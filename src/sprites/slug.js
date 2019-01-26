@@ -167,6 +167,11 @@ export default class Slug extends Sprite {
     } else {
       this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
     }
+
+    if (this.gamePad.justPressed(Phaser.Gamepad.XBOX360_A)){
+      console.log('a is pressed');
+      SignalManager.instance.dispatch('inputDetection', this);
+    }
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
 
     this.x += this.currentDirection.x;

@@ -13,6 +13,7 @@ import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
+import CharacterSelect from '../states/characterSelect';
 
 export default class extends State {
   init() {
@@ -20,6 +21,9 @@ export default class extends State {
     game.input.gamepad.start();
     game.world.setBounds(0, 0, 800, 800);
     game.physics.startSystem(Phaser.Physics.P2JS);
+
+    game.state.add('characterSelect', CharacterSelect);
+    game.state.start('characterSelect');
   }
 
   preload() {
