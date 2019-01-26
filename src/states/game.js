@@ -21,13 +21,11 @@ export default class extends State {
     game.input.gamepad.start();
     game.world.setBounds(0, 0, 800, 800);
     game.physics.startSystem(Phaser.Physics.P2JS);
-
-    game.state.add('characterSelect', CharacterSelect);
-    game.state.start('characterSelect');
   }
 
   preload() {
     LocalizationManager.instance.loadLanguagePackage();
+    this.game.load.json('characterSettings', 'assets/values/CharacterStats.json');
   }
 
   create() {

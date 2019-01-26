@@ -8,6 +8,8 @@ export default class characterSelect extends State {
 
     // Characters defined in assetList with keys.
     this.characterArray = ['snail1', 'snail2', 'snail3', 'snail4'];
+
+    game.state.start('game');
   }
 
   create() {

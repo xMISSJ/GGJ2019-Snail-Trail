@@ -35,9 +35,8 @@ export default class AssetList extends Singleton {
     this._imageList = [
       // TODO Add json key for texture atlasses.
       // { key: 'rq', dir: 'op', png: 'rq', etc1: 'op', s3tc: 'op', pvrtc: 'op', preload: 'op' },
-
       // Background
-      { key: 'background', dir: '', png: 'bg.jpg' },
+      { key: 'background', dir: '', png: 'bg.png' },
       { key: 'loaderBg', dir: '', png: 'loader-bg.png' },
 
       // User Interface

@@ -12,9 +12,9 @@ export default class extends Sprite {
     this.standardScale = 1;
     this.scaleChange = 0.0015;
     this.alphaChange = 0.0015;
-    this.pivot.y = -this.width;
 
     this.randomAngleOffset = 65;
+    this.visible = false;
 
 
   }

@@ -1,0 +1,24 @@
+{
+  "SLUG": {
+    "rotationSpeed": 2,
+    "currentMovementSpeed": 0,
+    "movementSpeedStep": 0.05,
+    "maxMovementSpeed": 2,
+    "boostSpeed": 16,
+    "speedDecrease": 0.5,
+    "maxTrailParts": 100,
+    "dashCooldown": 1,
+    "trailCooldown": 0.01
+  },
+  "SNAIL": {
+    "rotationSpeed": 4,
+    "currentMovementSpeed": 0,
+    "movementSpeedStep": 0.08,
+    "maxMovementSpeed": 4,
+    "boostSpeed": 12,
+    "speedDecrease": 1,
+    "maxTrailParts": 100,
+    "dashCooldown": 1,
+    "trailCooldown": 0.01
+  }
+}
