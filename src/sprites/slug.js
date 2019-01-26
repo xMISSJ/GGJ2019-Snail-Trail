@@ -52,6 +52,8 @@ export default class Slug extends Sprite {
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
+    this.forceDirection = new Point(1,0);
+    this.currentForce = 0;
 
     this.body.debug = false;
     this.currentMovementSpeed = 0;
@@ -221,10 +223,15 @@ export default class Slug extends Sprite {
     }
     this.handleBoosting();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
-    this.x += this.currentDirection.x * this.trailSpeed;
-    this.y += this.currentDirection.y * this.trailSpeed;
-    this.body.moveRight(this.currentDirection.x * 60 * this.trailSpeed);
-    this.body.moveDown(this.currentDirection.y * 60 * this.trailSpeed);
+
+    this.x += (this.currentDirection.x * this.trailSpeed);
+    this.y += (this.currentDirection.y * this.trailSpeed);
+
+    this.currentForce *= this.currentStats.forceDrag;
+    this.currentForce = this.currentForce < 0.1 ? 0 : this.currentForce;
+
+    this.body.moveRight((this.currentDirection.x * 60 * this.trailSpeed) + this.forceDirection.x * this.currentForce);
+    this.body.moveDown((this.currentDirection.y * 60 * this.trailSpeed) + this.forceDirection.y * this.currentForce);
 
     this.handleTrailSpawn();
   }
@@ -374,6 +381,11 @@ export default class Slug extends Sprite {
     } else if (this.currentState === this.states.SNAIL) {
 
     }
+  }
+
+  pressA() {
+    this.currentForce = 1500;
+    this.forceDirection = new Point(1,0);
   }
 
   handleTrailSpawn() {
