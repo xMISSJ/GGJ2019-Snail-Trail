@@ -118,6 +118,7 @@ export default class Slug extends Sprite {
   removeHealth(entity1, entity2, value) {
     if (!this.isSnail) return;
 
+    this.game.camera.shake(0.03, 100);
     this.currentHP -= value;
 
     if (this.currentHP <= 0) {
@@ -269,8 +270,9 @@ export default class Slug extends Sprite {
   }
 
   shoot() {
-    if(!this.canBoost) return;
     if (this.currentState === this.states.SLUG) {
+      if(!this.canBoost) return;
+      this.game.camera.shake(0.005, 50);
       this.canBoost = false;
       this.isBoosting = true;
       this.currentMovementSpeed += this.currentStats.boostSpeed;
