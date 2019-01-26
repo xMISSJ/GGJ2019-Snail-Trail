@@ -1,6 +1,6 @@
-import {Group} from 'phaser';
+import { Group } from 'phaser';
 import SignalManager from '../services/signalManager';
-import Singleton from "../services/singleton";
+import Singleton from '../services/singleton';
 
 export default class CollisionManager extends Singleton {
   constructor() {
@@ -27,12 +27,12 @@ export default class CollisionManager extends Singleton {
 
   addShell(entity) {
     this.shell = entity;
-    this.setPhysicsShell(entity)
+    this.setPhysicsShell(entity);
   }
 
   addWall(entity) {
     this.walls.push(entity);
-    this.setPhysicsWall(entity)
+    this.setPhysicsWall(entity);
   }
 
   addTrail(entity) {
@@ -62,7 +62,7 @@ export default class CollisionManager extends Singleton {
   }
 
   setPhysicsShell(entity) {
-    entity.body.setCollisionGroup(this.shellP2Group)
+    entity.body.setCollisionGroup(this.shellP2Group);
     entity.body.collides([this.slugsP2Group, this.shellP2Group]);
   }
 

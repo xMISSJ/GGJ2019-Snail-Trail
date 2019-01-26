@@ -65,6 +65,9 @@ export default class extends State {
     game.load.spritesheet('orangeSlugHit', 'assets/sprites/orange_hit.png', 33, 74, 3);
     game.load.spritesheet('blueSlugHit', 'assets/sprites/blue_hit.png', 33, 74, 3);
 
+
+    game.load.spritesheet('smokeBig', 'assets/sprites/explosion/snail-loseshell.png', 71, 74, 4);
+
   }
 
   [loadComplete]() {

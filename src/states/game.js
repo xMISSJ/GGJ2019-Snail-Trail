@@ -33,30 +33,12 @@ export default class extends State {
     game.add.existing(this.background);
 
     if (__DEV__) {
-      const zKey = game.input.keyboard.addKey(Phaser.KeyCode.Z);
-      const xKey = game.input.keyboard.addKey(Phaser.KeyCode.X);
-      const cKey = game.input.keyboard.addKey(Phaser.KeyCode.C);
-      const vKey = game.input.keyboard.addKey(Phaser.KeyCode.V);
-      const bKey = game.input.keyboard.addKey(Phaser.KeyCode.B);
-      const qKey = game.input.keyboard.addKey(Phaser.KeyCode.Q);
+      const rKey = game.input.keyboard.addKey(Phaser.KeyCode.R);
 
-      zKey.onDown.add(() => {
-        GameManager.instance.pickUpShell(1);
-      });
-      xKey.onDown.add(() => {
-        GameManager.instance.pickUpShell(2);
-      });
-      cKey.onDown.add(() => {
-        GameManager.instance.pickUpShell(3);
-      });
-      vKey.onDown.add(() => {
-        GameManager.instance.pickUpShell(4);
-      });
-      bKey.onDown.add(() => {
-        GameManager.instance.dropShell();
-      });
-      qKey.onDown.add(() => {
-        GameManager.instance.startGame();
+      rKey.onDown.add(() => {
+        if (GameManager.instance.currentState === GameManager.instance.states.end) {
+          game.state.start('characterSelect');
+        }
       });
     }
     // this.collisionManager = new CollisionManager();
@@ -64,9 +46,14 @@ export default class extends State {
     this.buildShell();
     this.buildSlugs();
     this.leaderboard = new Leaderboard();
+
+    GameManager.instance.startGame();
   }
 
   update() {
+    if (GameManager.instance.currentState !== GameManager.instance.states.game) {
+      return;
+    }
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
     }
@@ -106,7 +93,7 @@ export default class extends State {
   }
 
   buildShell() {
-    const shell = new Shell([800, 400]);
+    const shell = new Shell([game.width / 2, game.height / 2]);
     game.add.existing(shell);
   }
 
