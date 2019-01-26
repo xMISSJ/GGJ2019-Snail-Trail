@@ -76,7 +76,8 @@ export default class AssetList extends Singleton {
       { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
       { key: 'techLoop', dir: '', file: 'techLoop.wav' },
 
-      { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav' }
+      { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav'},
+      { key: 'slimeBoost', dir: 'effects/', file: 'slimeBoost.wav'}
     ];
 
     this._soundPath = './assets/sounds/';
