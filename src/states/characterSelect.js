@@ -1,6 +1,7 @@
 import { State, Phaser } from 'phaser';
 import SignalManager from '../services/signalManager';
 import PlayerMapping from '../services/PlayerMapping';
+import BackgroundMusic from '../services/backgroundMusic';
 import Controller from '../services/Controller';
 import Config from '../config';
 
@@ -15,6 +16,8 @@ export default class characterSelect extends State {
     game.controllers = [];
     this.controllersAdded = [false, false, false, false];
     this.screens = [1, 2, 3, 4];
+
+    game.backgroundMusic = new BackgroundMusic();
   }
 
   create() {
@@ -37,10 +40,12 @@ export default class characterSelect extends State {
       game.controllers[i].update();
       if (game.controllers[i].buttonInput.b) {
         game.state.start('Game');
+        BackgroundMusic.instance.stopCharacterSelect();
       }
       if (this.controllersAdded[i]) continue;
       for (const buttonPress in game.controllers[i].buttonInput) {
         if (game.controllers[i].buttonInput[buttonPress]) {
+          BackgroundMusic.instance.playNextSound();
           this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
           console.log('adding controller: ', i + 1);

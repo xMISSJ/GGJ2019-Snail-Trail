@@ -3,6 +3,7 @@ import Singleton from './singleton';
 import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
 import Text from "./text";
+import BackgroundMusic from '../services/backgroundMusic';
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -117,7 +118,8 @@ export default class GameManager extends Singleton {
     game.add.existing(this.countDown);
     this.countDown.start(() => {
       this.currentState = this.states.game;
-      this.countDown.destroy(); 
+      this.countDown.destroy();
+      BackgroundMusic.instance.playInGameSound();
     }, this);
   }
 
