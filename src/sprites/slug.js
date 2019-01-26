@@ -4,6 +4,7 @@ import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
+import TrailPart from './trailPart'
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
@@ -51,6 +52,14 @@ export default class Slug extends Sprite {
     this.canBoost = true;
     this.isBoosting = false;
     this.createSlug();
+
+    this.trailParts = [];
+    this.maxTrailParts = 20;
+    for (let i = 0; i < this.maxTrailParts; i += 1) {
+      this.trailParts.push(new TrailPart(0,0));
+    }
+    this.trailCooldown = 0.5;
+    this.trailCurrentTime = 0;
   }
 
   createSlug() {
@@ -154,6 +163,7 @@ export default class Slug extends Sprite {
     this.x += this.currentDirection.x;
     this.y += this.currentDirection.y;
     this.doAnimation();
+    this.handleTrailSpawn();
   }
 
   rotate() {
@@ -235,6 +245,15 @@ export default class Slug extends Sprite {
       this.canBoost = false;
       this.isBoosting = true;
       this.currentMovementSpeed += this.boostSpeed;
+    }
+  }
+
+  handleTrailSpawn() {
+    this.trailCurrentTime -= game.time.elapsed/1000;
+
+    if(this.trailCurrentTime < 0) {
+      this.trailCurrentTime = this.trailCooldown;
+      console.log('spawn trail');
     }
   }
 }
