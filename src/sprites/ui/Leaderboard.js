@@ -9,6 +9,12 @@ export default class Leaderboard extends Phaser.Group {
     this.cards = [];
     this.queue = [];
     this.tweenSpeed = 800;
+    this.cardAssets = [
+      'leaderboardCardGreen',
+      'leaderboardCardMagenta',
+      'leaderboardCardOrange',
+      'leaderboardCardBlue',
+    ];
     this.createLeaderboard();
     SignalManager.instance.add('switchLeaderboard', (id1, id2) => {
       this.addToQueue(id1, id2);
@@ -20,9 +26,9 @@ export default class Leaderboard extends Phaser.Group {
 
   createLeaderboard() {
     for (let i = 0; i < 4; i += 1) {
-      this.cards[i] = new LeaderboardCard(i + 1, 350 + (i * 250), 20);
+      this.cards[i] = new LeaderboardCard(i + 1, this.cardAssets[i], 350 + (i * 250), 0);
       if (i >= game.totalPlayers) {
-        this.cards[i].visible = false;
+        // this.cards[i].visible = false;
       }
     }
   }

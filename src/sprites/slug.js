@@ -73,6 +73,11 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
+
+    SignalManager.instance.add('gameEnd', () => {
+      this.targetDirection = new Phaser.Point(0, 0);
+      this.currentDirection = new Phaser.Point(0, 0);
+    });
   }
 
   createSlug() {
