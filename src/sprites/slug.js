@@ -6,12 +6,15 @@ import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 import Explosion from './explosion';
+import BackgroundMusic from '../services/backgroundMusic';
+import SoundEffects from '../services/soundEffects';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position, colors) {
     super({ asset: `${colors.color}Slug`, x: position[0], y: position[1] });
     this.color = colors.color;
 
+    this.name = colors.name;
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = game.cache.getJSON('characterSettings');
 
@@ -46,7 +49,6 @@ export default class Slug extends Sprite {
     this.body.fixedRotation = true;
     this.body.angle = 90;
     this.body.collideWorldBounds = true;
-
     this.scale.set(1, 1);
 
     this.currentDirection = new Point(1, 0);
@@ -149,6 +151,7 @@ export default class Slug extends Sprite {
     if (entity2.isBoosting) {
       if (!this.isSnail) return;
       this.removeHealth(entity1, entity2, 10);
+      SoundEffects.instance.onShellHit();
       entity2.isBoosting = false;
       entity2.currentDirection.normalize();
     }
@@ -174,12 +177,14 @@ export default class Slug extends Sprite {
     if (!entity1.canPickUp) return;
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
+    BackgroundMusic.instance.playRandomVoice();
     GameManager.instance.pickUpShell(this.playerNumber);
+    game.overlay.start(this.name)
     const newExplosion = new Explosion('MEDIUM', this.position);
     newExplosion.start([entity1]);
     game.world.bringToTop(this);
-
     this.shell = entity2;
+    SoundEffects.instance.onShellHit();
   }
 
   removeHealth(entity1, entity2, value) {
@@ -206,6 +211,11 @@ export default class Slug extends Sprite {
   }
 
   update() {
+    if (GameManager.instance.paused) {
+      this.body.moveRight(0);
+      this.body.moveDown(0);
+      return;
+    }
     if (this.currentTrailState === this.trailStates.COLLIDE) {
       // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
@@ -260,6 +270,7 @@ export default class Slug extends Sprite {
         this.currentDashCoolDown -= game.time.elapsed / 1000;
         if (this.currentDashCoolDown <= 0) {
           this.canBoost = true;
+          this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber)
           this.currentDashCoolDown = this.currentStats.dashCooldown;
         }
       }
@@ -381,7 +392,7 @@ export default class Slug extends Sprite {
   shoot() {
     if (this.currentState === this.states.SLUG) {
       if (!this.canBoost) return;
-
+      SoundEffects.instance.onBoost();
       game.camera.shake(0.005, 50);
       this.canBoost = false;
       this.isBoosting = true;
@@ -398,16 +409,19 @@ export default class Slug extends Sprite {
   }
 
   handleTrailSpawn() {
-    if (!this.isBoosting) return;
+    if(!this.isBoosting && !this.canBoost) return;
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
       this.trailParts[i].update();
     }
     this.trailCurrentTime -= game.time.elapsed / 1000;
 
+    if(this.currentState === this.states.SNAIL) return;
+    var lifeTImeRatio = this.isBoosting ? 1 : 2;
+    var scaleChange = this.isBoosting ? 1 : 0.5;
     if (!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.currentStats.trailCooldown;
-      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber);
+      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, lifeTImeRatio, scaleChange);
       this.trailToSpawn++;
 
       if (this.trailToSpawn >= this.currentStats.maxTrailParts - 1) this.trailToSpawn = 0;
