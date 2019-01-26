@@ -10,7 +10,7 @@ export default class GameManager extends Singleton {
     this.playerScores = [];
     this.leaderboard = [];
     this.shellHolder = 0;
-    this.winAmount = 5;
+    this.winAmount = 30;
     this.countDownValue = 3;
     this.states = {
       countDown: 0,

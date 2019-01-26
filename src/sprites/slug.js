@@ -392,6 +392,7 @@ export default class Slug extends Sprite {
   }
 
   pressA() {
+    return;
     this.currentForce = 1500;
     this.forceDirection = new Point(1, 0);
   }
@@ -426,7 +427,6 @@ export default class Slug extends Sprite {
         }
         this.forceDirection.setTo(direction.x, direction.y);
         this.currentForce = (data.explosionRadius - distance) * data.explosionForce;
-        console.log(this.forceDirection, this.currentForce, distance);
       }
     }, data.explosionFreezeTime * 1000);
   }

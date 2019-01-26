@@ -98,7 +98,7 @@ export default class extends State {
   }
 
   render() {
-    GameManager.instance.update();
+    //GameManager.instance.update();
     // this.collisionManager.render();
   }
 }
