@@ -12,11 +12,12 @@ export default class extends Sprite {
     this.tag = `trail${number}`;
     this.lifetime = 2;
     this.currentLifetime = 2;
-    this.standardScale = 1;
-    this.scaleChange = 0.005;
-    this.alphaChange = 0.005;
+    this.standardScale = 1.3;
+    this.scaleChange = 0.006;
+    this.alphaChange = 0.006;
 
     this.randomAngleOffset = 65;
+    this.randomPosOffset = 30;
 
     game.physics.p2.enable(this, true);
     this.body.data.sensor = true;
@@ -33,8 +34,10 @@ export default class extends Sprite {
   spawnPart(x, y, angle) {
     CollisionManager.instance.addTrail(this);
     this.position.setTo(x, y);
-    this.body.x = x;
-    this.body.y = y;
+    const randomXOffset = (Math.random() - 0.5) * this.randomPosOffset;
+    const randomYOffset = (Math.random() - 0.5) * this.randomPosOffset;
+    this.body.x = x + randomXOffset;
+    this.body.y = y + randomYOffset;
     const randomAngleOffset = (Math.random() - 0.5) * this.randomAngleOffset;
     this.angle = angle + randomAngleOffset;
     this.currentLifetime = this.lifetime;
