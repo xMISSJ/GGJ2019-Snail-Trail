@@ -64,10 +64,12 @@ export default class GameManager extends Singleton {
     this.shellHolderStartScore = this.playerScores[playerID - 1];
     this.timer = game.time.create(false);
     this.timer.start();
+    SignalManager.instance.dispatch('switchShell', this.shellHolder);
   }
 
   dropShell() {
     this.shellHolder = 0;
+    SignalManager.instance.dispatch('switchShell', this.shellHolder);
   }
 
   checkPlayerWin(playerID) {
