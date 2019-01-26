@@ -129,7 +129,7 @@ export default class Controller {
     }
 
     if (this.buttonInput.a) {
-      this.character.pressA();
+      this.character.shoot();
     }
   }
 
