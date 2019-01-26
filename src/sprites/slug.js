@@ -86,7 +86,7 @@ export default class Slug extends Sprite {
   }
 
   onCollideSlug(entity1, entity2) {
-    if(this.isBoosting) {
+    if (entity2.isBoosting) {
       this.removeHealth(entity1, entity2, 10);
     }
   }
@@ -171,7 +171,6 @@ export default class Slug extends Sprite {
   handleBoosting() {
     if (this.isBoosting) {
       this.currentMovementSpeed -= this.currentStats.speedDecrease;
-      console.log(' this.currentMovementSpeed at boost',  this.currentMovementSpeed);
       if (this.currentMovementSpeed < this.currentStats.maxMovementSpeed) {
         this.currentMovementSpeed = this.currentStats.maxMovementSpeed;
         this.isBoosting = false;
