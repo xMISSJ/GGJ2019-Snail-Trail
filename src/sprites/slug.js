@@ -20,8 +20,9 @@ export default class Slug extends Sprite {
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
     Object.freeze(this.state);
-    this.tag = 'slug';
-    this.maxHP = 3;
+
+    this.tag = "slug";
+    this.maxHP = 30;
 
     this.trailSpeed = 1;
 
@@ -132,7 +133,9 @@ export default class Slug extends Sprite {
   }
 
   onCollideSlug(entity1, entity2) {
-    this.removeHealth(entity1, entity2, 1);
+    if (entity2.isBoosting) {
+      this.removeHealth(entity1, entity2, 10);
+    }
   }
 
   checkIfNotColliding(entity) {
@@ -162,6 +165,7 @@ export default class Slug extends Sprite {
   removeHealth(entity1, entity2, value) {
     if (!this.isSnail) return;
 
+    this.game.camera.shake(0.03, 100);
     this.currentHP -= value;
     console.log(this.currentHP);
     if (this.currentHP <= 0) {
@@ -324,11 +328,14 @@ export default class Slug extends Sprite {
   }
 
   shoot() {
-    if (this.currentState === this.states.SNAIL) return;
-    if (this.canBoost) {
+    if (this.currentState === this.states.SLUG) {
+      if(!this.canBoost) return;
+      this.game.camera.shake(0.005, 50);
       this.canBoost = false;
       this.isBoosting = true;
       this.currentMovementSpeed += this.currentStats.boostSpeed;
+    } else if (this.currentState === this.states.SNAIL) {
+
     }
   }
 
