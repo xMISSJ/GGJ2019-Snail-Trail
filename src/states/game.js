@@ -77,10 +77,20 @@ export default class extends State {
   }
 
   buildSlugs() {
-    for (let i = 0; i < 4; i += 1) {
-      const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
-      game.add.existing(slug);
-    }
+    // for (let i = 0; i < 4; i += 1) {
+    //   const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
+    //   game.add.existing(slug);
+    // }
+
+    const slug1 = new Slug(1, [200, 200], 'slugGreen');
+    const slug2 = new Slug(2, [1000, 200], 'slugMagenta');
+    const slug3 = new Slug(3, [200, 500], 'slugOrange');
+    const slug4 = new Slug(4, [1000, 500], 'slugBlue');
+
+    game.add.existing(slug1);
+    game.add.existing(slug2);
+    game.add.existing(slug3);
+    game.add.existing(slug4);
   }
 
   buildShell() {

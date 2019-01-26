@@ -47,6 +47,11 @@ export default class extends State {
     game.load.spritesheet('slug', 'assets/sprites/slug-move-spritesheet.png', 33, 74, 4);
     game.load.spritesheet('snail', 'assets/sprites/snail-move-spritesheet.png', 61, 81, 4);
     game.load.spritesheet('snailHit', 'assets/sprites/snail-hit-spritesheet.png', 61, 74, 3);
+
+    game.load.spritesheet('slugGreen', 'assets/sprites/green_move.png', 33, 74, 4);
+    game.load.spritesheet('slugMagenta', 'assets/sprites/magenta_move.png', 33, 74, 4);
+    game.load.spritesheet('slugOrange', 'assets/sprites/orange_move.png', 33, 74, 4);
+    game.load.spritesheet('slugBlue', 'assets/sprites/blue_move.png', 33, 74, 4);
   }
 
   [loadComplete]() {

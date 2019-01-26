@@ -8,8 +8,10 @@ import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position) {
-    super({ asset: 'slug', x: position[0], y: position[1] });
+  constructor(playerNumber, position, asset) {
+    super({ asset, x: position[0], y: position[1] });
+
+    this.moveAsset = asset;
 
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = this.game.cache.getJSON('characterSettings');
@@ -79,7 +81,7 @@ export default class Slug extends Sprite {
     this.smoothed = false;
     // SignalManager.instance.dispatch('addSlug', this);
     CollisionManager.instance.addSlug(this);
-    this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
+    this.moving = this.animations.add('movingSlug', [0, 1, 2, 3], 10, true);
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
@@ -123,7 +125,6 @@ export default class Slug extends Sprite {
 
   onEndTrail() {
     this.collideWithTrail -= 1;
-    console.log("player " + this.playerNumber, this.collideWithTrail)
     if (this.collideWithTrail === 0) {
       this.trailSpeed = 1;
       this.currentTrailState = this.trailStates.NO_COLLIDE;
@@ -162,7 +163,7 @@ export default class Slug extends Sprite {
     if (!this.isSnail) return;
 
     this.currentHP -= value;
-console.log(this.currentHP)
+    console.log(this.currentHP);
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
@@ -257,8 +258,11 @@ console.log(this.currentHP)
 
   doAnimation() {
     if (this.isMoving) {
-      if (this.states.SLUG) this.play('moving');
-      else if (this.states.SNAIL) this.play('movingSnail');
+      if (this.isSlug) {
+        this.play('movingSlug');
+      } else if (this.isSnail) {
+        this.play('movingSnail');
+      }
     } else {
       // TODO Play idle
     }
@@ -309,7 +313,7 @@ console.log(this.currentHP)
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = 3;
-    this.loadTexture('slug');
+    this.loadTexture(this.moveAsset);
     this.scale.set(1, 1);
   }
 
