@@ -9,7 +9,7 @@ export default class extends Sprite {
     this.alive = false;
     this.lifetime = 2;
     this.currentLifetime = 2;
-    this.standardScale = 2.1;
+    this.standardScale = 1;
     this.scaleChange = 0.0015;
     this.alphaChange = 0.0015;
     this.pivot.y = -this.width;
