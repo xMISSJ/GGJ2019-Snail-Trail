@@ -86,6 +86,11 @@ export default class Slug extends Sprite {
     this.moving = this.animations.add('movingSlug', [0, 1, 2, 3], 10, true);
     this.hitted = this.animations.add('hittedSlug', [0, 1, 2], 10, true);
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
+    this.hittedSnail = this.animations.add('hittedSnail', [0, 1, 2], 10, false);
+    this.hittedSnail.onComplete.add(() => {
+      console.log("test")
+      this.doAnimation()
+    })
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
     this.doAnimation();
   }
@@ -183,6 +188,8 @@ export default class Slug extends Sprite {
         this.shell.onSpawn(this.position);
         this.shell = null;
       }
+    } else {
+      this.doHitAnimation();
     }
   }
 
@@ -273,6 +280,7 @@ export default class Slug extends Sprite {
         this.loadTexture(`${this.moveAsset}`);
         this.play('movingSlug');
       } else if (this.isSnail) {
+        this.loadTexture('snail');
         this.play('movingSnail');
       }
     } else {
@@ -281,8 +289,14 @@ export default class Slug extends Sprite {
   }
 
   doHitAnimation() {
-    this.loadTexture(`${this.moveAsset}Hit`);
-    this.play('hittedSlug');
+    if (this.isSlug) {
+      this.loadTexture(`${this.moveAsset}Hit`);
+      this.play('hittedSlug');
+    } else if (this.isSnail) {
+      this.loadTexture('snailHit');
+      this.play('hittedSnail');
+    }
+
   }
 
   moveUp() {
