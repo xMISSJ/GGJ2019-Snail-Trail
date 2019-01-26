@@ -1,6 +1,7 @@
 import { State, Phaser } from 'phaser';
 import lang from '../lang';
 import Background from '../sprites/background';
+import Sprite from '../services/sprite';
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
@@ -14,6 +15,7 @@ import CountDownText from '../sprites/countDownText';
 import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
+import ShellShine from '../sprites/shellShine';
 
 export default class extends State {
   init() {
@@ -51,9 +53,6 @@ export default class extends State {
   }
 
   update() {
-    if (GameManager.instance.currentState !== GameManager.instance.states.game) {
-      return;
-    }
     GameManager.instance.update();
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
@@ -95,6 +94,9 @@ export default class extends State {
 
   buildShell() {
     const shell = new Shell([game.width / 2, game.height / 2]);
+    game.shellShine = new ShellShine();
+    game.shellShine.onShellDrop(new Phaser.Point(shell.x, shell.y));
+    game.add.existing(game.shellShine);
     game.add.existing(shell);
   }
 }

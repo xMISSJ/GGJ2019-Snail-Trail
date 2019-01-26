@@ -64,6 +64,7 @@ export default class GameManager extends Singleton {
     this.timer = game.time.create(false);
     this.timer.start();
     SignalManager.instance.dispatch('switchShell', this.shellHolder);
+    game.shellShine.onShellPickUp();
   }
 
   dropShell() {
@@ -115,9 +116,20 @@ export default class GameManager extends Singleton {
       strokeThickness: 10,
     });
     game.add.existing(this.countDown);
+    this.objectiveText = new Text({
+      text: 'Hold the shell for 30 seconds!',
+      position: new Phaser.Point(game.width / 2, game.height / 2 + 100),
+      anchor: new Phaser.Point(0.5, 0.5),
+      color: '#FFFFFF',
+      fontSize: 30,
+      stroke: '#000000',
+      strokeThickness: 10,
+    });
+    game.add.existing(this.objectiveText);
     this.countDown.start(() => {
       this.currentState = this.states.game;
-      this.countDown.destroy(); 
+      this.countDown.destroy();
+      this.objectiveText.destroy();
     }, this);
   }
 

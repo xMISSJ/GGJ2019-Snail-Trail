@@ -196,6 +196,7 @@ export default class Slug extends Sprite {
       this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
+        game.shellShine.onShellDrop(this.position);
         this.shell = null;
       }
     } else {
@@ -222,6 +223,9 @@ export default class Slug extends Sprite {
       }
 
       this.rotate();
+      if (GameManager.instance.currentState !== GameManager.instance.states.game) {
+        return;
+      }
       this.currentMovementSpeed += this.currentStats.movementSpeedStep;
     } else if (this.currentDirection.getMagnitude() > 0.2) {
       this.currentMovementSpeed -= this.currentStats.movementSpeedStep * 3;
