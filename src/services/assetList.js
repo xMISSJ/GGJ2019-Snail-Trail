@@ -63,10 +63,34 @@ export default class AssetList extends Singleton {
       { key: 'leaderboardCardMagenta', dir: '', png: 'counter-magenta.png' },
       { key: 'leaderboardCardGreen', dir: '', png: 'counter-green.png' },
 
+      // Overlay
+      { key: 'hype_bar', dir: 'overlay/', png: 'hype_bar.png' },
+      { key: 'vs', dir: 'overlay/', png: 'vs.png' },
+      { key: 'everyone_hype', dir: 'overlay/', png: 'everyone_hype.png' },
+      { key: 'PHTEVEN', dir: 'overlay/', png: 'PHTEVEN.png' },
+      { key: 'FRANK', dir: 'overlay/', png: 'FRANK.png' },
+      { key: 'CARL', dir: 'overlay/', png: 'CARL.png' },
+      { key: 'BILL', dir: 'overlay/', png: 'BILL.png' },
+      { key: 'bill_buffed', dir: 'overlay/', png: 'bill_buffed.png' },
+      { key: 'carl_buffed', dir: 'overlay/', png: 'carl_buffed.png' },
+      { key: 'frank_buffed', dir: 'overlay/', png: 'frank_buffed.png' },
+      { key: 'phteven_buffed', dir: 'overlay/', png: 'phteven_buffed.png' },
     ];
 
     this._soundList = [
       // { key: 'rq', dir: 'op', file: 'rq', preload: 'op'},
+      { key: 'guitar', dir: '', file: 'guitar.wav' },
+      { key: 'bass', dir: '', file: 'bass.wav' },
+      { key: 'shaker', dir: '', file: 'shaker.wav' },
+      { key: 'hihat1', dir: '', file: 'hihat1.wav' },
+      { key: 'funkyMoog', dir: '', file: 'funkyMoog.wav' },
+      { key: 'reageaDrums', dir: '', file: 'reageaDrums.wav' },
+      { key: '85chiptune', dir: '', file: '85chiptune.wav' },
+      { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
+      { key: 'techLoop', dir: '', file: 'techLoop.wav' },
+
+      { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav'},
+      { key: 'slimeBoost', dir: 'effects/', file: 'slimeBoost.wav'}
     ];
 
     this._soundPath = './assets/sounds/';

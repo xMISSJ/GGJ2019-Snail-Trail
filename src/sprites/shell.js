@@ -19,7 +19,7 @@ export default class Shell extends Sprite {
     this.body.data.sensor = true
     this.body.enable = true;
     this.circleShape = this.body.setCircle(40, 0, 0);
-
+    this.body.debug = false;
     this.circleShape.sensor = true
     this.body.debug = false;
 
@@ -92,6 +92,6 @@ export default class Shell extends Sprite {
 
     setTimeout(() => {
       this.switchState(this.states.PICKABLE);
-    }, 2000);
+    }, 500);
   }
 }

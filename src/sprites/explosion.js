@@ -18,13 +18,13 @@ export default class extends Phaser.Group {
       MEDIUM: {
         explosionRadius: 400,
         explosionFreezeTime: 0.1,
-        explosionForce: 3,
+        explosionForce: 4,
         smokeScale: 1,
       },
       BIG: {
         explosionRadius: 500,
         explosionFreezeTime: 0.4,
-        explosionForce: 3,
+        explosionForce: 4,
         smokeScale: 2.5,
       },
     };
