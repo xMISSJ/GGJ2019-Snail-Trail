@@ -69,6 +69,7 @@ export default class Slug extends Sprite {
     this.smoothed = false;
     SignalManager.instance.dispatch('addSlug', this);
     this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
+    this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
@@ -182,7 +183,9 @@ export default class Slug extends Sprite {
 
   doAnimation() {
     if (this.isMoving) {
-      this.play('moving');
+      if(this.states.SLUG) this.play('moving');
+      else if(this.states.SNAIL) this.play('movingSnail');
+
     } else {
       // TODO Play idle
     }
@@ -235,12 +238,14 @@ export default class Slug extends Sprite {
     this.tint = 0xffffff;
     this.currentHP = 3;
     this.maxMovementSpeed -= 1;
+    this.loadTexture('slug');
   }
 
   switchToSnail() {
     // TODO for testing purposes
     this.tint = Math.random() * 0xffffff;
     this.maxMovementSpeed += 1;
+    this.loadTexture('snail');
   }
 
   shoot() {
