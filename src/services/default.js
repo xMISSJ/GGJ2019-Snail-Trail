@@ -6,7 +6,7 @@ export default {
     supported: ['en', 'us'],
   },
   text: {
-    font: '',
+    font: 'Emulogic',
     color: '',
     align: 'center',
     boundsAlignH: 'center',
@@ -16,5 +16,5 @@ export default {
   },
 
   // List of all signal names.
-  signalNames: ['addSlug', 'addShell', 'switchLeaderboard', 'gameReset', 'addWall'],
+  signalNames: ['addSlug', 'addShell', 'switchLeaderboard', 'gameReset', 'gameEnd', 'addWall'],
 };

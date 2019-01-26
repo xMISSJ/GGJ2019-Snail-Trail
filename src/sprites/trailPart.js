@@ -22,7 +22,6 @@ export default class extends Sprite {
     game.physics.p2.enable(this, true);
     this.body.data.sensor = true;
     this.body.enable = true;
-    this.body.debug = false;
     this.circleShape = this.body.setCircle(20, 0, 0);
     this.visible = false;
 
@@ -38,6 +37,8 @@ export default class extends Sprite {
     const randomYOffset = (Math.random() - 0.5) * this.randomPosOffset;
     this.body.x = x + randomXOffset;
     this.body.y = y + randomYOffset;
+    this.circleShape.radius = 1.2;
+    this.body.shapeChanged();
     const randomAngleOffset = (Math.random() - 0.5) * this.randomAngleOffset;
     this.angle = angle + randomAngleOffset;
     this.currentLifetime = this.lifetime;

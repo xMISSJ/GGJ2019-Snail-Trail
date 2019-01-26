@@ -5,12 +5,12 @@ import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
+import Explosion from './explosion';
 
 export default class Slug extends Sprite {
-  constructor(playerNumber, position, asset, color) {
-    super({ asset, x: position[0], y: position[1] });
-
-    this.moveAsset = asset;
+  constructor(playerNumber, position, colors) {
+    super({ asset: `${colors.color}Slug`, x: position[0], y: position[1] });
+    this.color = colors.color;
 
     this.states = { SLUG: 0, SNAIL: 1 };
     this.characterStats = game.cache.getJSON('characterSettings');
@@ -25,7 +25,7 @@ export default class Slug extends Sprite {
 
     this.trailSpeed = 1;
     this.canPickUp = true;
-    this.currentState = this.states.SLUG
+    this.currentState = this.states.SLUG;
     // this.switchState(this.states.SLUG);
     this.characterStats = game.cache.getJSON('characterSettings');
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -52,6 +52,8 @@ export default class Slug extends Sprite {
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
+    this.forceDirection = new Point(1, 0);
+    this.currentForce = 0;
 
     this.body.debug = false;
     this.currentMovementSpeed = 0;
@@ -67,12 +69,17 @@ export default class Slug extends Sprite {
     this.body.onEndContact.add(this.onEndContact, this);
     this.trailParts = [];
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
-      const trailPart = new TrailPart(10, 50, this.playerNumber, color);
+      const trailPart = new TrailPart(10, 50, this.playerNumber, colors.tint);
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
+
+    SignalManager.instance.add('gameEnd', () => {
+      this.targetDirection = new Phaser.Point(0, 0);
+      this.currentDirection = new Phaser.Point(0, 0);
+    });
   }
 
   createSlug() {
@@ -84,9 +91,9 @@ export default class Slug extends Sprite {
     this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     this.hittedSnail = this.animations.add('hittedSnail', [0, 1, 2], 10, false);
     this.hittedSnail.onComplete.add(() => {
-      console.log("test")
-      this.doAnimation()
-    })
+      this.doAnimation();
+    });
+
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
     this.doAnimation();
   }
@@ -168,6 +175,8 @@ export default class Slug extends Sprite {
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
     GameManager.instance.pickUpShell(this.playerNumber);
+    const newExplosion = new Explosion('MEDIUM', this.position);
+    newExplosion.start([entity1]);
     game.world.bringToTop(this);
 
     this.shell = entity2;
@@ -182,20 +191,23 @@ export default class Slug extends Sprite {
     if (this.currentHP <= 0) {
       this.switchState(this.states.SLUG);
       GameManager.instance.dropShell();
-
+      const newExplosion = new Explosion('BIG', this.position);
+      newExplosion.start([entity2]);
       this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
         this.shell = null;
       }
     } else {
+      const newExplosion = new Explosion('SMALL', this.position);
+      newExplosion.start([entity2]);
       this.doHitAnimation();
     }
   }
 
   update() {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
-      //this.removeHealth(null, null, game.time.elapsed / 1000);
+      // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
@@ -221,10 +233,15 @@ export default class Slug extends Sprite {
     }
     this.handleBoosting();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
-    this.x += this.currentDirection.x * this.trailSpeed;
-    this.y += this.currentDirection.y * this.trailSpeed;
-    this.body.moveRight(this.currentDirection.x * 60 * this.trailSpeed);
-    this.body.moveDown(this.currentDirection.y * 60 * this.trailSpeed);
+
+    this.x += (this.currentDirection.x * this.trailSpeed);
+    this.y += (this.currentDirection.y * this.trailSpeed);
+
+    this.currentForce *= this.currentStats.forceDrag;
+    this.currentForce = this.currentForce < 0.1 ? 0 : this.currentForce;
+
+    this.body.moveRight((this.currentDirection.x * 60 * this.trailSpeed) + this.forceDirection.x * this.currentForce);
+    this.body.moveDown((this.currentDirection.y * 60 * this.trailSpeed) + this.forceDirection.y * this.currentForce);
 
     this.handleTrailSpawn();
   }
@@ -272,13 +289,12 @@ export default class Slug extends Sprite {
   }
 
   doAnimation() {
-
     if (true) {
       if (this.isSlug) {
-        this.loadTexture(`${this.moveAsset}`);
+        this.loadTexture(`${this.color}Slug`);
         this.play('movingSlug');
       } else if (this.isSnail) {
-        this.loadTexture('snail');
+        this.loadTexture(`${this.color}Snail`);
         this.play('movingSnail');
       }
     } else {
@@ -288,13 +304,12 @@ export default class Slug extends Sprite {
 
   doHitAnimation() {
     if (this.isSlug) {
-      this.loadTexture(`${this.moveAsset}Hit`);
+      this.loadTexture(`${this.color}SlugHit`);
       this.play('hittedSlug');
     } else if (this.isSnail) {
       this.loadTexture('snailHit');
       this.play('hittedSnail');
     }
-
   }
 
   moveUp() {
@@ -342,23 +357,23 @@ export default class Slug extends Sprite {
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = this.maxHP;
-    this.loadTexture(this.moveAsset);
     this.scale.set(1, 1);
     this.collideWithTrail = 0;
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
+
 
     this.doHitAnimation();
     this.canPickUp = false;
     setTimeout(() => {
       this.doAnimation();
       this.canPickUp = true;
-    }, 3000)
+    }, 3000);
   }
 
   switchToSnail() {
     // TODO for testing purposes
-    this.loadTexture('snail');
+    // this.loadTexture('snail');
     this.doAnimation();
     this.scale.set(1.7, 1.7);
   }
@@ -376,6 +391,11 @@ export default class Slug extends Sprite {
     }
   }
 
+  pressA() {
+    this.currentForce = 1500;
+    this.forceDirection = new Point(1, 0);
+  }
+
   handleTrailSpawn() {
     if (!this.isBoosting) return;
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
@@ -391,5 +411,23 @@ export default class Slug extends Sprite {
 
       if (this.trailToSpawn >= this.currentStats.maxTrailParts - 1) this.trailToSpawn = 0;
     }
+  }
+
+  explode(position, data) {
+    setTimeout(() => {
+      const distance = Math.hypot(position.x - this.position.x, position.y - this.position.y);
+      if (distance < data.explosionRadius) {
+        const direction = new Point();
+        Point.subtract(this.position, position, direction).normalize();
+        if (direction.x === 0 && direction.y === 0) {
+          direction.x = Math.random() - 0.5;
+          direction.y = Math.random() - 0.5;
+          direction.normalize();
+        }
+        this.forceDirection.setTo(direction.x, direction.y);
+        this.currentForce = (data.explosionRadius - distance) * data.explosionForce;
+        console.log(this.forceDirection, this.currentForce, distance);
+      }
+    }, data.explosionFreezeTime * 1000);
   }
 }

@@ -15,10 +15,22 @@
             margin: 0;
             padding: 0;
         }
+
+        @font-face {
+            font-family: 'Emulogic';
+            src: url('assets/fonts/emulogic.ttf') format('truetype')
+        }
+
+        .fontPreload1 {
+            font-family: "Emulogic";
+            position:absolute;
+            left:-100px;
+        }
     </style>
 </head>
 
 <body>
+    <div class="fontPreload1">.</div>
     <script src="https://connect.facebook.net/en_US/fbinstant.6.2.js"></script>
     <div id="content"></div>
     <!-- uncomment the line bellow for cordova feature -->

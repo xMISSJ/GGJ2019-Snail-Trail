@@ -56,6 +56,12 @@ export default class AssetList extends Singleton {
       { key: 'slugM', dir: '', png: 'icon-slug-magenta.png' },
       { key: 'slugO', dir: '', png: 'icon-slug-orange.png' },
       { key: 'slugG', dir: '', png: 'icon-slug-green.png' },
+
+      { key: 'leaderboardCardBlue', dir: '', png: 'counter-blue.png' },
+      { key: 'leaderboardCardOrange', dir: '', png: 'counter-orange.png' },
+      { key: 'leaderboardCardMagenta', dir: '', png: 'counter-magenta.png' },
+      { key: 'leaderboardCardGreen', dir: '', png: 'counter-green.png' },
+      
     ];
 
     this._soundList = [
