@@ -41,6 +41,7 @@ export default class AssetList extends Singleton {
 
       // User Interface
       { key: 'loaderBar', dir: '', png: 'loader-bar.png' },
+      { key: 'menuCard', dir: '', png: 'placeholder.png' },
 
       // Snail
       { key: 'cloud', dir: '', png: 'cloud.png' },
