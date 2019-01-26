@@ -14,6 +14,7 @@ export default class extends Sprite {
     this.alphaChange = 0.0015;
 
     this.randomAngleOffset = 65;
+    this.visible = false;
 
 
   }
