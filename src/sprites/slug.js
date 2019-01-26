@@ -399,16 +399,18 @@ export default class Slug extends Sprite {
   }
 
   handleTrailSpawn() {
-    if (!this.isBoosting) return;
+    if(!this.isBoosting && !this.canBoost) return;
     for (let i = 0; i < this.currentStats.maxTrailParts; i += 1) {
       this.trailParts[i].update();
     }
     this.trailCurrentTime -= game.time.elapsed / 1000;
 
+    var lifeTImeRatio = this.isBoosting ? 1 : 2;
+    var scaleChange = this.isBoosting ? 1 : 0.5;
     if (!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.currentStats.trailCooldown;
-      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber);
+      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, lifeTImeRatio, scaleChange);
       this.trailToSpawn++;
 
       if (this.trailToSpawn >= this.currentStats.maxTrailParts - 1) this.trailToSpawn = 0;
