@@ -100,7 +100,7 @@ export default class extends State {
 
     for (let i = 0; i < game.totalPlayers; i += 1) {
       const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i]);
-      game.controllers[i].setCharacter(slug);
+      game.playerSettings[i].controller.setCharacter(slug);
       game.add.existing(slug);
     }
   }
