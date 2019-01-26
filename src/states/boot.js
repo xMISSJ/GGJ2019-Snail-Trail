@@ -2,6 +2,7 @@ import { State } from 'phaser';
 import Facebook from '../services/facebook';
 import AssetList from '../services/assetList';
 import SoundManager from '../services/soundManager';
+import CharacterSelect from "./characterSelect";
 
 // Private methods.
 const loadImage = Symbol('loadImage');
@@ -43,6 +44,7 @@ export default class extends State {
   loadSpritesheets() {
     // Parameters(key, path, width, height, amount of frames
     // game.load.spritesheet('ms', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
+    game.load.json('characterSettings', 'assets/values/CharacterStats.json');
 
     game.load.spritesheet('slug', 'assets/sprites/slug-move-spritesheet.png', 33, 74, 4);
     game.load.spritesheet('snail', 'assets/sprites/snail-move-spritesheet.png', 61, 81, 4);
@@ -119,7 +121,8 @@ export default class extends State {
 
     game.sound.setDecodedCallback(sounds, () => {
       Facebook.instance.startGameAsync(() => {
-        window.game.state.start('Game', true, false);
+
+        window.game.state.start('characterSelect');
       }, this);
     }, this);
   }

@@ -1,6 +1,5 @@
 import { Phaser, Point } from 'phaser';
 import Sprite from '../services/sprite';
-import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
@@ -49,9 +48,6 @@ export default class Slug extends Sprite {
     this.body.collideWorldBounds = true;
 
     this.scale.set(1, 1);
-    this.settings = Config.playerInput[`player${playerNumber}`];
-    this.gamePad = game.input.gamepad[`pad${playerNumber}`];
-    this.controller = new Controller(game, this, this.gamePad, this.settings);
 
     this.currentDirection = new Point(1, 0);
     this.targetDirection = new Point(0, 0);
@@ -130,7 +126,7 @@ export default class Slug extends Sprite {
     if (this.isSlug) return;
     this.collideWithTrail += 1;
     this.currentTrailState = this.trailStates.COLLIDE;
-    this.trailSpeed = 0.5;
+    this.trailSpeed = 0.3;
   }
 
   onEndTrail() {
@@ -144,7 +140,10 @@ export default class Slug extends Sprite {
 
   onCollideSlug(entity1, entity2) {
     if (entity2.isBoosting) {
+      if (!this.isSnail) return;
       this.removeHealth(entity1, entity2, 10);
+      entity2.isBoosting = false;
+      entity2.currentDirection.normalize();
     }
   }
 
@@ -195,11 +194,10 @@ export default class Slug extends Sprite {
 
   update() {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
-      this.removeHealth(null, null, game.time.elapsed / 1000);
+      //this.removeHealth(null, null, game.time.elapsed / 1000);
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
-    this.controller.update();
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
@@ -220,7 +218,6 @@ export default class Slug extends Sprite {
       this.isMoving = false;
       this.currentMovementSpeed = 0;
     }
-
     this.handleBoosting();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
     this.x += this.currentDirection.x * this.trailSpeed;
