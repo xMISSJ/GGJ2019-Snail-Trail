@@ -5,12 +5,13 @@ import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
 import TrailPart from './trailPart'
-
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
     super({ asset: 'slug', x: position[0], y: position[1] });
 
     this.states = { SLUG: 0, SNAIL: 1 };
+    this.characterStats = this.game.cache.getJSON('characterSettings');
+    console.log(this.characterStats);
     Object.freeze(this.state);
     this.tag = "slug";
     this.maxHP = 3;
@@ -133,6 +134,7 @@ export default class Slug extends Sprite {
   }
 
   update() {
+    this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
     this.controller.update();
     this.currentDirection.normalize();
 
@@ -146,9 +148,9 @@ export default class Slug extends Sprite {
       }
 
       this.rotate();
-      this.currentMovementSpeed += this.movementSpeedStep;
+      this.currentMovementSpeed += this.currentStats.movementSpeedStep;
     } else if (this.currentDirection.getMagnitude() > 0.2) {
-      this.currentMovementSpeed -= this.movementSpeedStep * 3;
+      this.currentMovementSpeed -= this.currentStats.movementSpeedStep * 3;
       this.lastDirection.x = this.currentDirection.x;
       this.lastDirection.y = this.currentDirection.y;
     } else if (this.isMoving) {
@@ -157,15 +159,15 @@ export default class Slug extends Sprite {
     }
 
     if (this.isBoosting) {
-      this.currentMovementSpeed -= this.speedDecrease;
-      if (this.currentMovementSpeed < this.maxMovementSpeed) {
-        this.currentMovementSpeed = this.maxMovementSpeed;
+      this.currentMovementSpeed -= this.currentStats.speedDecrease;
+      if (this.currentMovementSpeed < this.currentStats.maxMovementSpeed) {
+        this.currentMovementSpeed = this.currentStats.maxMovementSpeed;
         this.isBoosting = false;
         this.canBoost = true;
         // TODO Start cooldown
       }
     } else {
-      this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
+      this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.currentStats.maxMovementSpeed);
     }
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
 
@@ -179,9 +181,9 @@ export default class Slug extends Sprite {
 
   rotate() {
     if (this.targetDirection.x * this.currentDirection.y > this.targetDirection.y * this.currentDirection.x) {
-      this.currentDirection.rotate(0, 0, -this.rotationSpeed, true);
+      this.currentDirection.rotate(0, 0, -this.currentStats.rotationSpeed, true);
     } else {
-      this.currentDirection.rotate(0, 0, this.rotationSpeed, true);
+      this.currentDirection.rotate(0, 0, this.currentStats.rotationSpeed, true);
     }
 
     const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 180;
@@ -245,22 +247,21 @@ export default class Slug extends Sprite {
     // TODO for testing purposes
     this.tint = 0xffffff;
     this.currentHP = 3;
-    this.maxMovementSpeed -= 1;
     this.loadTexture('slug');
   }
 
   switchToSnail() {
     // TODO for testing purposes
     this.tint = Math.random() * 0xffffff;
-    this.maxMovementSpeed += 1;
     this.loadTexture('snail');
   }
 
   shoot() {
+    if(this.currentState === this.states.SNAIL) return;
     if (this.canBoost) {
       this.canBoost = false;
       this.isBoosting = true;
-      this.currentMovementSpeed += this.boostSpeed;
+      this.currentMovementSpeed += this.currentStats.boostSpeed;
     }
   }
 

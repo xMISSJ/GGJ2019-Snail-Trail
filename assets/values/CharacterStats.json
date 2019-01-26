@@ -1,0 +1,18 @@
+{
+  "SLUG": {
+    "rotationSpeed": 1.5,
+    "currentMovementSpeed": 0,
+    "movementSpeedStep": 0.05,
+    "maxMovementSpeed": 3,
+    "boostSpeed": 5,
+    "speedDecrease": 0.12
+  },
+  "SNAIL": {
+    "rotationSpeed": 6,
+    "currentMovementSpeed": 0,
+    "movementSpeedStep": 0.05,
+    "maxMovementSpeed": 6,
+    "boostSpeed": 12,
+    "speedDecrease": 0.12
+  }
+}
