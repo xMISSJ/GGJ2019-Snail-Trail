@@ -90,6 +90,6 @@ export default class extends State {
   }
 
   render() {
-    this.collisionManager.render();
+    //this.collisionManager.render();
   }
 }

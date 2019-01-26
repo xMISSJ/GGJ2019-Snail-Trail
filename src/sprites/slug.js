@@ -32,7 +32,7 @@ export default class Slug extends Sprite {
     this.body.angle = 90
     this.body.collideWorldBounds = true;
 
-    this.scale.set(1.5, 1.5);
+    this.scale.set(1, 1);
     this.settings = Config.playerInput[`player${playerNumber}`];
     this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
     this.controller = new Controller(game, this, this.gamePad, this.settings);
@@ -57,13 +57,13 @@ export default class Slug extends Sprite {
     this.body.onBeginContact.add(this.onContact, this)
 
     this.trailParts = [];
-    this.maxTrailParts = 50;
+    this.maxTrailParts = 75;
     for (let i = 0; i < this.maxTrailParts; i += 1) {
       var trailPart = new TrailPart(10,50)
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
-    this.trailCooldown = 0.095;
+    this.trailCooldown = 0.05;
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
   }
@@ -271,6 +271,7 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime -= game.time.elapsed/1000;
 
+    if(!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.trailCooldown;
       this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
