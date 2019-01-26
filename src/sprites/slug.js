@@ -4,6 +4,7 @@ import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
+import TrailPart from './trailPart'
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
@@ -25,11 +26,13 @@ export default class Slug extends Sprite {
 
     game.physics.p2.enable(this, true);
     this.body.enable = true;
-    this.body.addCapsule(90, 40, 20);
+    this.body.clearShapes();
+    this.body.addCapsule(40, 20, 10, 0, 0);
     this.body.fixedRotation = true
     this.body.angle = 90
+    this.body.collideWorldBounds = true;
 
-    this.scale.set(3, 3);
+    this.scale.set(1.5, 1.5);
     this.settings = Config.playerInput[`player${playerNumber}`];
     this.gamePad = this.game.input.gamepad[`pad${playerNumber}`];
     this.controller = new Controller(game, this, this.gamePad, this.settings);
@@ -43,15 +46,33 @@ export default class Slug extends Sprite {
     this.movementSpeedStep = 0.05;
     this.maxMovementSpeed = 3;
     this.body.debug = true
+    this.boostSpeed = 5;
+    this.speedDecrease = 0.12;
+
     this.isMoving = false;
+
+    this.canBoost = true;
+    this.isBoosting = false;
     this.createSlug();
     this.body.onBeginContact.add(this.onContact, this)
+
+    this.trailParts = [];
+    this.maxTrailParts = 50;
+    for (let i = 0; i < this.maxTrailParts; i += 1) {
+      var trailPart = new TrailPart(10,50)
+      this.trailParts.push(trailPart);
+      game.add.existing(trailPart);
+    }
+    this.trailCooldown = 0.095;
+    this.trailCurrentTime = 0;
+    this.trailToSpawn = 0;
   }
 
   createSlug() {
     this.smoothed = false;
     SignalManager.instance.dispatch('addSlug', this);
     this.moving = this.animations.add('moving', [0, 1, 2, 3], 10, true);
+    this.movingSnail = this.animations.add('movingSnail', [0, 1, 2, 3], 10, true);
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
   }
 
@@ -135,7 +156,17 @@ export default class Slug extends Sprite {
       this.currentMovementSpeed = 0;
     }
 
-    this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
+    if (this.isBoosting) {
+      this.currentMovementSpeed -= this.speedDecrease;
+      if (this.currentMovementSpeed < this.maxMovementSpeed) {
+        this.currentMovementSpeed = this.maxMovementSpeed;
+        this.isBoosting = false;
+        this.canBoost = true;
+        // TODO Start cooldown
+      }
+    } else {
+      this.currentMovementSpeed = Phaser.Math.clamp(this.currentMovementSpeed, 0, this.maxMovementSpeed);
+    }
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
 
     this.x += this.currentDirection.x;
@@ -143,6 +174,7 @@ export default class Slug extends Sprite {
     this.body.moveRight(this.currentDirection.x * 60);
     this.body.moveDown(this.currentDirection.y * 60);
     this.doAnimation();
+    this.handleTrailSpawn();
   }
 
   rotate() {
@@ -159,7 +191,9 @@ export default class Slug extends Sprite {
 
   doAnimation() {
     if (this.isMoving) {
-      this.play('moving');
+      if(this.states.SLUG) this.play('moving');
+      else if(this.states.SNAIL) this.play('movingSnail');
+
     } else {
       // TODO Play idle
     }
@@ -211,14 +245,37 @@ export default class Slug extends Sprite {
     // TODO for testing purposes
     this.tint = 0xffffff;
     this.currentHP = 3;
+    this.maxMovementSpeed -= 1;
+    this.loadTexture('slug');
   }
 
   switchToSnail() {
     // TODO for testing purposes
     this.tint = Math.random() * 0xffffff;
+    this.maxMovementSpeed += 1;
+    this.loadTexture('snail');
   }
 
   shoot() {
+    if (this.canBoost) {
+      this.canBoost = false;
+      this.isBoosting = true;
+      this.currentMovementSpeed += this.boostSpeed;
+    }
+  }
 
+  handleTrailSpawn() {
+    return;
+    for (let i = 0; i < this.maxTrailParts; i += 1) {
+      this.trailParts[i].update();
+    }
+    this.trailCurrentTime -= game.time.elapsed/1000;
+
+    if (this.trailCurrentTime < 0) {
+      this.trailCurrentTime = this.trailCooldown;
+      this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
+      this.trailToSpawn++;
+      if(this.trailToSpawn >= this.maxTrailParts - 1) this.trailToSpawn = 0;
+    }
   }
 }

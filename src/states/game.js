@@ -1,6 +1,6 @@
 import { State, Phaser } from 'phaser';
 import lang from '../lang';
-import Background from '../sprites/background'
+import Background from '../sprites/background';
 import Facebook from '../services/facebook';
 import LocalizationManager from '../services/localizationManager';
 import SignalManager from '../services/signalManager';
@@ -8,14 +8,16 @@ import Image from '../services/image';
 import CollisionManager from '../sprites/collisionManager';
 import Slug from '../sprites/slug';
 import Shell from '../sprites/shell';
-import ColliderGroup from "../sprites/colliderGroup";
+import ColliderGroup from '../sprites/colliderGroup';
 import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
+import Wall from '../sprites/wall';
 
 export default class extends State {
   init() {
     this.game.input.maxPointers = 2;
     game.input.gamepad.start();
+    game.world.setBounds(0, 0, 800, 800);
     game.physics.startSystem(Phaser.Physics.P2JS);
   }
 
@@ -24,7 +26,7 @@ export default class extends State {
   }
 
   create() {
-    this.background = new Background(0,0);
+    this.background = new Background(0, 0);
     game.add.existing(this.background);
 
     if (__DEV__) {
@@ -55,13 +57,25 @@ export default class extends State {
       });
     }
     this.collisionManager = new CollisionManager();
+    this.buildWalls();
     this.buildShell();
     this.buildSlugs();
   }
 
+  buildWalls() {
+    const wall1 = new Wall([0, 350], [720, 100]);
+    game.add.existing(wall1);
+    const wall2 = new Wall([1280, 350], [720, 100]);
+    game.add.existing(wall2);
+    const wall3 = new Wall([640, 0], [100, 1280]);
+    game.add.existing(wall3);
+    const wall4 = new Wall([640, 720], [100, 1280]);
+    game.add.existing(wall4);
+  }
+
   buildSlugs() {
     for (let i = 0; i < 4; i += 1) {
-      const slug = new Slug(i + 1, [i * 200, i * 200]);
+      const slug = new Slug(i + 1, [i * 200 + 100, i * 200 + 100]);
       game.add.existing(slug);
     }
   }
@@ -73,7 +87,6 @@ export default class extends State {
 
   update() {
     GameManager.instance.update();
-
   }
 
   render() {

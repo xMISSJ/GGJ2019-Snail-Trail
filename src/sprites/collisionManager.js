@@ -7,9 +7,13 @@ export default class CollisionManager extends Group {
 
     this.slugs = [];
     this.shell = null;
+    this.walls = [];
+    this.wallsP2Group = game.physics.p2.createCollisionGroup();
     this.slugsP2Group = game.physics.p2.createCollisionGroup();
     this.shellP2Group = game.physics.p2.createCollisionGroup();
+    this.worldP2Group = game.physics.p2.createCollisionGroup();
     SignalManager.instance.add('addSlug', this.addSlug, this);
+    SignalManager.instance.add('addWall', this.addShell, this);
     SignalManager.instance.add('addShell', this.addShell, this);
   }
 
@@ -28,6 +32,12 @@ export default class CollisionManager extends Group {
     this.setPhysicsShell(entity)
   }
 
+  addWall(entity) {
+    this.walls.push(entity);
+console.log("add wall")
+    this.setPhysicsWall(entity)
+  }
+
   removeShell(entity) {
     // const index = this.shells.indexOf(entity);
     //
@@ -44,6 +54,8 @@ export default class CollisionManager extends Group {
     entity.body.setCollisionGroup(this.slugsP2Group);
     entity.body.collides(this.shellP2Group, entity.onCollideShell, entity);
     entity.body.collides(this.slugsP2Group, entity.onCollideSlug, entity);
+    entity.body.collides(this.wallsP2Group);
+    entity.body.collideWorldBounds = true;
   }
 
   setPhysicsShell(entity) {
@@ -51,6 +63,9 @@ export default class CollisionManager extends Group {
     entity.body.collides([this.slugsP2Group, this.shellP2Group]);
   }
 
+  setPhysicsWall(entity) {
+    entity.body.setCollisionGroup(this.wallsP2Group);
+  }
 
   render() {
     if (this.shell && this.shell.visible) {
