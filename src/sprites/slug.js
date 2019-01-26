@@ -4,7 +4,8 @@ import Controller from '../services/Controller';
 import Config from '../config';
 import SignalManager from '../services/signalManager';
 import GameManager from '../services/gameManager';
-import TrailPart from './trailPart'
+import TrailPart from './trailPart';
+
 export default class Slug extends Sprite {
   constructor(playerNumber, position) {
     super({ asset: 'slug', x: position[0], y: position[1] });
@@ -13,7 +14,7 @@ export default class Slug extends Sprite {
     this.characterStats = this.game.cache.getJSON('characterSettings');
     console.log(this.characterStats);
     Object.freeze(this.state);
-    this.tag = "slug";
+    this.tag = 'slug';
     this.maxHP = 3;
 
     this.switchState(this.states.SLUG);
@@ -29,8 +30,8 @@ export default class Slug extends Sprite {
     this.body.enable = true;
     this.body.clearShapes();
     this.body.addCapsule(40, 20, 10, 0, 0);
-    this.body.fixedRotation = true
-    this.body.angle = 90
+    this.body.fixedRotation = true;
+    this.body.angle = 90;
     this.body.collideWorldBounds = true;
 
     this.scale.set(1, 1);
@@ -42,7 +43,7 @@ export default class Slug extends Sprite {
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
 
-    this.body.debug = true;
+    this.body.debug = false;
     this.currentMovementSpeed = 0;
 
     this.isMoving = false;
@@ -50,12 +51,12 @@ export default class Slug extends Sprite {
     this.canBoost = true;
     this.isBoosting = false;
     this.createSlug();
-    this.body.onBeginContact.add(this.onContact, this)
+    this.body.onBeginContact.add(this.onContact, this);
 
     this.trailParts = [];
     this.maxTrailParts = 75;
     for (let i = 0; i < this.maxTrailParts; i += 1) {
-      var trailPart = new TrailPart(10,50)
+      const trailPart = new TrailPart(10, 50);
       this.trailParts.push(trailPart);
       game.add.existing(trailPart);
     }
@@ -73,7 +74,7 @@ export default class Slug extends Sprite {
   }
 
   onContact(body) {
-    switch(body.sprite.tag) {
+    switch (body.sprite.tag) {
       case 'slug':
         this.onCollideSlug(this, body.sprite);
         break;
@@ -175,10 +176,20 @@ export default class Slug extends Sprite {
   }
 
   rotate() {
-    if (this.targetDirection.x * this.currentDirection.y > this.targetDirection.y * this.currentDirection.x) {
-      this.currentDirection.rotate(0, 0, -this.currentStats.rotationSpeed, true);
+    // This part makes sure that the last part of the rotation doesn't over shoot.
+    const angle = Math.acos(this.currentDirection.dot(this.targetDirection));
+    let nextRotation = Phaser.Math.degToRad(this.currentStats.rotationSpeed);
+    if (!isNaN(angle)) { // When the angle is to small Math.acos returns NaN In this case we reduce the next rotation.
+      if (angle < nextRotation) nextRotation = angle;
     } else {
-      this.currentDirection.rotate(0, 0, this.currentStats.rotationSpeed, true);
+      nextRotation /= 8;
+    }
+
+    // Actual rotate the current direction towards the target direction;
+    if (this.targetDirection.x * this.currentDirection.y > this.targetDirection.y * this.currentDirection.x) {
+      this.currentDirection.rotate(0, 0, -nextRotation);
+    } else {
+      this.currentDirection.rotate(0, 0, nextRotation);
     }
 
     const newAngle = this.currentDirection.angle(new Point(0, 0), true) + 270;
@@ -188,9 +199,8 @@ export default class Slug extends Sprite {
 
   doAnimation() {
     if (this.isMoving) {
-      if(this.states.SLUG) this.play('moving');
-      else if(this.states.SNAIL) this.play('movingSnail');
-
+      if (this.states.SLUG) this.play('moving');
+      else if (this.states.SNAIL) this.play('movingSnail');
     } else {
       // TODO Play idle
     }
@@ -240,19 +250,19 @@ export default class Slug extends Sprite {
 
   switchToSlug() {
     // TODO for testing purposes
-    this.tint = 0xffffff;
     this.currentHP = 3;
     this.loadTexture('slug');
+    this.scale.set(1, 1);
   }
 
   switchToSnail() {
     // TODO for testing purposes
-    this.tint = Math.random() * 0xffffff;
-    this.loadTexture('snail');
+    this.loadTexture('snailTemp');
+    this.scale.set(1.7, 1.7);
   }
 
   shoot() {
-    if(this.currentState === this.states.SNAIL) return;
+    if (this.currentState === this.states.SNAIL) return;
     if (this.canBoost) {
       this.canBoost = false;
       this.isBoosting = true;
@@ -264,14 +274,14 @@ export default class Slug extends Sprite {
     for (let i = 0; i < this.maxTrailParts; i += 1) {
       this.trailParts[i].update();
     }
-    this.trailCurrentTime -= game.time.elapsed/1000;
+    this.trailCurrentTime -= game.time.elapsed / 1000;
 
-    if(!this.isMoving) return;
+    if (!this.isMoving) return;
     if (this.trailCurrentTime < 0) {
       this.trailCurrentTime = this.trailCooldown;
       this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle);
       this.trailToSpawn++;
-      if(this.trailToSpawn >= this.maxTrailParts - 1) this.trailToSpawn = 0;
+      if (this.trailToSpawn >= this.maxTrailParts - 1) this.trailToSpawn = 0;
     }
   }
 }
