@@ -6,6 +6,7 @@ import GameManager from '../services/gameManager';
 import TrailPart from './trailPart';
 import CollisionManager from './collisionManager';
 import Explosion from './explosion';
+import BackgroundMusic from '../services/backgroundMusic';
 
 export default class Slug extends Sprite {
   constructor(playerNumber, position, colors) {
@@ -174,11 +175,11 @@ export default class Slug extends Sprite {
     if (!entity1.canPickUp) return;
     entity2.onCollide();
     this.switchState(this.states.SNAIL);
+    BackgroundMusic.instance.playRandomVoice();
     GameManager.instance.pickUpShell(this.playerNumber);
     const newExplosion = new Explosion('MEDIUM', this.position);
     newExplosion.start([entity1]);
     game.world.bringToTop(this);
-
     this.shell = entity2;
   }
 
