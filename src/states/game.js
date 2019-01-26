@@ -24,6 +24,7 @@ export default class extends State {
 
   preload() {
     LocalizationManager.instance.loadLanguagePackage();
+    this.game.load.json('characterSettings', 'assets/values/CharacterStats.json');
   }
 
   create() {
