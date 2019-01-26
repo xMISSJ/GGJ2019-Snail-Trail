@@ -1,4 +1,4 @@
-import { Group } from 'phaser';
+import {Group} from 'phaser';
 import SignalManager from '../services/signalManager';
 
 export default class CollisionManager extends Group {
@@ -7,8 +7,13 @@ export default class CollisionManager extends Group {
 
     this.slugs = [];
     this.shell = null;
-
+    this.walls = [];
+    this.wallsP2Group = game.physics.p2.createCollisionGroup();
+    this.slugsP2Group = game.physics.p2.createCollisionGroup();
+    this.shellP2Group = game.physics.p2.createCollisionGroup();
+    this.worldP2Group = game.physics.p2.createCollisionGroup();
     SignalManager.instance.add('addSlug', this.addSlug, this);
+    SignalManager.instance.add('addWall', this.addShell, this);
     SignalManager.instance.add('addShell', this.addShell, this);
   }
 
@@ -17,10 +22,20 @@ export default class CollisionManager extends Group {
    ----------------------------- */
   addSlug(entity) {
     this.slugs.push(entity);
+
+    this.setPhysicsSlugs(entity);
   }
 
   addShell(entity) {
     this.shell = entity;
+
+    this.setPhysicsShell(entity)
+  }
+
+  addWall(entity) {
+    this.walls.push(entity);
+console.log("add wall")
+    this.setPhysicsWall(entity)
   }
 
   removeShell(entity) {
@@ -35,39 +50,24 @@ export default class CollisionManager extends Group {
    * Collision checker
    ----------------------------- */
 
-  update() {
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      this.slugs[i].update();
-    }
+  setPhysicsSlugs(entity) {
+    entity.body.setCollisionGroup(this.slugsP2Group);
+    entity.body.collides(this.shellP2Group, entity.onCollideShell, entity);
+    entity.body.collides(this.slugsP2Group, entity.onCollideSlug, entity);
+    entity.body.collides(this.wallsP2Group);
+    entity.body.collideWorldBounds = true;
+  }
 
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      for (let j = 0; j < this.slugs.length; j += 1) {
-        if (this.shell.isPickable) {
-          game.physics.arcade.overlap(
-            this.slugs[i],
-            this.shell,
-            this.slugs[i].onCollideShell,
-            null,
-            this.slugs[i],
-          );
-        }
-        if (i === j) continue;
-        game.physics.arcade.overlap(
-          this.slugs[i],
-          this.slugs[j],
-          this.slugs[i].onCollideSlug,
-          null,
-          this.slugs[i],
-        );
-      }
-    }
+  setPhysicsShell(entity) {
+    entity.body.setCollisionGroup(this.shellP2Group)
+    entity.body.collides([this.slugsP2Group, this.shellP2Group]);
+  }
+
+  setPhysicsWall(entity) {
+    entity.body.setCollisionGroup(this.wallsP2Group);
   }
 
   render() {
-    for (let i = 0; i < this.slugs.length; i += 1) {
-      game.debug.body(this.slugs[i]);
-    }
-
     if (this.shell && this.shell.visible) {
       game.debug.body(this.shell);
     }

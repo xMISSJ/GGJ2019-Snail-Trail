@@ -16,5 +16,5 @@ export default {
   },
 
   // List of all signal names.
-  signalNames: ['addSlug', 'addShell', 'switchLeaderboard', 'gameReset'],
+  signalNames: ['addSlug', 'addShell', 'switchLeaderboard', 'gameReset', 'addWall'],
 };

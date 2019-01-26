@@ -5,19 +5,19 @@ import SignalManager from '../services/signalManager';
 
 export default class Shell extends Sprite {
   constructor(position) {
-    super({ asset: 'cloud', x: position[0], y: position[1], scaleX: 0.5, scaleY: 0.5 });
+    super({ asset: 'snailhouse', x: position[0], y: position[1], scaleX: 1.5, scaleY: 1.5 });
 
     this.states = { PICKABLE: 0, PICKEDUP: 1, SPAWN: 2 };
     Object.freeze(this.state);
-
+    this.tag = "shell";
     this.switchState(this.states.PICKABLE);
 
-    game.physics.arcade.enable(this);
+    game.physics.p2.enable(this, true);
+    this.body.data.sensor = true
     this.body.enable = true;
-    this.body.setCircle(100, 0, 0);
-    this.body.bounce.set(1);
-    this.body.collideWorldBounds = true;
-    this.body.drag.setTo(20, 20);
+    this.circleShape = this.body.setCircle(40, 0, 0);
+
+    this.circleShape.sensor = true
 
     SignalManager.instance.dispatch('addShell', this);
   }
@@ -29,9 +29,9 @@ export default class Shell extends Sprite {
 
   onSpawn(position) {
     this.switchState(this.states.SPAWN);
-
     this.position.setTo(position.x, position.y);
-    this.body.velocity.setTo(Math.random() * 100 - 50, Math.random() * 100 - 50);
+    this.body.x = position.x;
+    this.body.y = position.y;
   }
   /* -----------------------------
    * States management
