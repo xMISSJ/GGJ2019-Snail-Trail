@@ -130,7 +130,10 @@ export default class Slug extends Sprite {
 
   onCollideSlug(entity1, entity2) {
     if (entity2.isBoosting) {
+      if (!this.isSnail) return;
       this.removeHealth(entity1, entity2, 10);
+      entity2.isBoosting = false;
+      entity2.currentDirection.normalize();
     }
   }
 
