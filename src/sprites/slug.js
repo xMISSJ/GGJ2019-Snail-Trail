@@ -118,7 +118,7 @@ export default class Slug extends Sprite {
   onBeginTrail() {
     this.collideWithTrail += 1;
     this.currentTrailState = this.trailStates.COLLIDE;
-    this.trailSpeed = 0.5;
+    this.trailSpeed = 0.3;
   }
 
   onEndTrail() {
@@ -177,7 +177,7 @@ console.log(this.currentHP)
 
   update() {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
-      this.removeHealth(null, null, game.time.elapsed / 1000);
+      //this.removeHealth(null, null, game.time.elapsed / 1000);
     }
 
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
