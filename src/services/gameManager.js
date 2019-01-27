@@ -4,6 +4,7 @@ import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
 import Text from "./text";
 import BackgroundMusic from '../services/backgroundMusic';
+import SoundEffects from "./soundEffects";
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -99,6 +100,7 @@ export default class GameManager extends Singleton {
       strokeThickness: 10,
     });
     game.add.existing(this.winText);
+    SoundEffects.instance.onWinner();
   }
 
   reset() {
@@ -132,13 +134,14 @@ export default class GameManager extends Singleton {
     });
     game.add.existing(this.objectiveText);
     game.add.existing(this.countDown);
-    game.add.tween(this.countDown.scale).to({ x: 2, y: 2 }, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
+    game.add.tween(this.countDown.scale).to({ x: 1.3, y: 1.3}, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
     this.countDown.start(() => {
       this.currentState = this.states.game;
       this.countDown.destroy();
       this.objectiveText.destroy();
       BackgroundMusic.instance.playInGameSound();
     }, this);
+    SoundEffects.instance.onReadySetGo();
   }
 
   update() {
