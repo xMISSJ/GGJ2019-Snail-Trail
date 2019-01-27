@@ -45,7 +45,7 @@ export default class BackgroundMusic extends Singleton {
   update() {
     if (GameManager.instance.currentState === GameManager.instance.states.game) {
       var currentMaxValue = GameManager.instance.playerScores[GameManager.instance.shellHolder - 1];
-      console.log(currentMaxValue);
+      // console.log(currentMaxValue);
       currentMaxValue = isNaN(currentMaxValue) ? 0 : currentMaxValue;
       var speedDif = this.speedMax - this.speedMin;
       var ratio = currentMaxValue / GameManager.instance.winAmount;

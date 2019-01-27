@@ -13,9 +13,11 @@ export default class Goal extends Group {
   buildCrown() {
     this.crown = new Sprite({
       asset: 'crown',
-      x: 50,
-      y: 40,
+      x: 60,
+      y: 30,
     });
+
+    this.crown.scale.setTo(0.75,0.75)
 
     this.add(this.crown);
   }
@@ -23,7 +25,7 @@ export default class Goal extends Group {
   buildText() {
     this.text = new Text({
       text: '30s',
-      position: new Point(150, 40),
+      position: new Point(150, 30),
       color: '#ffffff',
       strokeThickness: 10,
     });

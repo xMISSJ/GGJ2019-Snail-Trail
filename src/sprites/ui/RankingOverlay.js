@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Sprite from '../../services/sprite';
 import Text from '../../services/text';
 import GameManager from '../../services/gameManager';
+import CollisionManager from "../collisionManager";
 
 export default class RankingOverlay extends Phaser.Group {
   constructor() {
@@ -26,6 +27,8 @@ export default class RankingOverlay extends Phaser.Group {
       rankingStage.anchor.setTo(0.5, 1);
       this.add(rankingStage);
     }
+
+    CollisionManager.instance.reset();
 
     const ySnailOffset = index === 3 ? 0 : rankingStage.height;
     const slug = game.add.sprite(posX, this.startY - ySnailOffset + 30, `${this.spriteNames[GameManager.instance.leaderboard[index] - 1]}`);
