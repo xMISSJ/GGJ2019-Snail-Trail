@@ -93,6 +93,7 @@ export default class AssetList extends Singleton {
       { key: '85chiptune', dir: '', file: '85chiptune.wav' },
       { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
       { key: 'techLoop', dir: '', file: 'techLoop.wav' },
+      { key: 'epicString', dir: '', file: 'epicString120.wav' },
 
       { key: 'winner', dir: 'effects/', file: 'winner.wav'},
       { key: 'cheer', dir: 'effects/', file: 'cheer.wav'},

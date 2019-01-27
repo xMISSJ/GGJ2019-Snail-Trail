@@ -4,6 +4,7 @@ import BackgroundMusic from '../services/backgroundMusic';
 import Controller from '../services/Controller';
 import Config from '../config';
 import Text from '../services/text';
+import SoundEffects from "../services/soundEffects";
 
 export default class characterSelect extends State {
   init() {
@@ -72,6 +73,8 @@ export default class characterSelect extends State {
           this.screens.push(this.screen);
           this.screen.scale.set(4);
           this.add.existing(this.nameText);
+          SoundEffects.instance.setYayName(this.nameText.text.toLowerCase());
+          SoundEffects.instance.onYay();
         }
         break;
       }

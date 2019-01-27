@@ -31,7 +31,7 @@ export default class SoundEffects extends Singleton {
     this.yayName = name;
   }
   onYay() {
-    this.yaySounds[this.yayName].play('', 0, 1);
+    this.yaySounds[this.yayName].play('', 0, 3);
   };
 
   onSwoosh() {

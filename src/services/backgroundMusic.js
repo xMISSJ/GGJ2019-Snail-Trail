@@ -23,8 +23,8 @@ export default class BackgroundMusic extends Singleton {
       this.shaker,
       this.reageaDrums,
       this.funkyMoog,
+      this.bass,
       this.guitar,
-      this.bass
     ];
     for (let i = 0; i < this.loops.length; i++) {
       this.loops[i].play('', i, 0, true);
@@ -35,7 +35,7 @@ export default class BackgroundMusic extends Singleton {
     this.currentToPlay = 0;
 
     this.speedMin = 1;
-    this.speedMax = 1.4;
+    this.speedMax = 1.3;
     this.currentSpeed = this.speedMin;
     this.speedChange = 0.0075;
     this.targetSpeed = this.speedMin;
@@ -45,7 +45,6 @@ export default class BackgroundMusic extends Singleton {
   update() {
     if (GameManager.instance.currentState === GameManager.instance.states.game) {
       var currentMaxValue = GameManager.instance.playerScores[GameManager.instance.shellHolder - 1];
-      console.log(currentMaxValue);
       currentMaxValue = isNaN(currentMaxValue) ? 0 : currentMaxValue;
       var speedDif = this.speedMax - this.speedMin;
       var ratio = currentMaxValue / GameManager.instance.winAmount;
@@ -54,18 +53,27 @@ export default class BackgroundMusic extends Singleton {
       this.targetSpeed = newVal;
     } else {
       this.targetSpeed = this.speedMin;
+      var ratio = 0;
     }
+    var stringVolume = (ratio < 0.66 ? 0 : ratio) * 2;
     var nextStep = this.speedChange;
     nextStep = this.currentSpeed > this.targetSpeed ? - nextStep : nextStep;
     this.currentSpeed += nextStep;
 
     this.techLoop._sound.playbackRate.value = this.currentSpeed;
+    this.epicString._sound.playbackRate.value = this.currentSpeed;
+    this.epicString.volume = stringVolume;
   }
   setIngameSound() {
-    this.techLoop = SoundManager.instance.getSound('techLoop')
+    this.techLoop = SoundManager.instance.getSound('techLoop');
+    this.epicString = SoundManager.instance.getSound('epicString');
     this.voiceSound = SoundManager.instance.getSound('85voiceSound');
 
     this.techLoop.play('',0,0, true);
+    this.epicString.play('',0.2,0, true);
+
+    this.techLoop.pause();
+    this.epicString.pause();
   }
 
   playRandomVoice() {
@@ -86,7 +94,8 @@ export default class BackgroundMusic extends Singleton {
 
   playInGameSound() {
     this.techLoop.volume = 1;
-    this.voiceSound.play('',0,0, true);
+    this.techLoop.resume();
+    this.epicString.resume();
   }
 
   stopCharacterSelect() {
