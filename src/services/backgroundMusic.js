@@ -1,5 +1,7 @@
 import Singleton from './singleton';
-import SoundManager from './soundManager'
+import SoundManager from './soundManager';
+import GameManager from './gameManager';
+
 export default class BackgroundMusic extends Singleton {
   constructor() {
     super();
@@ -32,12 +34,38 @@ export default class BackgroundMusic extends Singleton {
 
     this.currentToPlay = 0;
 
+    this.speedMin = 1;
+    this.speedMax = 1.4;
+    this.currentSpeed = this.speedMin;
+    this.speedChange = 0.0075;
+    this.targetSpeed = this.speedMin;
     this.setIngameSound();
   }
 
+  update() {
+    if (GameManager.instance.currentState === GameManager.instance.states.game) {
+      var currentMaxValue = GameManager.instance.playerScores[GameManager.instance.shellHolder - 1];
+      console.log(currentMaxValue);
+      currentMaxValue = isNaN(currentMaxValue) ? 0 : currentMaxValue;
+      var speedDif = this.speedMax - this.speedMin;
+      var ratio = currentMaxValue / GameManager.instance.winAmount;
+      var extraValue = speedDif * ratio;
+      var newVal = this.speedMin + extraValue;
+      this.targetSpeed = newVal;
+    } else {
+      this.targetSpeed = this.speedMin;
+    }
+    var nextStep = this.speedChange;
+    nextStep = this.currentSpeed > this.targetSpeed ? - nextStep : nextStep;
+    this.currentSpeed += nextStep;
+
+    this.techLoop._sound.playbackRate.value = this.currentSpeed;
+  }
   setIngameSound() {
     this.techLoop = SoundManager.instance.getSound('techLoop')
     this.voiceSound = SoundManager.instance.getSound('85voiceSound');
+
+    this.techLoop.play('',0,0, true);
   }
 
   playRandomVoice() {
@@ -57,7 +85,7 @@ export default class BackgroundMusic extends Singleton {
   }
 
   playInGameSound() {
-    this.techLoop.play('',0,1, true);
+    this.techLoop.volume = 1;
     this.voiceSound.play('',0,0, true);
   }
 

@@ -99,6 +99,7 @@ export default class GameManager extends Singleton {
     this.overlay = new RankingOverlay();
     game.background.alpha = 0.3;
     SoundEffects.instance.onWinner();
+    BackgroundMusic.instance.targetSpeed = 1;
   }
 
   reset() {
@@ -143,6 +144,7 @@ export default class GameManager extends Singleton {
   }
 
   update() {
+    BackgroundMusic.instance.update();
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
     } else if (this.currentState === this.states.end) {
