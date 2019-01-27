@@ -68,6 +68,7 @@ export default class AssetList extends Singleton {
 
       // Overlay
       { key: 'hype_bar', dir: 'overlay/', png: 'hype_bar.png' },
+      { key: 'countDown_bar', dir: 'overlay/', png: 'countdown_bar.png' },
       { key: 'vs', dir: 'overlay/', png: 'vs.png' },
       { key: 'everyone_hype', dir: 'overlay/', png: 'everyone_hype.png' },
       { key: 'PHTEVEN', dir: 'overlay/', png: 'PHTEVEN.png' },
@@ -83,6 +84,10 @@ export default class AssetList extends Singleton {
       { key: 'stage1', dir: '', png: 'podium1.png' },
       { key: 'stage2', dir: '', png: 'podium2.png' },
       { key: 'stage3', dir: '', png: 'podium3.png' },
+
+      // logo
+      { key: 'logo', dir: '', png: 'logo.png' },
+      { key: 'logo-team', dir: '', png: 'logo-team.png' },
     ];
 
     this._soundList = [
