@@ -4,7 +4,7 @@ import BackgroundMusic from '../services/backgroundMusic';
 import Controller from '../services/Controller';
 import Config from '../config';
 import Text from '../services/text';
-import SoundEffects from "../services/soundEffects";
+import SoundEffects from '../services/soundEffects';
 
 export default class characterSelect extends State {
   init() {
@@ -48,6 +48,7 @@ export default class characterSelect extends State {
     }
 
     this.startText = new Text({ text: 'Press B to start the game!', position: new Phaser.Point(game.width / 2, game.height - 67), fontSize: 20, color: '#FFFFFF' });
+    this.startText.visible = false;
     this.add.existing(this.startText);
     game.add.tween(this.startText).to({ y: this.startText.y - 4 }, 100, 'Linear', true).yoyo(true).loop(true);
   }
@@ -64,8 +65,9 @@ export default class characterSelect extends State {
       if (this.controllersAdded[i]) continue;
       for (const buttonPress in game.controllers[i].buttonInput) {
         if (game.controllers[i].buttonInput[buttonPress]) {
-          this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
+
+          this.addPlayer(game.controllers[i]);
           // console.log('adding controller: ', i + 1);
           // console.log(game.totalPlayers - 1);
           BackgroundMusic.instance.playNextSound();
@@ -83,6 +85,9 @@ export default class characterSelect extends State {
 
   addPlayer(controller) {
     game.playerMap.addPlayer(controller);
+    if (!this.startText.visible && this.controllersAdded.reduce((x, y) => x + y) >= 2) {
+      this.startText.visible = true;
+    }
   }
 
   createCard(index) {
