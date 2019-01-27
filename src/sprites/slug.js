@@ -398,6 +398,9 @@ export default class Slug extends Sprite {
   switchState(state) {
     this.currentState = state;
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
+    console.log(this.currentStats.size)
+    this.cancelTweens();
+    this.scale.setTo(this.currentStats.size);
 
     switch (this.currentState) {
       case this.states.SLUG:
@@ -419,13 +422,12 @@ export default class Slug extends Sprite {
   }
 
   switchToSlug() {
-    // TODO for testing purposes
     this.currentHP = this.maxHP;
-    this.scale.setTo(this.currentStats.size);
     this.collideWithTrail.length = 0;
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
     this.shine.visible = false;
+    this.snailShell.visible = false;
 
     this.doHitAnimation();
     this.canPickUp = false;
@@ -436,11 +438,7 @@ export default class Slug extends Sprite {
   }
 
   switchToSnail() {
-    // TODO for testing purposes
-    // this.loadTexture('snail');
-    console.log(this.currentStats.size);
     this.doAnimation();
-    this.scale.setTo(this.currentStats.size);
     SoundEffects.instance.setYayName(this.name);
     this.shine.visible = true;
   }
@@ -467,14 +465,14 @@ export default class Slug extends Sprite {
       this.isParrying = true;
       this.targetDirection = new Phaser.Point(0, 0);
       this.currentDirection = new Phaser.Point(0, 0);
-      game.add.tween(this.scale).to({ x: this.currentStats.size / 2, y: this.currentStats.size / 2 }, 500, Phaser.Easing.Exponential.Out, true);
-      game.add.tween(this.snailShell.scale).to({ x: this.currentStats.size * 1.5, y: this.currentStats.size * 1.5 }, 500, Phaser.Easing.Exponential.Out, true);
+      this.shrinkTween = game.add.tween(this.scale).to({ x: this.currentStats.size / 2, y: this.currentStats.size / 2 }, 500, Phaser.Easing.Exponential.Out, true);
+      this.shellGrowTween = game.add.tween(this.snailShell.scale).to({ x: this.currentStats.size * 1.5, y: this.currentStats.size * 1.5 }, 500, Phaser.Easing.Exponential.Out, true);
       setTimeout(() => {
         this.doAnimation();
         this.isParrying = false;
         this.currentParryCoolDown = this.currentStats.parryCooldown;
-        game.add.tween(this.scale).to({ x: this.currentStats.size, y: this.currentStats.size }, 500, Phaser.Easing.Exponential.Out, true);
-        game.add.tween(this.snailShell.scale).to({ x: 1, y: 1 }, 500, Phaser.Easing.Exponential.Out, true);
+        this.growTween = game.add.tween(this.scale).to({ x: this.currentStats.size, y: this.currentStats.size }, 500, Phaser.Easing.Exponential.Out, true);
+        this.shellShrinkTween = game.add.tween(this.snailShell.scale).to({ x: 1, y: 1 }, 500, Phaser.Easing.Exponential.Out, true);
       }, 1000);
     }
   }
@@ -522,5 +520,18 @@ export default class Slug extends Sprite {
         this.currentForce = (data.explosionRadius - distance) * data.explosionForce;
       }
     }, data.explosionFreezeTime * 1000);
+  }
+
+  cancelTweens() {
+    if (this.growTween === undefined ||
+      this.shrinkTween === undefined ||
+      this.shellShrinkTween === undefined ||
+      this.shellGrowTween === undefined) {
+      return;
+    }
+    this.growTween.stop();
+    this.shrinkTween.stop();
+    this.shellShrinkTween.stop();
+    this.shellGrowTween.stop();
   }
 }
