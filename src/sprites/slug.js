@@ -103,6 +103,8 @@ export default class Slug extends Sprite {
     this.hittedSnail.onComplete.add(() => {
       this.doAnimation();
     });
+    this.snailShell = new Sprite({ asset: 'snailShell', y: 5 });
+    this.addChild(this.snailShell);
 
     // this.idle = this.player.animations.add('idle', [0,3], 10, true);
     this.doAnimation();
@@ -251,8 +253,6 @@ export default class Slug extends Sprite {
     if (this.currentTrailState === this.trailStates.COLLIDE) {
       // this.removeHealth(null, null, game.time.elapsed / 1000);
     }
-
-    this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
     this.currentDirection.normalize();
 
     if (this.targetDirection.getMagnitude() > 0.2) {
@@ -351,9 +351,11 @@ export default class Slug extends Sprite {
       if (this.isSlug) {
         this.loadTexture(`${this.color}Slug`);
         this.play('movingSlug');
+        this.snailShell.visible = false;
       } else if (this.isSnail) {
         this.loadTexture(`${this.color}Snail`);
         this.play('movingSnail');
+        this.snailShell.visible = true;
       }
     } else {
       // TODO Play idle
@@ -392,6 +394,7 @@ export default class Slug extends Sprite {
 
   switchState(state) {
     this.currentState = state;
+    this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
 
     switch (this.currentState) {
       case this.states.SLUG:
@@ -415,7 +418,7 @@ export default class Slug extends Sprite {
   switchToSlug() {
     // TODO for testing purposes
     this.currentHP = this.maxHP;
-    this.scale.set(1, 1);
+    this.scale.setTo(this.currentStats.size);
     this.collideWithTrail.length = 0;
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
@@ -432,8 +435,9 @@ export default class Slug extends Sprite {
   switchToSnail() {
     // TODO for testing purposes
     // this.loadTexture('snail');
+    console.log(this.currentStats.size);
     this.doAnimation();
-    this.scale.set(1.7, 1.7);
+    this.scale.setTo(this.currentStats.size);
     SoundEffects.instance.setYayName(this.name);
   }
 
@@ -456,15 +460,16 @@ export default class Slug extends Sprite {
       if (!this.canParry) return;
       this.canParry = false;
       this.isParrying = true;
-      this.loadTexture('snailhouse');
       this.targetDirection = new Phaser.Point(0, 0);
       this.currentDirection = new Phaser.Point(0, 0);
+      game.add.tween(this.scale).to({ x: this.currentStats.size / 2, y: this.currentStats.size / 2 }, 500, Phaser.Easing.Exponential.Out, true);
+      game.add.tween(this.snailShell.scale).to({ x: this.currentStats.size * 1.5, y: this.currentStats.size * 1.5 }, 500, Phaser.Easing.Exponential.Out, true);
       setTimeout(() => {
         this.doAnimation();
         this.isParrying = false;
-        this.loadTexture(`${this.color}Snail`);
-        this.play('movingSnail');
         this.currentParryCoolDown = this.currentStats.parryCooldown;
+        game.add.tween(this.scale).to({ x: this.currentStats.size, y: this.currentStats.size }, 500, Phaser.Easing.Exponential.Out, true);
+        game.add.tween(this.snailShell.scale).to({ x: 1, y: 1 }, 500, Phaser.Easing.Exponential.Out, true);
       }, 1000);
     }
   }

@@ -31,6 +31,7 @@ export default class extends Phaser.Group {
   }
 
   start(array) {
+    game.camera.shake(0.05, 200);
     this.smoke = new BigSmoke(this.point.x, this.point.y);
     this.smoke.start(this.explosionTypes[this.type].smokeScale);
     this.explode(array);

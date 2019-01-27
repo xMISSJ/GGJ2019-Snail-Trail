@@ -50,6 +50,7 @@ export default class AssetList extends Singleton {
       { key: 'box', dir: '', png: 'box.png' },
       { key: 'snailhouse', dir: '', png: 'snailhouse.png' },
       { key: 'shellShine', dir: '', png: 'shine_shell.png' },
+      { key: 'snailShell', dir: '', png: 'body-shell.png' },
       { key: 'trailPart1', dir: 'trailParts/', png: 'patch01.png' },
       { key: 'trailPart2', dir: 'trailParts/', png: 'patch02.png' },
       { key: 'trailPart3', dir: 'trailParts/', png: 'patch03.png' },

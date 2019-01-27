@@ -10,7 +10,8 @@
     "dashCooldown": 1,
     "trailCooldown": 0.005,
     "forceDrag": 0.95,
-    "parryCooldown": 5
+    "parryCooldown": 5,
+    "size": 1
   },
   "SNAIL": {
     "rotationSpeed": 4.5,
@@ -23,6 +24,7 @@
     "dashCooldown": 1,
     "trailCooldown": 0.01,
     "forceDrag": 0.95,
-    "parryCooldown": 5
+    "parryCooldown": 5,
+    "size": 1.7
   }
 }
