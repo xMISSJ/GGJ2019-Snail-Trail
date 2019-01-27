@@ -55,7 +55,7 @@ export default class BackgroundMusic extends Singleton {
       this.targetSpeed = this.speedMin;
       var ratio = 0;
     }
-    var stringVolume = (ratio < 0.66 ? 0 : ratio) * 2;
+    var stringVolume = (ratio < 0.55 ? 0 : ratio) * 2;
     var nextStep = this.speedChange;
     nextStep = this.currentSpeed > this.targetSpeed ? - nextStep : nextStep;
     this.currentSpeed += nextStep;
