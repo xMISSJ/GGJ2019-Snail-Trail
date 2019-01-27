@@ -38,47 +38,48 @@ export default class characterSelect extends State {
   update() {
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
-      if (game.controllers[i].buttonInput.b) {
-        game.state.start('Game');
-        BackgroundMusic.instance.stopCharacterSelect();
+      if (game.controllers[i].buttonInput.start || game.controllers[i].buttonInput.b) {
+        if (this.controllersAdded[i]) {
+          game.state.start('Game');
+          BackgroundMusic.instance.stopCharacterSelect();
+        }
       }
       if (this.controllersAdded[i]) continue;
-      for (const buttonPress in game.controllers[i].buttonInput) {
-        if (game.controllers[i].buttonInput[buttonPress]) {
-          BackgroundMusic.instance.playNextSound();
-          this.addPlayer(game.controllers[i]);
-          this.controllersAdded[i] = true;
-          console.log('adding controller: ', i + 1);
-          console.log(game.totalPlayers - 1);
+      if (game.controllers[i].buttonInput.a) {
+        BackgroundMusic.instance.playNextSound();
+        this.addPlayer(game.controllers[i]);
+        this.controllersAdded[i] = true;
+        console.log('adding controller: ', i + 1);
+        console.log(game.totalPlayers - 1);
 
-          switch (game.totalPlayers - 1) {
-            case 0:
-              this.screen = game.add.sprite(93, 220, 'slugG');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 1:
-              this.screen = game.add.sprite(390, 220, 'slugM');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 2:
-              this.screen = game.add.sprite(685, 220, 'slugO');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-            case 3:
-              console.log('hoi ik ben blauw');
-              this.screen = game.add.sprite(982, 220, 'slugB');
-              this.screen.scale.set(4);
-              this.screens.push(this.screen);
-              game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-              break;
-          }
+        switch (game.totalPlayers - 1) {
+          case 0:
+            this.screen = game.add.sprite(93, 220, 'slugG');
+            this.screen.scale.set(4);
+            this.screens.push(this.screen);
+            game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
+            break;
+          case 1:
+            this.screen = game.add.sprite(390, 220, 'slugM');
+            this.screen.scale.set(4);
+            this.screens.push(this.screen);
+            game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
+            break;
+          case 2:
+            this.screen = game.add.sprite(685, 220, 'slugO');
+            this.screen.scale.set(4);
+            this.screens.push(this.screen);
+            game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
+            break;
+          case 3:
+            console.log('hoi ik ben blauw');
+            this.screen = game.add.sprite(982, 220, 'slugB');
+            this.screen.scale.set(4);
+            this.screens.push(this.screen);
+            game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
+            break;
         }
+        break;
       }
     }
   }
