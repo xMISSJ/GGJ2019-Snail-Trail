@@ -46,7 +46,7 @@ export default class GameManager extends Singleton {
   }
 
   getPlayerScore(playerID) {
-    return this.playerScores[playerID - 1];
+    return Phaser.Math.clamp(this.playerScores[playerID - 1], 0, this.winAmount);
   }
 
   sortLeaderboard(playerID) {
