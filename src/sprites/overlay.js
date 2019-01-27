@@ -2,6 +2,7 @@ import { Group, Point, Phaser } from 'phaser';
 import Image from '../services/image';
 import GameManager from '../services/gameManager';
 import SoundEffects from '../services/soundEffects';
+import CollisionManager from './collisionManager';
 
 export default class Overlay extends Group {
   constructor() {
@@ -46,11 +47,35 @@ export default class Overlay extends Group {
       position: new Point(game.width - 200, 450),
     });
 
+    this.slug1 = new Image({
+      key: 'slugB',
+      position: new Point(200, 450),
+      scale: new Point(2, 2),
+    });
+
+    this.slug2 = new Image({
+      key: 'slugB',
+      position: new Point(140, 450),
+      scale: new Point(2, 2),
+    });
+
+    this.slug3 = new Image({
+      key: 'slugB',
+      position: new Point(170, 400),
+      scale: new Point(2, 2),
+    });
+
+    this.slugGroup = new Phaser.Group(game);
+
     this.add(this.hypeBar);
     this.add(this.name);
     this.add(this.everyoneHype);
     this.add(this.buffslug);
     this.add(this.vs);
+    this.slugGroup.add(this.slug3);
+    this.slugGroup.add(this.slug2);
+    this.slugGroup.add(this.slug1);
+    this.add(this.slugGroup);
   }
 
   createTweens() {
@@ -96,6 +121,15 @@ export default class Overlay extends Group {
     });
     this.everyoneHypeTweenIn.frameBased = true;
     this.everyoneHypeTweenOut.frameBased = true;
+
+    this.slug1TweenIn = game.make.tween(this.slugGroup).to({ x: 0 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 250, 0, false);
+    this.slug1TweenOut = game.make.tween(this.slugGroup).to({ x: -300 }, 300, Phaser.Easing.Sinusoidal.InOut, false, 1250, 0, false);
+    this.slug1TweenIn.onComplete.add(() => {
+      this.slug1TweenOut.start();
+    });
+
+    this.slug1TweenIn.frameBased = true;
+    this.slug1TweenOut.frameBased = true;
   }
 
   update() {
@@ -103,9 +137,11 @@ export default class Overlay extends Group {
   }
 
   start(name) {
+    game.world.bringToTop(this);
     GameManager.instance.togglePause();
     this.setTexture(name);
     this.setName(name);
+    this.setSlugs(name);
     setTimeout(() => {
       this.visible = true;
       this.hypeBar.x = 3597 / 2 + game.width;
@@ -124,6 +160,9 @@ export default class Overlay extends Group {
 
       this.everyoneHype.x = -500;
       this.everyoneHypeTweenIn.start();
+
+      this.slugGroup.x = -300;
+      this.slug1TweenIn.start();
     }, 50);
   }
 
@@ -139,5 +178,19 @@ export default class Overlay extends Group {
 
   setName(name) {
     this.name.loadTexture(name.toUpperCase());
+  }
+
+  setSlugs(name) {
+    let step = 0;
+    for (let i = 0; i < CollisionManager.instance.slugs.length; i += 1) {
+      if (CollisionManager.instance.slugs[i].name === name) continue;
+      this.slugGroup.children[step].loadTexture(`slug${CollisionManager.instance.slugs[i].color.charAt(0).toUpperCase()}`);
+      this.slugGroup.children[step].visible = true;
+      step += 1;
+    }
+
+    for (;step < 3; step += 1) {
+      this.slugGroup.children[step].visible = false;
+    }
   }
 }
