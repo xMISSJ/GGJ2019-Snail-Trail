@@ -52,10 +52,10 @@ export default class Slug extends Sprite {
     this.body.collideWorldBounds = true;
     this.scale.set(1, 1);
 
-    this.currentDirection = new Point(1, 0);
+    this.currentDirection = new Point(0, 0);
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
-    this.forceDirection = new Point(1, 0);
+    this.forceDirection = new Point(0, 0);
     this.currentForce = 0;
 
     this.body.debug = false;
