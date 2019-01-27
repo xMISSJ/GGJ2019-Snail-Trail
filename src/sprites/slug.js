@@ -34,7 +34,7 @@ export default class Slug extends Sprite {
     this.currentStats = this.characterStats[Object.keys(this.states)[this.currentState]];
     this.currentHP = this.maxHP;
 
-    this.collideWithTrail = 0;
+    this.collideWithTrail = [];
 
     this.shell = null;
 
@@ -116,6 +116,7 @@ export default class Slug extends Sprite {
   }
 
   onEndContact(body) {
+    if (!body.sprite) return;
     switch (body.sprite.tag) {
       case 'slug':
         this.onCollideSlugEnd(this, body.sprite)
@@ -132,17 +133,24 @@ export default class Slug extends Sprite {
     }
   }
 
-  onBeginTrail() {
+  onBeginTrail(entity) {
     if (this.isSlug) return;
-    this.collideWithTrail += 1;
+
+    this.collideWithTrail.push(entity);
     this.currentTrailState = this.trailStates.COLLIDE;
     this.trailSpeed = 0.3;
   }
 
-  onEndTrail() {
+  onEndTrail(entity) {
     if (this.isSlug) return;
-    this.collideWithTrail -= 1;
-    if (this.collideWithTrail === 0) {
+
+    for (let i = this.collideWithTrail.length - 1; i >= 0; i -= 1) {
+      if (this.collideWithTrail[i] === entity) {
+        this.collideWithTrail.splice(i, 1);
+      }
+    }
+
+    if (this.collideWithTrail.length === 0) {
       this.trailSpeed = 1;
       this.currentTrailState = this.trailStates.NO_COLLIDE;
     }
@@ -380,7 +388,7 @@ export default class Slug extends Sprite {
     // TODO for testing purposes
     this.currentHP = this.maxHP;
     this.scale.set(1, 1);
-    this.collideWithTrail = 0;
+    this.collideWithTrail.length = 0;
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
 
