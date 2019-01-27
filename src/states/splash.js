@@ -19,6 +19,11 @@ export default class Splash extends State {
     this.tweenInGame = game.make.tween(this.logoGame).to({ alpha: 1 }, 1000, null, false);
     this.tweenOutGame = game.make.tween(this.logoGame).to({ alpha: 0 }, 1000, null, false, 2000);
 
+    this.tweenInTeam.frameBased = true;
+    this.tweenOutTeam.frameBased = true;
+    this.tweenInGame.frameBased = true;
+    this.tweenOutGame.frameBased = true;
+
     this.tweenInTeam.chain(this.tweenOutTeam);
     this.tweenOutTeam.chain(this.tweenInGame);
     this.tweenInGame.chain(this.tweenOutGame);
