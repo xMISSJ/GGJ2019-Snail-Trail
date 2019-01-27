@@ -47,7 +47,7 @@ export default class AssetList extends Singleton {
 
       // Snail
       { key: 'cloud', dir: '', png: 'cloud.png' },
-      { key: 'box', dir: '', png: 'box.png' },
+      { key: 'box', dir: '', png: 'rock.png' },
       { key: 'snailhouse', dir: '', png: 'snailhouse.png' },
       { key: 'shellShine', dir: '', png: 'shine_shell.png' },
       { key: 'snailShell', dir: '', png: 'body-shell.png' },
