@@ -8,6 +8,7 @@ import Image from '../services/image';
 import CollisionManager from '../sprites/collisionManager';
 import Slug from '../sprites/slug';
 import Shell from '../sprites/shell';
+import ShellShine from '../sprites/shellShine';
 import ColliderGroup from '../sprites/colliderGroup';
 import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
@@ -102,7 +103,10 @@ export default class extends State {
   }
 
   buildShell() {
+    game.shellShine = new ShellShine();
     const shell = new Shell([game.width / 2, game.height / 2]);
+    this.add.existing(game.shellShine);
     game.add.existing(shell);
+    game.shellShine.onShellDrop(new Phaser.Point(shell.x, shell.y))
   }
 }

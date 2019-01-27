@@ -47,6 +47,7 @@ export default class AssetList extends Singleton {
       // Snail
       { key: 'cloud', dir: '', png: 'cloud.png' },
       { key: 'snailhouse', dir: '', png: 'snailhouse.png' },
+      { key: 'shellShine', dir: '', png: 'shine_shell.png' },
       { key: 'trailPart1', dir: 'trailParts/', png: 'patch01.png' },
       { key: 'trailPart2', dir: 'trailParts/', png: 'patch02.png' },
       { key: 'trailPart3', dir: 'trailParts/', png: 'patch03.png' },
@@ -93,8 +94,16 @@ export default class AssetList extends Singleton {
       { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
       { key: 'techLoop', dir: '', file: 'techLoop.wav' },
 
+      { key: 'winner', dir: 'effects/', file: 'winner.wav'},
+      { key: 'cheer', dir: 'effects/', file: 'cheer.wav'},
+      { key: 'readySetGo', dir: 'effects/', file: 'readySetGo4.wav'},
+      { key: 'swoosh', dir: 'effects/', file: 'swoosh.wav'},
       { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav'},
-      { key: 'slimeBoost', dir: 'effects/', file: 'slimeBoost.wav'}
+      { key: 'slimeBoost', dir: 'effects/', file: 'slimeBoost.wav'},
+      { key: 'yayBill', dir: 'effects/', file: 'yay-bill.wav' },
+      { key: 'yayCarl', dir: 'effects/', file: 'yay-carl.ogg' },
+      { key: 'yayFrank', dir: 'effects/', file: 'yay-frank.wav' },
+      { key: 'yayPhteven', dir: 'effects/', file: 'yay-phteven.wav' }
     ];
 
     this._soundPath = './assets/sounds/';

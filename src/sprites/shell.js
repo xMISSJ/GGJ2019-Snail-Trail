@@ -6,7 +6,7 @@ import CollisionManager from "./collisionManager";
 
 export default class Shell extends Sprite {
   constructor(position) {
-    super({ asset: 'snailhouse', x: position[0], y: position[1], scaleX: 1.5, scaleY: 1.5 });
+    super({ asset: 'snailhouse', x: position[0], y: position[1], scaleX: 1, scaleY: 1 });
 
     this.states = { PICKABLE: 0, PICKEDUP: 1, SPAWN: 2 };
     Object.freeze(this.state);
@@ -72,22 +72,18 @@ export default class Shell extends Sprite {
   }
 
   switchToPickable() {
-    // TODO for testing purposes
-    this.tint = 0xffffff;
     this.visible = true;
 
     CollisionManager.instance.addShell(this);
   }
 
   switchToPickUp() {
-    // TODO for testing purposes
     this.visible = false;
     this.body.clearCollision()
   }
 
   switchToSpawn() {
-    // TODO for testing purposes
-    this.tint = Math.random() * 0xffffff;
+
     this.visible = true;
 
     setTimeout(() => {

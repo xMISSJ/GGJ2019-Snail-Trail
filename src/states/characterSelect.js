@@ -16,9 +16,11 @@ export default class characterSelect extends State {
     game.controllers = [];
     this.controllersAdded = [false, false, false, false];
     this.screens = [1, 2, 3, 4];
+
     this.spriteNames = ['slugG', 'slugM', 'slugO', 'slugB'];
     this.slugNames = ['Bill', 'Phteven', 'Carl', 'Frank'];
     this.offset = 295;
+
     game.backgroundMusic = new BackgroundMusic();
   }
 
@@ -52,24 +54,26 @@ export default class characterSelect extends State {
   update() {
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
-      if (game.controllers[i].buttonInput.b) {
-        game.state.start('Game');
-        BackgroundMusic.instance.stopCharacterSelect();
+      if (game.controllers[i].buttonInput.start || game.controllers[i].buttonInput.b) {
+        if (this.controllersAdded[i]) {
+          game.state.start('Game');
+          BackgroundMusic.instance.stopCharacterSelect();
+        }
       }
       if (this.controllersAdded[i]) continue;
       for (const buttonPress in game.controllers[i].buttonInput) {
         if (game.controllers[i].buttonInput[buttonPress]) {
-          BackgroundMusic.instance.playNextSound();
           this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
           // console.log('adding controller: ', i + 1);
           // console.log(game.totalPlayers - 1);
-
+          BackgroundMusic.instance.playNextSound();
           this.createCard(game.totalPlayers - 1);
           this.screens.push(this.screen);
           this.screen.scale.set(4);
           this.add.existing(this.nameText);
         }
+        break;
       }
     }
   }

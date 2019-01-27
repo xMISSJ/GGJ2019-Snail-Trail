@@ -37,7 +37,8 @@ export default class Controller {
       a: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_A)),
       b: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_B)),
       y: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_Y)),
-      x: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_X))
+      x: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_X)),
+      start: (this.inputPad.isDown(Phaser.Gamepad.XBOX360_START))
     };
 
     this.input = {
@@ -128,7 +129,7 @@ export default class Controller {
     }
 
     if (this.buttonInput.a) {
-      this.character.pressA();
+      this.character.shoot();
     }
   }
 
