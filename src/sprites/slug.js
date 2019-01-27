@@ -66,6 +66,9 @@ export default class Slug extends Sprite {
     this.canBoost = true;
     this.isBoosting = false;
     this.currentDashCoolDown = this.currentStats.dashCooldown;
+    this.canParry = true;
+    this.isParrying = false;
+    this.currentParryCoolDown = this.currentStats.parryCooldown;
 
     this.createSlug();
     this.body.onBeginContact.add(this.onBeginContact, this);
@@ -78,6 +81,10 @@ export default class Slug extends Sprite {
     }
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
+
+    this.shine = new Sprite({ asset: 'shellShine', scaleX: 0, scaleY: 0 });
+    this.shine.alpha = 0.8;
+    this.addChild(this.shine);
 
     SignalManager.instance.add('gameEnd', () => {
       this.targetDirection = new Phaser.Point(0, 0);
@@ -162,6 +169,11 @@ export default class Slug extends Sprite {
 
     if (entity2.isBoosting) {
       if (!this.isSnail) return;
+      if (this.isParrying) {
+        const newExplosion = new Explosion('MEDIUM', this.position);
+        newExplosion.start([this]);
+        return;
+      }
       this.removeHealth(entity1, entity2, 10);
       SoundEffects.instance.onShellHit();
       entity2.isBoosting = false;
@@ -265,6 +277,7 @@ export default class Slug extends Sprite {
       this.currentMovementSpeed = 0;
     }
     this.handleBoosting();
+    this.handleParry();
     this.currentDirection.multiply(this.currentMovementSpeed, this.currentMovementSpeed);
 
     this.x += (this.currentDirection.x * this.trailSpeed);
@@ -296,6 +309,17 @@ export default class Slug extends Sprite {
           this.trailParts[this.trailToSpawn].spawnPart(this.x, this.y, this.angle, this.playerNumber);
           this.currentDashCoolDown = this.currentStats.dashCooldown;
         }
+      }
+    }
+  }
+
+  handleParry() {
+    if (!this.canParry) {
+      this.currentParryCoolDown -= game.time.elapsed / 1000;
+      if (this.currentParryCoolDown <= 0) {
+        this.canParry = true;
+        this.currentParryCoolDown = this.currentStats.parryCooldown;
+        const shine = game.add.tween(this.shine.scale).to({ x: 0.4, y: 0.4 }, 100, Phaser.Easing.Quadratic.Out, true).yoyo(true);
       }
     }
   }
@@ -429,7 +453,19 @@ export default class Slug extends Sprite {
 
       this.currentMovementSpeed += this.currentStats.boostSpeed;
     } else if (this.currentState === this.states.SNAIL) {
-
+      if (!this.canParry) return;
+      this.canParry = false;
+      this.isParrying = true;
+      this.loadTexture('snailhouse');
+      this.targetDirection = new Phaser.Point(0, 0);
+      this.currentDirection = new Phaser.Point(0, 0);
+      setTimeout(() => {
+        this.doAnimation();
+        this.isParrying = false;
+        this.loadTexture(`${this.color}Snail`);
+        this.play('movingSnail');
+        this.currentParryCoolDown = this.currentStats.parryCooldown;
+      }, 1000);
     }
   }
 

@@ -9,7 +9,8 @@
     "maxTrailParts": 150,
     "dashCooldown": 1,
     "trailCooldown": 0.005,
-    "forceDrag": 0.95
+    "forceDrag": 0.95,
+    "parryCooldown": 5
   },
   "SNAIL": {
     "rotationSpeed": 4.5,
@@ -21,6 +22,7 @@
     "maxTrailParts": 100,
     "dashCooldown": 1,
     "trailCooldown": 0.01,
-    "forceDrag": 0.95
+    "forceDrag": 0.95,
+    "parryCooldown": 5
   }
 }
