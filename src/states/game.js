@@ -60,12 +60,11 @@ export default class extends State {
   }
 
   update() {
+    for (let i = 0; i < game.controllers.length; i++) {
+      game.controllers[i].update();
+    };
     if (GameManager.instance.currentState === GameManager.instance.states.game || GameManager.instance.currentState === GameManager.instance.states.end) {
-
       GameManager.instance.update();
-      for (let i = 0; i < game.controllers.length; i++) {
-        game.controllers[i].update();
-      }
     }
   }
 
