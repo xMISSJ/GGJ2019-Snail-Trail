@@ -4,6 +4,7 @@ import BackgroundMusic from '../services/backgroundMusic';
 import Controller from '../services/Controller';
 import Config from '../config';
 import Text from '../services/text';
+import SoundEffects from '../services/soundEffects';
 
 export default class characterSelect extends State {
   init() {
@@ -47,6 +48,7 @@ export default class characterSelect extends State {
     }
 
     this.startText = new Text({ text: 'Press B to start the game!', position: new Phaser.Point(game.width / 2, game.height - 67), fontSize: 20, color: '#FFFFFF' });
+    this.startText.visible = false;
     this.add.existing(this.startText);
     game.add.tween(this.startText).to({ y: this.startText.y - 4 }, 100, 'Linear', true).yoyo(true).loop(true);
   }
@@ -61,11 +63,11 @@ export default class characterSelect extends State {
         }
       }
       if (this.controllersAdded[i]) continue;
-      // <<<<<<< HEAD
       for (const buttonPress in game.controllers[i].buttonInput) {
         if (game.controllers[i].buttonInput[buttonPress]) {
-          this.addPlayer(game.controllers[i]);
           this.controllersAdded[i] = true;
+
+          this.addPlayer(game.controllers[i]);
           // console.log('adding controller: ', i + 1);
           // console.log(game.totalPlayers - 1);
           BackgroundMusic.instance.playNextSound();
@@ -73,41 +75,8 @@ export default class characterSelect extends State {
           this.screens.push(this.screen);
           this.screen.scale.set(4);
           this.add.existing(this.nameText);
-          // =======
-          //       if (game.controllers[i].buttonInput.a) {
-          //         BackgroundMusic.instance.playNextSound();
-          //         this.addPlayer(game.controllers[i]);
-          //         this.controllersAdded[i] = true;
-          //         console.log('adding controller: ', i + 1);
-          //         console.log(game.totalPlayers - 1);
-          //
-          //         switch (game.totalPlayers - 1) {
-          //           case 0:
-          //             this.screen = game.add.sprite(93, 220, 'slugG');
-          //             this.screen.scale.set(4);
-          //             this.screens.push(this.screen);
-          //             game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-          //             break;
-          //           case 1:
-          //             this.screen = game.add.sprite(390, 220, 'slugM');
-          //             this.screen.scale.set(4);
-          //             this.screens.push(this.screen);
-          //             game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-          //             break;
-          //           case 2:
-          //             this.screen = game.add.sprite(685, 220, 'slugO');
-          //             this.screen.scale.set(4);
-          //             this.screens.push(this.screen);
-          //             game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-          //             break;
-          //           case 3:
-          //             console.log('hoi ik ben blauw');
-          //             this.screen = game.add.sprite(982, 220, 'slugB');
-          //             this.screen.scale.set(4);
-          //             this.screens.push(this.screen);
-          //             game.add.text(this.screen.x, this.screen.y, `${game.totalPlayers}`);
-          //             break;
-          // >>>>>>> master
+          SoundEffects.instance.setYayName(this.nameText.text.toLowerCase());
+          SoundEffects.instance.onYay();
         }
         break;
       }
@@ -116,6 +85,9 @@ export default class characterSelect extends State {
 
   addPlayer(controller) {
     game.playerMap.addPlayer(controller);
+    if (!this.startText.visible && this.controllersAdded.reduce((x, y) => x + y) >= 2) {
+      this.startText.visible = true;
+    }
   }
 
   createCard(index) {

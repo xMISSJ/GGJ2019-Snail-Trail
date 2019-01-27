@@ -7,6 +7,9 @@ export default class SoundEffects extends Singleton {
     this.smallCrack = SoundManager.instance.getSound('smallCrack');
     this.slimeBoost = SoundManager.instance.getSound('slimeBoost');
     this.swoosh = SoundManager.instance.getSound('swoosh');
+    this.readySetGo = SoundManager.instance.getSound('readySetGo')
+    this.winner = SoundManager.instance.getSound('winner');
+    this.cheer = SoundManager.instance.getSound('cheer');
 
     this.yaySounds = {
       bill: SoundManager.instance.getSound('yayBill'),
@@ -28,10 +31,19 @@ export default class SoundEffects extends Singleton {
     this.yayName = name;
   }
   onYay() {
-    this.yaySounds[this.yayName].play('', 0, 1);
+    this.yaySounds[this.yayName].play('', 0, 3);
   };
 
   onSwoosh() {
     this.swoosh.play('', 0.1, 1);
+  }
+
+  onReadySetGo() {
+    this.readySetGo.play('', 0.1, 1);
+  }
+
+  onWinner() {
+    this.winner.play('', 0.1, 1);
+    this.cheer.play('',1,1);
   }
 }

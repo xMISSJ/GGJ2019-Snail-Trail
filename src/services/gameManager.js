@@ -3,7 +3,9 @@ import Singleton from './singleton';
 import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
 import Text from "./text";
+import RankingOverlay from "../sprites/ui/RankingOverlay";
 import BackgroundMusic from '../services/backgroundMusic';
+import SoundEffects from "./soundEffects";
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -44,7 +46,7 @@ export default class GameManager extends Singleton {
   }
 
   getPlayerScore(playerID) {
-    return this.playerScores[playerID - 1];
+    return Phaser.Math.clamp(this.playerScores[playerID - 1], 0, this.winAmount);
   }
 
   sortLeaderboard(playerID) {
@@ -70,6 +72,7 @@ export default class GameManager extends Singleton {
     this.timer = game.time.create(false);
     this.timer.start();
     SignalManager.instance.dispatch('switchShell', this.shellHolder);
+    game.shellShine.onShellPickUp();
   }
 
   dropShell() {
@@ -88,16 +91,15 @@ export default class GameManager extends Singleton {
     SignalManager.instance.dispatch('gameEnd');
     this.currentState = this.states.end;
 
-    this.winText = new Text({
-      text: 'Player ' + playerID + ' wins!!!!',
-      anchor: new Phaser.Point(0.5, 0.5),
-      position: new Phaser.Point(game.width / 2, game.height / 2),
-      color: '#FFFFFF',
-      fontSize: 50,
-      stroke: '#000000',
-      strokeThickness: 10,
-    });
-    game.add.existing(this.winText);
+    // Makes all slugs invisible.
+    for (let i = 0; i < game.slugs.length; i++){
+      game.slugs[i].destroy();
+    }
+
+    this.overlay = new RankingOverlay();
+    game.background.alpha = 0.3;
+    SoundEffects.instance.onWinner();
+    BackgroundMusic.instance.targetSpeed = 1;
   }
 
   reset() {
@@ -120,17 +122,39 @@ export default class GameManager extends Singleton {
       stroke: '#000000',
       strokeThickness: 10,
     });
+    this.objectiveText = new Text({
+      text: 'Hold the shell for 30 seconds!',
+      position: new Phaser.Point(game.width / 2, game.height / 2 + 100),
+      anchor: new Phaser.Point(0.5, 0.5),
+      color: '#FFFFFF',
+      fontSize: 30,
+      stroke: '#000000',
+      strokeThickness: 10,
+    });
+    game.add.existing(this.objectiveText);
     game.add.existing(this.countDown);
+    game.add.tween(this.countDown.scale).to({ x: 1.3, y: 1.3}, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
     this.countDown.start(() => {
       this.currentState = this.states.game;
       this.countDown.destroy();
+      this.objectiveText.destroy();
       BackgroundMusic.instance.playInGameSound();
     }, this);
+    SoundEffects.instance.onReadySetGo();
   }
 
   update() {
+    BackgroundMusic.instance.update();
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
+    } else if (this.currentState === this.states.end) {
+      for (let i = 0; i < game.controllers.length; i++) {
+        game.controllers[i].update();
+        if (game.controllers[i].buttonInput.start) {
+          game.state.start('characterSelect');
+          SoundEffects.instance.cheer.stop();
+        }
+      }
     }
   }
 

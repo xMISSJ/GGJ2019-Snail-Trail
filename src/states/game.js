@@ -8,6 +8,8 @@ import Image from '../services/image';
 import CollisionManager from '../sprites/collisionManager';
 import Slug from '../sprites/slug';
 import Shell from '../sprites/shell';
+import Box from '../sprites/box';
+import ShellShine from '../sprites/shellShine';
 import ColliderGroup from '../sprites/colliderGroup';
 import GameManager from '../services/gameManager';
 import CountDownText from '../sprites/countDownText';
@@ -15,6 +17,8 @@ import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
 import Overlay from '../sprites/overlay';
+import Goal from "../sprites/ui/Goal";
+import Level from '../services/level';
 
 export default class extends State {
   init() {
@@ -31,6 +35,7 @@ export default class extends State {
 
   create() {
     this.background = new Background(0, 0);
+    game.background = this.background;
     game.add.existing(this.background);
 
     if (__DEV__) {
@@ -46,21 +51,20 @@ export default class extends State {
     this.buildWalls();
     this.buildShell();
     this.buildSlugs();
+    this.level = new Level();
     this.leaderboard = new Leaderboard();
-
+    this.goal = new Goal();
     GameManager.instance.startGame();
 
     this.overlay = new Overlay();
   }
 
   update() {
-    if (GameManager.instance.currentState !== GameManager.instance.states.game) {
-      return;
-    }
-
-    GameManager.instance.update();
     for (let i = 0; i < game.controllers.length; i++) {
       game.controllers[i].update();
+    };
+    if (GameManager.instance.currentState === GameManager.instance.states.game || GameManager.instance.currentState === GameManager.instance.states.end) {
+      GameManager.instance.update();
     }
   }
 
@@ -83,6 +87,8 @@ export default class extends State {
       { tint: 0x74b5ed, color: 'blue', name: 'frank' },
     ];
 
+    game.slugColors = this.slugColors;
+
     this.slugPositions = [
       [200, 200],
       [1000, 200],
@@ -90,15 +96,20 @@ export default class extends State {
       [1000, 500],
     ];
 
+    game.slugs = [];
     for (let i = 0; i < game.totalPlayers; i += 1) {
       const slug = new Slug(i + 1, this.slugPositions[i], this.slugColors[i]);
       game.playerSettings[i].controller.setCharacter(slug);
       game.add.existing(slug);
+      game.slugs.push(slug);
     }
   }
 
   buildShell() {
+    game.shellShine = new ShellShine();
     const shell = new Shell([game.width / 2, game.height / 2]);
+    this.add.existing(game.shellShine);
     game.add.existing(shell);
+    game.shellShine.onShellDrop(new Phaser.Point(shell.x, shell.y))
   }
 }

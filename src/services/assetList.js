@@ -43,10 +43,13 @@ export default class AssetList extends Singleton {
       // User Interface
       { key: 'loaderBar', dir: '', png: 'loader-bar.png' },
       { key: 'menuCard', dir: '', png: 'placeholder.png' },
+      { key: 'crown', dir: '', png: 'crown.png' },
 
       // Snail
       { key: 'cloud', dir: '', png: 'cloud.png' },
+      { key: 'box', dir: '', png: 'box.png' },
       { key: 'snailhouse', dir: '', png: 'snailhouse.png' },
+      { key: 'shellShine', dir: '', png: 'shine_shell.png' },
       { key: 'trailPart1', dir: 'trailParts/', png: 'patch01.png' },
       { key: 'trailPart2', dir: 'trailParts/', png: 'patch02.png' },
       { key: 'trailPart3', dir: 'trailParts/', png: 'patch03.png' },
@@ -74,6 +77,11 @@ export default class AssetList extends Singleton {
       { key: 'carl_buffed', dir: 'overlay/', png: 'carl_buffed.png' },
       { key: 'frank_buffed', dir: 'overlay/', png: 'frank_buffed.png' },
       { key: 'phteven_buffed', dir: 'overlay/', png: 'phteven_buffed.png' },
+
+      // Ranking Screen
+      { key: 'stage1', dir: '', png: 'podium1.png' },
+      { key: 'stage2', dir: '', png: 'podium2.png' },
+      { key: 'stage3', dir: '', png: 'podium3.png' },
     ];
 
     this._soundList = [
@@ -87,7 +95,11 @@ export default class AssetList extends Singleton {
       { key: '85chiptune', dir: '', file: '85chiptune.wav' },
       { key: '85voiceSound', dir: '', file: '85voiceSound.wav' },
       { key: 'techLoop', dir: '', file: 'techLoop.wav' },
+      { key: 'epicString', dir: '', file: 'epicString120.wav' },
 
+      { key: 'winner', dir: 'effects/', file: 'winner.wav'},
+      { key: 'cheer', dir: 'effects/', file: 'cheer.wav'},
+      { key: 'readySetGo', dir: 'effects/', file: 'readySetGo4.wav'},
       { key: 'swoosh', dir: 'effects/', file: 'swoosh.wav'},
       { key: 'smallCrack', dir: 'effects/', file: 'smallCrack.wav'},
       { key: 'slimeBoost', dir: 'effects/', file: 'slimeBoost.wav'},

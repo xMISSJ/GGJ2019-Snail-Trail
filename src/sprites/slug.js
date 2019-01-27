@@ -52,10 +52,10 @@ export default class Slug extends Sprite {
     this.body.collideWorldBounds = true;
     this.scale.set(1, 1);
 
-    this.currentDirection = new Point(1, 0);
+    this.currentDirection = new Point(0, 0);
     this.targetDirection = new Point(0, 0);
     this.lastDirection = new Point(1, 0);
-    this.forceDirection = new Point(1, 0);
+    this.forceDirection = new Point(0, 0);
     this.currentForce = 0;
 
     this.body.debug = false;
@@ -220,6 +220,7 @@ export default class Slug extends Sprite {
       this.setVelocity(entity1, entity2, 500);
       if (this.shell) {
         this.shell.onSpawn(this.position);
+        game.shellShine.onShellDrop(this.position);
         this.shell = null;
       }
     } else {
@@ -251,6 +252,9 @@ export default class Slug extends Sprite {
       }
 
       this.rotate();
+      if (GameManager.instance.currentState !== GameManager.instance.states.game) {
+        return;
+      }
       this.currentMovementSpeed += this.currentStats.movementSpeedStep;
     } else if (this.currentDirection.getMagnitude() > 0.2) {
       this.currentMovementSpeed -= this.currentStats.movementSpeedStep * 3;
