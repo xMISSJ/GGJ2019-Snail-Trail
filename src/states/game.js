@@ -16,6 +16,7 @@ import Leaderboard from '../sprites/ui/Leaderboard';
 import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
 import Overlay from '../sprites/overlay';
+import Goal from "../sprites/ui/Goal";
 
 export default class extends State {
   init() {
@@ -49,7 +50,7 @@ export default class extends State {
     this.buildShell();
     this.buildSlugs();
     this.leaderboard = new Leaderboard();
-
+    this.goal = new Goal();
     GameManager.instance.startGame();
 
     this.overlay = new Overlay();

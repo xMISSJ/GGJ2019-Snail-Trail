@@ -75,4 +75,11 @@ export default class CollisionManager extends Singleton {
     entity.body.setCollisionGroup(this.trailsP2Group);
     entity.body.collides(this.slugsP2Group);
   }
+
+  reset() {
+    this.slugs.length = 0;
+    this.shell = null;
+    this.walls.length = 0;
+    this.trails.length = 0;
+  }
 }
