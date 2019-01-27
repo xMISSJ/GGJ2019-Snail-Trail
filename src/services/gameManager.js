@@ -99,6 +99,7 @@ export default class GameManager extends Singleton {
     this.overlay = new RankingOverlay();
     game.background.alpha = 0.3;
     SoundEffects.instance.onWinner();
+    BackgroundMusic.instance.targetSpeed = 1;
   }
 
   reset() {
@@ -143,13 +144,15 @@ export default class GameManager extends Singleton {
   }
 
   update() {
+    BackgroundMusic.instance.update();
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
     } else if (this.currentState === this.states.end) {
       for (let i = 0; i < game.controllers.length; i++) {
         game.controllers[i].update();
-        if (game.controllers[i].buttonInput.a) {
+        if (game.controllers[i].buttonInput.start) {
           game.state.start('characterSelect');
+          SoundEffects.instance.cheer.stop();
         }
       }
     }
