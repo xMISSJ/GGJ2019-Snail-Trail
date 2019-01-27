@@ -22,18 +22,21 @@ export default class extends Sprite {
     game.physics.p2.enable(this, true);
     this.body.data.sensor = true;
     this.body.enable = true;
+    this.body.debug = false;
     this.circleShape = this.body.setCircle(20, 0, 0);
     this.visible = false;
 
     this.circleShape.sensor = true;
     this.body.debug = false;
 
+    this.lifeTimeRatio = 1;
     CollisionManager.instance.addTrail(this);
   }
 
-  spawnPart(x, y, angle) {
+  spawnPart(x, y, angle, lifeTimeRatio, scaleChange) {
     CollisionManager.instance.addTrail(this);
     this.position.setTo(x, y);
+    this.lifeTimeRatio = lifeTimeRatio
     const randomXOffset = (Math.random() - 0.5) * this.randomPosOffset;
     const randomYOffset = (Math.random() - 0.5) * this.randomPosOffset;
     this.body.x = x + randomXOffset;
@@ -43,7 +46,7 @@ export default class extends Sprite {
     const randomAngleOffset = (Math.random() - 0.5) * this.randomAngleOffset;
     this.angle = angle + randomAngleOffset;
     this.currentLifetime = this.lifetime;
-    this.scale.set(this.standardScale, this.standardScale);
+    this.scale.set(this.standardScale * scaleChange, this.standardScale * scaleChange);
     this.alive = true;
     this.visible = true;
     this.alpha = 1;
@@ -52,11 +55,11 @@ export default class extends Sprite {
   update() {
     if (!this.alive) return;
     this.currentLifetime -= game.time.elapsed / 1000;
-    this.scale.x -= this.scaleChange;
-    this.scale.y -= this.scaleChange;
-    this.circleShape.radius -= this.scaleChange;
+    this.scale.x -= this.scaleChange * this.lifeTimeRatio;
+    this.scale.y -= this.scaleChange * this.lifeTimeRatio;
+    this.circleShape.radius -= this.scaleChange * this.lifeTimeRatio;
     this.body.shapeChanged();
-    this.alpha -= this.alphaChange;
+    this.alpha -= this.alphaChange * this.lifeTimeRatio;
 
     if (this.alpha <= 0 || this.scale.x <= 0) {
       this.dead();

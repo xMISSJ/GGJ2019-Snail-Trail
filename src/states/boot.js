@@ -2,7 +2,7 @@ import { State } from 'phaser';
 import Facebook from '../services/facebook';
 import AssetList from '../services/assetList';
 import SoundManager from '../services/soundManager';
-import CharacterSelect from "./characterSelect";
+import CharacterSelect from './characterSelect';
 
 // Private methods.
 const loadImage = Symbol('loadImage');
@@ -68,7 +68,6 @@ export default class extends State {
 
 
     game.load.spritesheet('smokeBig', 'assets/sprites/explosion/snail-loseshell.png', 71, 74, 4);
-
   }
 
   [loadComplete]() {
@@ -110,7 +109,7 @@ export default class extends State {
    */
   [loadSound](sound) {
     if (sound.preload !== undefined && !sound.preload) {
-      return;
+
     }
 
     this.load.audio(sound.key, this._soundPath + sound.dir + sound.file);
@@ -125,12 +124,11 @@ export default class extends State {
     this.game.clearBeforeRender = false;
     const sounds = [];
     for (let i = 0; i < this._soundList.length; i += 1) {
-      sounds.push(this._soundList[i]);
+      sounds.push(this._soundList[i].key);
     }
-
+    
     game.sound.setDecodedCallback(sounds, () => {
       Facebook.instance.startGameAsync(() => {
-
         window.game.state.start('characterSelect');
       }, this);
     }, this);

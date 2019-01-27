@@ -19,7 +19,7 @@ export default class Shell extends Sprite {
     this.body.data.sensor = true
     this.body.enable = true;
     this.circleShape = this.body.setCircle(40, 0, 0);
-
+    this.body.debug = false;
     this.circleShape.sensor = true
     this.body.debug = false;
 
@@ -72,26 +72,22 @@ export default class Shell extends Sprite {
   }
 
   switchToPickable() {
-    // TODO for testing purposes
-    this.tint = 0xffffff;
     this.visible = true;
 
     CollisionManager.instance.addShell(this);
   }
 
   switchToPickUp() {
-    // TODO for testing purposes
     this.visible = false;
     this.body.clearCollision()
   }
 
   switchToSpawn() {
-    // TODO for testing purposes
-    this.tint = Math.random() * 0xffffff;
+
     this.visible = true;
 
     setTimeout(() => {
       this.switchState(this.states.PICKABLE);
-    }, 2000);
+    }, 500);
   }
 }

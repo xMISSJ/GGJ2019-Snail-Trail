@@ -3,6 +3,7 @@ import Singleton from './singleton';
 import CountDownText from "../sprites/countDownText";
 import SignalManager from '../services/signalManager';
 import Text from "./text";
+import BackgroundMusic from '../services/backgroundMusic';
 
 export default class GameManager extends Singleton {
   constructor() {
@@ -20,6 +21,11 @@ export default class GameManager extends Singleton {
     };
     this.timer = game.time.create(false);
     this.currentState = this.states.pause;
+
+    this.key3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+    this.key3.onDown.add(this.togglePause, this);
+
+    this.paused = false;
   }
 
   startGame() {
@@ -117,13 +123,27 @@ export default class GameManager extends Singleton {
     game.add.existing(this.countDown);
     this.countDown.start(() => {
       this.currentState = this.states.game;
-      this.countDown.destroy(); 
+      this.countDown.destroy();
+      BackgroundMusic.instance.playInGameSound();
     }, this);
   }
 
   update() {
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
+    }
+  }
+
+  togglePause() {
+    this.paused = !this.paused;
+
+    switch(this.paused) {
+      case false:
+        this.timer.resume()
+        break;
+      case true:
+        this.timer.pause()
+        break;
     }
   }
 }
