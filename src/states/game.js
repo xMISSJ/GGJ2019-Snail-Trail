@@ -31,6 +31,7 @@ export default class extends State {
 
   create() {
     this.background = new Background(0, 0);
+    game.background = this.background;
     game.add.existing(this.background);
 
     if (__DEV__) {
@@ -54,13 +55,12 @@ export default class extends State {
   }
 
   update() {
-    if (GameManager.instance.currentState !== GameManager.instance.states.game) {
-      return;
-    }
+    if (GameManager.instance.currentState === GameManager.instance.states.game || GameManager.instance.currentState === GameManager.instance.states.end) {
 
-    GameManager.instance.update();
-    for (let i = 0; i < game.controllers.length; i++) {
-      game.controllers[i].update();
+      GameManager.instance.update();
+      for (let i = 0; i < game.controllers.length; i++) {
+        game.controllers[i].update();
+      }
     }
   }
 

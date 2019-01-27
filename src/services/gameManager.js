@@ -12,7 +12,7 @@ export default class GameManager extends Singleton {
     this.playerScores = [];
     this.leaderboard = [];
     this.shellHolder = 0;
-    this.winAmount = 3;
+    this.winAmount = 1;
     this.countDownValue = 3;
     this.states = {
       countDown: 0,
@@ -91,11 +91,11 @@ export default class GameManager extends Singleton {
 
     // Makes all slugs invisible.
     for (let i = 0; i < game.slugs.length; i++){
-      game.slugs[i].alpha = 0;
+      game.slugs[i].destroy();
     }
 
-    this.rankingOverlay = new RankingOverlay();
-    this.add(this.rankingOverlay);
+    this.overlay = new RankingOverlay();
+    game.background.alpha = 0.3;
   }
 
   reset() {
@@ -129,6 +129,13 @@ export default class GameManager extends Singleton {
   update() {
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
+    } else if (this.currentState === this.states.end) {
+      for (let i = 0; i < game.controllers.length; i++) {
+        game.controllers[i].update();
+        if (game.controllers[i].buttonInput.a) {
+          game.state.start('characterSelect');
+        }
+      }
     }
   }
 

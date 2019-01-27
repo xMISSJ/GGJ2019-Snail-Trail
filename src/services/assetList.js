@@ -74,6 +74,11 @@ export default class AssetList extends Singleton {
       { key: 'carl_buffed', dir: 'overlay/', png: 'carl_buffed.png' },
       { key: 'frank_buffed', dir: 'overlay/', png: 'frank_buffed.png' },
       { key: 'phteven_buffed', dir: 'overlay/', png: 'phteven_buffed.png' },
+
+      // Ranking Screen
+      { key: 'stage1', dir: '', png: 'podium1.png' },
+      { key: 'stage2', dir: '', png: 'podium2.png' },
+      { key: 'stage3', dir: '', png: 'podium3.png' },
     ];
 
     this._soundList = [
