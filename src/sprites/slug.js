@@ -243,7 +243,7 @@ export default class Slug extends Sprite {
   }
 
   update() {
-    if (GameManager.instance.paused) {
+    if (GameManager.instance.paused || this.isParrying) {
       this.body.moveRight(0);
       this.body.moveDown(0);
       return;
