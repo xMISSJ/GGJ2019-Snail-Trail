@@ -318,9 +318,10 @@ export default class Slug extends Sprite {
     if (!this.canParry) {
       this.currentParryCoolDown -= game.time.elapsed / 1000;
       if (this.currentParryCoolDown <= 0) {
+        if (this.currentStats === this.states.SNAIL) this.shine.visible = true;
         this.canParry = true;
         this.currentParryCoolDown = this.currentStats.parryCooldown;
-        this.shine.visible = true;
+
         const shine = game.add.tween(this.shine.scale).to({ x: 0.6, y: 0.6 }, 100, Phaser.Easing.Quadratic.Out, true).yoyo(true);
       }
     }
