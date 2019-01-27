@@ -47,7 +47,7 @@ export default class AssetList extends Singleton {
 
       // Snail
       { key: 'cloud', dir: '', png: 'cloud.png' },
-      { key: 'box', dir: '', png: 'box.png' },
+      { key: 'box', dir: '', png: 'rock.png' },
       { key: 'snailhouse', dir: '', png: 'snailhouse.png' },
       { key: 'shellShine', dir: '', png: 'shine_shell.png' },
       { key: 'trailPart1', dir: 'trailParts/', png: 'patch01.png' },
@@ -83,6 +83,10 @@ export default class AssetList extends Singleton {
       { key: 'stage1', dir: '', png: 'podium1.png' },
       { key: 'stage2', dir: '', png: 'podium2.png' },
       { key: 'stage3', dir: '', png: 'podium3.png' },
+
+      // logo
+      { key: 'logo', dir: '', png: 'logo.png' },
+      { key: 'logo-team', dir: '', png: 'logo-team.png' },
     ];
 
     this._soundList = [
