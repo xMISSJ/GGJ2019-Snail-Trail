@@ -68,6 +68,7 @@ export default class AssetList extends Singleton {
 
       // Overlay
       { key: 'hype_bar', dir: 'overlay/', png: 'hype_bar.png' },
+      { key: 'countDown_bar', dir: 'overlay/', png: 'countdown_bar.png' },
       { key: 'vs', dir: 'overlay/', png: 'vs.png' },
       { key: 'everyone_hype', dir: 'overlay/', png: 'everyone_hype.png' },
       { key: 'PHTEVEN', dir: 'overlay/', png: 'PHTEVEN.png' },
