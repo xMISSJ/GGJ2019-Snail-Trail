@@ -51,6 +51,10 @@ export default class characterSelect extends State {
     this.startText.visible = false;
     this.add.existing(this.startText);
     game.add.tween(this.startText).to({ y: this.startText.y - 4 }, 100, 'Linear', true).yoyo(true).loop(true);
+
+    this.logo = game.add.image(game.width / 2, 100, 'logo');
+    this.logo.anchor.setTo(0.5, 0.5);
+    this.logo.scale.setTo(0.5, 0.5);
   }
 
   update() {
