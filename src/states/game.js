@@ -8,6 +8,7 @@ import Image from '../services/image';
 import CollisionManager from '../sprites/collisionManager';
 import Slug from '../sprites/slug';
 import Shell from '../sprites/shell';
+import Box from '../sprites/box';
 import ShellShine from '../sprites/shellShine';
 import ColliderGroup from '../sprites/colliderGroup';
 import GameManager from '../services/gameManager';
@@ -17,6 +18,7 @@ import Wall from '../sprites/wall';
 import CharacterSelect from './characterSelect';
 import Overlay from '../sprites/overlay';
 import Goal from "../sprites/ui/Goal";
+import Level from '../services/level';
 
 export default class extends State {
   init() {
@@ -49,6 +51,7 @@ export default class extends State {
     this.buildWalls();
     this.buildShell();
     this.buildSlugs();
+    this.level = new Level();
     this.leaderboard = new Leaderboard();
     this.goal = new Goal();
     GameManager.instance.startGame();
