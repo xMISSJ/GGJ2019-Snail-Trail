@@ -37,7 +37,7 @@ export default class BackgroundMusic extends Singleton {
     this.speedMin = 1;
     this.speedMax = 1.4;
     this.currentSpeed = this.speedMin;
-    this.speedChange = 0.01;
+    this.speedChange = 0.0075;
     this.targetSpeed = this.speedMin;
     this.setIngameSound();
   }
@@ -53,10 +53,10 @@ export default class BackgroundMusic extends Singleton {
       var newVal = this.speedMin + extraValue;
       this.targetSpeed = newVal;
     } else {
-      this.targetSpeed = 1;
+      this.targetSpeed = this.speedMin;
     }
     var nextStep = this.speedChange;
-    nextStep = this.currentSpeed > this.targetSpeed ? -nextStep : nextStep;
+    nextStep = this.currentSpeed > this.targetSpeed ? - nextStep : nextStep;
     this.currentSpeed += nextStep;
 
     this.techLoop._sound.playbackRate.value = this.currentSpeed;
@@ -64,6 +64,8 @@ export default class BackgroundMusic extends Singleton {
   setIngameSound() {
     this.techLoop = SoundManager.instance.getSound('techLoop')
     this.voiceSound = SoundManager.instance.getSound('85voiceSound');
+
+    this.techLoop.play('',0,0, true);
   }
 
   playRandomVoice() {
@@ -83,7 +85,7 @@ export default class BackgroundMusic extends Singleton {
   }
 
   playInGameSound() {
-    this.techLoop.play('',0,1, true);
+    this.techLoop.volume = 1;
     this.voiceSound.play('',0,0, true);
   }
 

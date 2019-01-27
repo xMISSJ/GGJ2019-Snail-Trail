@@ -146,9 +146,9 @@ export default class GameManager extends Singleton {
   }
 
   update() {
+    BackgroundMusic.instance.update();
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
-      BackgroundMusic.instance.update();
     }
   }
 
