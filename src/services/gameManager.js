@@ -150,8 +150,9 @@ export default class GameManager extends Singleton {
     } else if (this.currentState === this.states.end) {
       for (let i = 0; i < game.controllers.length; i++) {
         game.controllers[i].update();
-        if (game.controllers[i].buttonInput.a) {
+        if (game.controllers[i].buttonInput.start) {
           game.state.start('characterSelect');
+          SoundEffects.instance.cheer.stop();
         }
       }
     }
