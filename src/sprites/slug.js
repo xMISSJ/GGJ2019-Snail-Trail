@@ -82,10 +82,9 @@ export default class Slug extends Sprite {
     this.trailCurrentTime = 0;
     this.trailToSpawn = 0;
 
-    this.shine = new Sprite({ asset: 'shellShine', scaleX: 0, scaleY: 0 });
-    this.shine.alpha = 0.8;
-    this.addChild(this.shine);
-
+    this.shine.alpha = 0.3;
+    this.shine.rotateTween = game.add.tween(this.shine).to({ rotation: 10 }, 1500, Phaser.Easing.Linear.None, true, 0, -1);
+    this.shine.visible = false;
     SignalManager.instance.add('gameEnd', () => {
       this.targetDirection = new Phaser.Point(0, 0);
       this.currentDirection = new Phaser.Point(0, 0);
@@ -103,6 +102,8 @@ export default class Slug extends Sprite {
     this.hittedSnail.onComplete.add(() => {
       this.doAnimation();
     });
+    this.shine = new Sprite({ asset: 'shellShine', scaleX: .4, scaleY: .4, y: 5});
+    this.addChild(this.shine);
     this.snailShell = new Sprite({ asset: 'snailShell', y: 5 });
     this.addChild(this.snailShell);
 
@@ -319,7 +320,8 @@ export default class Slug extends Sprite {
       if (this.currentParryCoolDown <= 0) {
         this.canParry = true;
         this.currentParryCoolDown = this.currentStats.parryCooldown;
-        const shine = game.add.tween(this.shine.scale).to({ x: 0.4, y: 0.4 }, 100, Phaser.Easing.Quadratic.Out, true).yoyo(true);
+        this.shine.visible = true;
+        const shine = game.add.tween(this.shine.scale).to({ x: 0.6, y: 0.6 }, 100, Phaser.Easing.Quadratic.Out, true).yoyo(true);
       }
     }
   }
@@ -422,7 +424,7 @@ export default class Slug extends Sprite {
     this.collideWithTrail.length = 0;
     this.trailSpeed = 1;
     this.currentTrailState = this.trailStates.NO_COLLIDE;
-
+    this.shine.visible = false;
 
     this.doHitAnimation();
     this.canPickUp = false;
@@ -439,6 +441,7 @@ export default class Slug extends Sprite {
     this.doAnimation();
     this.scale.setTo(this.currentStats.size);
     SoundEffects.instance.setYayName(this.name);
+    this.shine.visible = true;
   }
 
   shoot() {
@@ -459,6 +462,7 @@ export default class Slug extends Sprite {
     } else if (this.currentState === this.states.SNAIL) {
       if (!this.canParry) return;
       this.canParry = false;
+      this.shine.visible = false;
       this.isParrying = true;
       this.targetDirection = new Phaser.Point(0, 0);
       this.currentDirection = new Phaser.Point(0, 0);
