@@ -101,6 +101,7 @@ export default class GameManager extends Singleton {
     });
     game.add.existing(this.winText);
     SoundEffects.instance.onWinner();
+    BackgroundMusic.instance.targetSpeed = 1;
   }
 
   reset() {
@@ -147,6 +148,7 @@ export default class GameManager extends Singleton {
   update() {
     if (this.currentState === this.states.game) {
       this.addTimeToPlayerScore(this.shellHolder);
+      BackgroundMusic.instance.update();
     }
   }
 
