@@ -129,7 +129,7 @@ export default class extends State {
     
     game.sound.setDecodedCallback(sounds, () => {
       Facebook.instance.startGameAsync(() => {
-        window.game.state.start('characterSelect');
+        window.game.state.start('Splash');
       }, this);
     }, this);
   }
