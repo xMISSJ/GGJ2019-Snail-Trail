@@ -113,31 +113,36 @@ export default class GameManager extends Singleton {
   }
 
   startCountDown() {
+
+    this.countDownBar = game.add.sprite(0, 0, 'countDown_bar');
+
     this.countDown = new CountDownText({
       startValue: 3,
-      position: new Phaser.Point(game.width / 2, game.height / 2),
+      position: new Phaser.Point(game.width / 2, game.height / 2 - 45),
       anchor: new Phaser.Point(0.5, 0.5),
-      color: '#FFFFFF',
-      fontSize: 80,
-      stroke: '#000000',
+      color: '#000000',
+      fontSize: 70,
+      stroke: '#FFFFFF',
       strokeThickness: 10,
     });
     this.objectiveText = new Text({
       text: 'Hold the shell for 30 seconds!',
-      position: new Phaser.Point(game.width / 2, game.height / 2 + 100),
+      position: new Phaser.Point(game.width / 2, game.height / 2 + 50),
       anchor: new Phaser.Point(0.5, 0.5),
-      color: '#FFFFFF',
-      fontSize: 30,
-      stroke: '#000000',
+      color: '#000000',
+      fontSize: 25,
+      stroke: '#FFFFFF',
       strokeThickness: 10,
     });
     game.add.existing(this.objectiveText);
     game.add.existing(this.countDown);
-    game.add.tween(this.countDown.scale).to({ x: 1.3, y: 1.3}, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
+    game.add.existing(this.countDownBar);
+    game.add.tween(this.countDown.scale).to({ x: 1.15, y: 1.15}, 500, Phaser.Easing.Sinusoidal.InOut, true).yoyo(true).loop(true);
     this.countDown.start(() => {
       this.currentState = this.states.game;
       this.countDown.destroy();
       this.objectiveText.destroy();
+      this.countDownBar.destroy();
       BackgroundMusic.instance.playInGameSound();
     }, this);
     SoundEffects.instance.onReadySetGo();
